@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:caldroid="http://schemas.android.com/apk/res-auto">
+
+    <item android:color="@color/caldroid_555" android:state_pressed="false" caldroid:state_date_disabled="true"/>
+    <item android:color="@color/caldroid_555" caldroid:state_date_prev_next_month="true"/>
+    <item android:color="@color/accent"  caldroid:state_date_today="true"/>
+    <item android:color="@color/caldroid_555"  caldroid:state_date_leave="true"/>
+    <item android:color="@color/caldroid_555"  caldroid:state_date_present="true"/>
+    <item android:color="@color/caldroid_555"  caldroid:state_date_comp_off="true"/>
+    <item android:color="@color/caldroid_555"/>
+
+</selector>

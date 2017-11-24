@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/padding_default" >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/choicelist" />
+
+            <TextView
+                android:id="@+id/tv_select_month"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/text_16"
+                android:layout_gravity="center"
+                android:background="@color/transparent"
+                android:paddingLeft="@dimen/margin_default"
+                android:textColor="@android:color/black"
+                android:text="Select Month" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_default"
+            android:orientation="vertical" >
+
+            <EditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:ems="10"
+                android:hint="Enter your login password to authenticate yourself"
+                android:inputType="textPassword"
+                android:padding="@dimen/padding_default"
+                android:fontFamily=""
+                android:textSize="@dimen/text_16"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray"
+                android:textStyle="normal"
+                android:typeface="sans" >
+
+                <requestFocus />
+            </EditText>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/lighter_gray" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/btn_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|end"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/margin_mini"
+            android:layout_marginEnd="@dimen/margin_default"
+            android:layout_marginTop="@dimen/margin_mini"
+            android:paddingTop="@dimen/padding_mini"
+            android:paddingBottom="@dimen/padding_mini"
+            android:background="@drawable/rounded_corner_light_blue"
+            android:paddingLeft="@dimen/margin_large"
+            android:paddingRight="@dimen/margin_large"
+            android:text="View"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+</FrameLayout>

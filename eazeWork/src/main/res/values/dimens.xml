@@ -1,0 +1,43 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="navigation_icon_size" tools:override="true">36dp</dimen>
+
+
+    <!--
+         Per the design guidelines, navigation drawers should be between 240dp and 320dp:
+         https://developer.android.com/design/patterns/navigation-drawer.html
+    -->
+    <dimen name="navigation_drawer_width">240dp</dimen>
+    <dimen name="tiny_gap_default">1dp</dimen>
+    <dimen name="padding_default">5dp</dimen>
+    <dimen name="card_shadow">1dp</dimen>
+    <dimen name="padding_mini">5dp</dimen>
+    <dimen name="padding_large">20dp</dimen>
+    <dimen name="margin_default">10dp</dimen>
+    <dimen name="margin_below_l">20dp</dimen>
+    <dimen name="margin_mini">5dp</dimen>
+    <dimen name="margin_large">30dp</dimen>
+    <dimen name="radius_default">5dp</dimen>
+    <dimen name="radius_mini">5dp</dimen>
+    <dimen name="radius_large">20dp</dimen>
+
+    <dimen name="chip_height">32dp</dimen>
+    <dimen name="chip_horizontal_padding">12dp</dimen>
+    <dimen name="chip_icon_horizontal_margin">8dp</dimen>
+    <dimen name="chip_close_horizontal_margin">4dp</dimen>
+    <dimen name="chip_close_icon_size">18dp</dimen>
+    <dimen name="chip_close_icon_size2">24dp</dimen>
+    <dimen name="chip_close_icon_padding">3dp</dimen>
+
+
+    <dimen name="font_12">12sp</dimen>
+    <dimen name="font_14">14sp</dimen>
+    <dimen name="font_16">16sp</dimen>
+    <dimen name="font_20">20sp</dimen>
+    <dimen name="font_24">24sp</dimen>
+    <dimen name="font_28">28sp</dimen>
+    <dimen name="font_32">32sp</dimen>
+</resources>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/primary"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_20"
+            android:src="@drawable/eazework_logo"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:layout_marginStart="@dimen/margin_20"
+            android:layout_marginEnd="@dimen/margin_20"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <EditText
+                android:id="@+id/et_url"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:drawableLeft="@drawable/link_url"
+                android:drawablePadding="@dimen/padding_mini"
+                android:ems="10"
+                android:fontFamily="sans-serif"
+                android:hint="@string/msg_url"
+                android:inputType="textUri"
+                android:textColor="@color/black">
+
+                <requestFocus/>
+            </EditText>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margin_10"
+                android:background="@color/lighter_gray"/>
+
+            <EditText
+                android:id="@+id/et_user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:drawableLeft="@drawable/icon_user"
+                android:drawablePadding="@dimen/padding_mini"
+                android:ems="10"
+                android:paddingTop="@dimen/margin_10"
+                android:fontFamily="sans-serif"
+                android:hint="@string/msg_username"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/black">
+            </EditText>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="@dimen/margin_10"
+                android:background="@color/lighter_gray"/>
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/et_password"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="@dimen/margin_10"
+                    android:background="@android:color/transparent"
+                    android:drawableLeft="@drawable/icon_password"
+                    android:drawablePadding="@dimen/padding_mini"
+                    android:fontFamily="sans-serif"
+                    android:hint="@string/msg_password"
+                    android:inputType="textPassword"
+                    android:textColor="@color/black"/>
+
+                <ImageView
+                    android:id="@+id/icon_eye"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical|right"
+                    android:src="@drawable/show_pws"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_sign_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="@dimen/margin_20"
+            android:layout_marginEnd="@dimen/margin_20"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/rounded_corner_light_blue"
+            android:padding="@dimen/margin_default"
+            android:text="Login"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/tv_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/dont_have_account"
+            android:textColor="@color/accent"
+            android:textSize="@dimen/text_16"
+            android:visibility="visible"/>
+
+    </LinearLayout>
+
+    <include layout="@layout/progress_root_container"/>
+
+    <include
+        layout="@layout/error_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</FrameLayout>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_height="wrap_content">
+    <Button
+        android:visibility="gone"
+        android:layout_margin="@dimen/margin_7"
+        android:id="@+id/deleteBTN"
+        android:layout_width="@dimen/margin_70"
+        android:layout_height="@dimen/margin_30"
+        style="@style/button"
+        android:gravity="center"
+        android:background="@drawable/rounded_corner_accent"
+        android:text="@string/delete_btn"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_12" />
+    <Button
+        android:visibility="gone"
+        android:layout_margin="@dimen/margin_7"
+        android:id="@+id/saveDraftBTN"
+        android:layout_width="@dimen/margin_100"
+        android:layout_height="@dimen/margin_30"
+        style="@style/button"
+        android:gravity="center"
+        android:background="@drawable/rounded_corner_light_blue"
+        android:text="@string/save_as_draft"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_12" />
+    <Button
+        android:visibility="gone"
+        android:layout_margin="@dimen/margin_7"
+        android:id="@+id/submitBTN"
+        android:layout_width="@dimen/margin_70"
+        android:layout_height="@dimen/margin_30"
+        style="@style/button"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/rounded_corner_light_blue"
+        android:text="@string/msg_save"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_12" />
+    <Button
+        style="@style/button"
+        android:layout_margin="@dimen/margin_7"
+        android:gravity="center"
+        android:id="@+id/resubmitBTN"
+        android:layout_width="@dimen/margin_70"
+        android:layout_height="@dimen/margin_30"
+        android:background="@drawable/rounded_corner_light_blue"
+        android:text="@string/resubmit"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_12"
+        android:visibility="gone" />
+    <Button
+        android:visibility="gone"
+        android:layout_margin="@dimen/margin_7"
+        android:id="@+id/rejectBTN"
+        style="@style/button"
+        android:layout_width="@dimen/margin_70"
+        android:layout_height="@dimen/margin_30"
+        android:background="@drawable/rounded_corner_accent"
+        android:text="Reject"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_12" />
+    <Button
+        android:visibility="gone"
+        android:layout_margin="@dimen/margin_7"
+        android:id="@+id/returnBTN"
+        style="@style/button"
+        android:layout_width="@dimen/margin_70"
+        android:layout_height="@dimen/margin_30"
+        android:layout_marginRight="@dimen/margin_5"
+        android:background="@drawable/rounded_corner_accent"
+        android:text="Return"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_12" />
+    <Button
+        android:visibility="gone"
+        android:layout_margin="@dimen/margin_7"
+        android:id="@+id/approvalBTN"
+        style="@style/button"
+        android:layout_width="@dimen/margin_70"
+        android:layout_height="@dimen/margin_30"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/rounded_corner_light_blue"
+        android:text="Approve"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_12" />
+
+    <Button
+        android:id="@+id/withdrawBTN"
+        android:layout_width="@dimen/margin_70"
+        style="@style/button"
+        android:layout_height="@dimen/margin_30"
+        android:layout_margin="@dimen/margin_7"
+        android:background="@drawable/rounded_corner_light_blue"
+        android:text="@string/withdraw"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_12"
+        android:visibility="gone" />
+
+
+</LinearLayout>

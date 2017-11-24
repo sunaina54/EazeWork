@@ -1,0 +1,27 @@
+# Built application files
+*.apk
+*.ap_
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+*.iml
+.gradle
+local.properties
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/dictionaries
+.idea/libraries
+.DS_Store
+build/
+captures/
+bin/
+gen/
+out/
+/eazeWork/build/
+/build/
+/cardview/build/

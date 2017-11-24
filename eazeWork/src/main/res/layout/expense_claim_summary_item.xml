@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view1"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@color/white"
+
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="2dp"
+        card_view:cardUseCompatPadding="true">
+        <RelativeLayout
+            android:layout_margin="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:weightSum="1"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textSize="@dimen/font_12"
+                        style="@style/textView"
+                        android:text="@string/voucher_no"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.3"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/padding_default"
+                        android:paddingRight="@dimen/padding_default"
+                        android:text=":"
+                        android:textColor="@color/black" />
+                    <TextView
+                        android:id="@+id/voucherNoTV"
+                        android:textSize="@dimen/font_12"
+                        style="@style/textViewYellow"
+                        android:text="-"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.7"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:weightSum="1"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textSize="@dimen/font_12"
+                        style="@style/textView"
+                        android:text="@string/date"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.3"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/padding_default"
+                        android:paddingRight="@dimen/padding_default"
+                        android:text=":"
+                        android:textColor="@color/black" />
+                    <TextView
+                        android:id="@+id/dateTV"
+                        android:textSize="@dimen/font_12"
+                        style="@style/textViewYellow"
+                        android:text="-"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.7"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:weightSum="1"
+                    android:orientation="horizontal"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textSize="@dimen/font_12"
+                        style="@style/textView"
+                        android:text="@string/description"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.3"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/padding_default"
+                        android:paddingRight="@dimen/padding_default"
+                        android:text=":"
+                        android:textColor="@color/black" />
+                    <TextView
+                        android:id="@+id/descriptionTV"
+                        android:textSize="@dimen/font_12"
+                        style="@style/textViewYellow"
+                        android:text="-"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.7"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="1"
+                    android:orientation="horizontal"
+                    android:id="@+id/ebLinearLayout">
+                    <TextView
+                        android:textSize="@dimen/font_12"
+                        style="@style/textView"
+                        android:text="@string/pendingWith"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.3"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/padding_default"
+                        android:paddingRight="@dimen/padding_default"
+                        android:text=":"
+                        android:textColor="@color/black" />
+                    <TextView
+                        android:id="@+id/pendingWithTV"
+                        android:textSize="@dimen/font_12"
+                        style="@style/textViewYellow"
+                        android:text="-"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.7"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/subEbLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="1"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:textSize="@dimen/font_12"
+                        style="@style/textView"
+                        android:text="@string/status"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.3"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/padding_default"
+                        android:paddingRight="@dimen/padding_default"
+                        android:text=":"
+                        android:textColor="@color/black" />
+                    <TextView
+                        android:id="@+id/statusTV"
+                        android:textSize="@dimen/font_12"
+                        style="@style/textViewYellow"
+                        android:text="-"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.7"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+            <Button
+                android:layout_marginRight="@dimen/margin_5"
+                style="@style/button"
+                android:layout_alignParentBottom="true"
+                android:textSize="@dimen/font_12"
+                android:layout_alignParentRight="true"
+                android:id="@+id/viewBTN"
+                android:background="@drawable/rounded_corner_light_blue"
+                android:textColor="@color/white"
+                android:text="@string/viewBTN"
+                android:layout_width="@dimen/margin_70"
+                android:layout_height="@dimen/margin_30" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>
+
+

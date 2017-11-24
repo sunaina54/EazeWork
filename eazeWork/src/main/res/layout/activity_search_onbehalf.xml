@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_search_onbehalf"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/splashscreen"
+    tools:context="hr.eazework.com.SearchOnbehalfActivity">
+    <include android:id="@+id/header_layout"
+        layout="@layout/custom_header_layout"></include>
+    <LinearLayout
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <include  layout="@layout/progress_root_container"  />
+    </LinearLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/noRecordLayout"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="No Employee Found"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="@dimen/margin_5"
+        android:layout_below="@+id/header_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:layout_marginLeft="@dimen/margin_5"
+            android:layout_marginRight="@dimen/margin_5"
+            android:weightSum="2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+      <!--      <EditText
+                android:id="@+id/searchET"
+                android:paddingLeft="@dimen/margin_10"
+                android:layout_margin="@dimen/margin_10"
+                android:background="@drawable/edittext_background_gray_corner"
+                android:layout_width="0dp"
+                android:hint="@string/search_hint"
+                android:layout_weight="1.8"
+                android:textSize="@dimen/font_14"
+                android:layout_height="@dimen/margin_40" />-->
+
+            <RelativeLayout
+
+                android:background="@drawable/grey_commoborder"
+                android:padding="@dimen/margin_default"
+                android:id="@+id/search_layout"
+                android:visibility="visible"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1.8"
+                android:weightSum="2">
+                <EditText
+                    android:background="@android:color/transparent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/search_hint"
+                    android:id="@+id/searchET"
+                    android:textSize="@dimen/font_14"
+                    />
+                <ImageView
+                    android:id="@+id/clearTextIV"
+                    android:layout_centerVertical="true"
+                    android:visibility="visible"
+                    android:layout_width="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="15dp"
+                    android:background="@drawable/cancel"
+                    />
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/searchLayout"
+                android:layout_width="0dp"
+                android:layout_weight=".2"
+                android:layout_height="@dimen/margin_40">
+                <ImageView
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/search"
+                    android:layout_width="@dimen/margin_25"
+                    android:layout_height="@dimen/margin_25" />
+            </RelativeLayout>
+        </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycleView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_10"
+            android:divider="@drawable/gradient_line">
+
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+</RelativeLayout>

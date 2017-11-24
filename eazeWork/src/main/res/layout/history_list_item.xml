@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@android:color/white"
+    android:layout_marginTop="@dimen/margin_10"
+    android:layout_marginBottom="@dimen/margin_10"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/linearHistory"
+        android:layout_weight="80"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvHistoryDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:text="Large Text"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_marginTop="@dimen/margin_5"
+            android:textColor="@android:color/black"
+            android:layout_marginStart="@dimen/margin_20"
+            android:layout_marginLeft="@dimen/margin_20"/>
+        <LinearLayout
+            android:layout_width="@dimen/margin_130"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginStart="@dimen/margin_22"
+            android:layout_marginLeft="@dimen/margin_22">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:textSize="@dimen/font_12"
+                android:textColor="@color/black"
+                android:layout_height="wrap_content"
+                android:text="In-Time" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:textSize="@dimen/font_12"
+                android:textColor="@color/black"
+                android:paddingLeft="@dimen/margin_5"
+                android:paddingRight="@dimen/margin_5" />
+
+            <TextView
+                android:id="@+id/tvHistoryTimeIn"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:singleLine="true"
+                android:maxLines="1"
+                android:textSize="@dimen/font_12"
+                android:textColor="@color/black"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="TextView" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="@dimen/margin_130"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:layout_marginTop="@dimen/margin_5"
+            android:layout_marginStart="@dimen/margin_22"
+            android:layout_marginLeft="@dimen/margin_22">
+            <TextView
+                android:id="@+id/tv_item_title"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:singleLine="true"
+                android:textSize="@dimen/font_12"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="Out-Time" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:textSize="@dimen/font_12"
+                android:textColor="@color/black"
+                android:paddingLeft="@dimen/margin_5"
+                android:paddingRight="@dimen/margin_5" />
+
+            <TextView
+                android:id="@+id/tvHistoryTimeOut"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textSize="@dimen/font_12"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="TextView" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginEnd="@dimen/margin_20"
+        android:layout_width="@dimen/margin_130"
+        android:layout_marginTop="@dimen/margin_5"
+        android:gravity="end"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tvHistoryTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="Weekly Off"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            />
+    </LinearLayout>
+
+</LinearLayout>

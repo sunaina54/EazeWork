@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/profile_detail_sub_layout" 
+        android:visibility="visible"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/margin_default" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/leave_balance"
+            android:textSize="@dimen/font_20"
+            android:paddingLeft="@dimen/margin_default"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent">
+            <LinearLayout android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+            android:layout_marginBottom="@dimen/padding_default">
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+        android:layout_marginLeft="@dimen/margin_default"
+        android:layout_marginRight="@dimen/margin_default">
+                    
+        <hr.eazework.com.ui.util.custom.MyViewPager
+            android:id="@+id/pager_leaves"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp" >
+        </hr.eazework.com.ui.util.custom.MyViewPager>
+            <hr.eazework.selfcare.viewpagerindicator.CirclePageIndicator
+                android:id="@+id/leaves_pager_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:layout_gravity="center" />
+                </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="@dimen/padding_default"
+            android:id="@+id/calendar_attandance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/padding_default"/>
+            </LinearLayout>
+        </ScrollView>
+</LinearLayout>

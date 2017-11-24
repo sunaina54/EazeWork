@@ -1,0 +1,169 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:id="@+id/map_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"/>
+
+        <LinearLayout
+            android:id="@+id/llShiftTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:paddingStart="@dimen/margin_25"
+            android:paddingLeft="@dimen/margin_25"
+            android:layout_marginTop="@dimen/margin_5"
+            android:background="#bbffffff"
+            android:orientation="horizontal">
+
+            <LinearLayout
+
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:gravity="center"
+                    android:text="Shift Time"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_18" />
+
+                <hr.eazework.com.ui.customview.ShiftTimeView
+                    android:id="@+id/stvShiftTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:gravity="center"
+                    android:text="05:12:11"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_32" />
+
+
+                <TextView
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:gravity="center"
+                    android:text="hh:mm:ss"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/text_14" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/ivTimeLineExapand"
+                android:layout_width="@dimen/margin_30"
+                android:layout_height="@dimen/margin_30"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/margin_20"
+                android:layout_marginRight="@dimen/margin_20"
+                android:src="@drawable/user_time_in" />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/ivCurrentLocation"
+            android:layout_width="@dimen/margin_35"
+            android:layout_height="@dimen/margin_35"
+            android:paddingTop="@dimen/margin_5"
+            android:layout_marginLeft="@dimen/margin_10"
+            android:layout_marginStart="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_70"
+            android:layout_gravity="start|left|bottom"
+            android:layout_marginEnd="@dimen/margin_10"
+            android:layout_marginRight="@dimen/margin_10"
+            android:src="@drawable/currentloc_black" />
+        <LinearLayout
+            android:id="@+id/llLogin_Logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="@dimen/margin_10"
+            android:layout_marginBottom="@dimen/margin_10"
+            android:layout_marginLeft="@dimen/margin_20"
+            android:layout_marginStart="@dimen/margin_20"
+            android:layout_marginEnd="@dimen/margin_20"
+            android:layout_marginRight="@dimen/margin_20"
+            android:background="@drawable/redrectagleborder"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_5">
+
+            <ImageView
+                android:layout_width="@dimen/margin_35"
+                android:layout_height="@dimen/margin_35"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/margin_10"
+                android:src="@drawable/timeinouticon" />
+
+            <LinearLayout
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|left"
+                android:layout_weight="1"
+                android:gravity="center|left"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvTimeInOut"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|left"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:gravity="center|left"
+                    android:text="Time In"
+                    android:textColor="@android:color/white"/>
+
+                <TextView
+                    android:id="@+id/tvTimeInOutMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|left"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:visibility="gone"
+                    android:gravity="center|left"
+                    android:text="@string/time_in_out_message"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/font_12" />
+
+                <TextView
+                    android:id="@+id/tvTimeInOutLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|left"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:gravity="center|left"
+                    android:text=""
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/font_12" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/margin_10"
+                android:src="@drawable/time_in_out_right" />
+        </LinearLayout>
+
+
+    </FrameLayout>
+</LinearLayout>

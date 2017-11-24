@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hr.calender.caldroid.ScrollableGridView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/calendar_gridview"
+    android:layout_width="match_parent"
+    android:layout_height="400dp"
+    android:adjustViewBounds="true"
+    android:gravity="center_horizontal"
+    android:horizontalSpacing="1dp"
+    android:numColumns="7"
+    android:padding="1dp"
+    android:listSelector="@android:color/transparent"
+    android:stretchMode="columnWidth"
+    android:verticalSpacing="1dp"
+    style="?styleCaldroidGridView" />

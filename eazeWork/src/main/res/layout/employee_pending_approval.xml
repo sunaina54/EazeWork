@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/white"
+             android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_default"
+            android:layout_marginLeft="@dimen/padding_default"
+            android:layout_marginRight="@dimen/padding_default"
+            android:layout_marginTop="@dimen/padding_large"
+            android:background="@color/accent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tv_leave_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:padding="@dimen/padding_mini"
+                android:text="20"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_32"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_leave_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:padding="@dimen/margin_mini"
+                android:text="@string/pendinfg_for_approval"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_24" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_default"
+            android:layout_marginTop="@dimen/margin_default"
+            android:paddingLeft="@dimen/margin_default"
+            android:text="@string/msg_pending_activity"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/accent"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:id="@+id/ll_pending_item_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_default" >
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+    <include layout="@layout/progress_root_container"/>
+    <ImageView
+        android:id="@+id/tv_apply_leave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end|right"
+        android:layout_margin="@dimen/margin_large"
+        android:padding="@dimen/padding_mini"
+        android:src="@drawable/icon_plus"
+        android:visibility="gone" />
+
+</FrameLayout>

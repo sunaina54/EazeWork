@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="navigationItemsList">
+        <item >@string/title_home</item>
+        <item >@string/msg_attandance</item>
+        <item >@string/msg_leaves</item>
+        <item >@string/title_pay_slip</item>
+        <item >@string/title_profile</item>
+        <item >@string/title_notification</item>
+        <item >@string/msg_change_password</item>
+        <item >@string/title_logout</item>
+    </string-array>
+</resources>

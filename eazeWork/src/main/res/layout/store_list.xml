@@ -1,0 +1,38 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/llLocation"
+        android:layout_width="match_parent"
+        android:layout_marginStart="@dimen/margin_10"
+        android:layout_marginEnd="@dimen/margin_10"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_default"
+        android:background="@drawable/focus_style_gray"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_default">
+        <TextView
+            android:id="@+id/tv_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No location assigned"/>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/list_store"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@drawable/gradient_line"
+        android:dividerHeight="@dimen/tiny_gap_default"
+        android:listSelector="@android:color/transparent"
+        android:paddingLeft="@dimen/padding_default"
+        android:paddingRight="@dimen/padding_default">
+    </ListView>
+
+
+</LinearLayout>

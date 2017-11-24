@@ -1,0 +1,978 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/fragment_bg">
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
+                android:id="@+id/add_expense"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:visibility="visible">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_13"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/cardViewExpense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="20dp"
+                        card_view:cardCornerRadius="2dp"
+                        card_view:cardElevation="2dp"
+                        card_view:cardUseCompatPadding="true">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_5"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:orientation="horizontal"
+                                android:weightSum="1">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.4"
+                                    android:padding="5dp"
+                                    android:text="Voucher No"
+                                    style="@style/textView"
+                                    android:textSize="@dimen/font_14" />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="@dimen/padding_default"
+                                    android:paddingRight="@dimen/padding_default"
+                                    android:text=":"
+                                    android:textColor="@color/black" />
+
+
+                                <TextView
+                                    android:id="@+id/voucherNoTV"
+                                    style="@style/textViewYellow"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.6"
+                                    android:text="Voucher No"
+                                    android:textSize="@dimen/font_14" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/onBehalfLinearLayout"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:visibility="visible"
+                                android:weightSum="1">
+
+                                <TextView
+                                    style="@style/textView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.4"
+                                    android:padding="5dp"
+                                    android:text="Request For"
+                                    android:textSize="@dimen/font_14" />
+
+                                <TextView
+                                    android:id="@+id/textView2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="@dimen/padding_default"
+                                    android:paddingRight="@dimen/padding_default"
+                                    android:text=":"
+                                    android:textColor="@color/black" />
+
+                                <TextView
+                                    android:id="@+id/onBehalfTV"
+                                    style="@style/textViewYellow"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.6"
+                                    android:text="Request For"
+                                    android:textSize="@dimen/font_14" />
+
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:id="@+id/claimLinearLayout"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:orientation="horizontal"
+                                android:weightSum="1">
+
+                                <TextView
+                                    style="@style/textView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.4"
+                                    android:padding="5dp"
+                                    android:text="Claim Type"
+                                    android:textSize="@dimen/font_14" />
+
+                                <TextView
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="@dimen/padding_default"
+                                    android:paddingRight="@dimen/padding_default"
+                                    android:text=":"
+                                    android:textColor="@color/black" />
+
+                                <TextView
+                                    android:id="@+id/claimTypeTV"
+                                    style="@style/textViewYellow"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.6"
+                                    android:text="Select Claim Type"
+                                    android:textSize="@dimen/font_14" />
+
+
+                                <LinearLayout
+                                    style="@style/blueBorderEditText"
+                                    android:layout_width="0dp"
+                                    android:layout_height="30dp"
+                                    android:layout_weight="0.7"
+                                    android:visibility="gone"
+
+                                    >
+
+                                    <Spinner
+                                        android:id="@+id/claimSpinner"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.7"
+                                        android:overScrollMode="never"
+                                        android:scrollbars="none"
+                                        android:spinnerMode="dropdown"></Spinner>
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:orientation="horizontal"
+                                android:weightSum="1">
+
+                                <TextView
+                                    style="@style/textView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.4"
+                                    android:padding="5dp"
+                                    android:text="Currency"
+                                    android:textSize="@dimen/font_14" />
+
+                                <TextView
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="@dimen/padding_default"
+                                    android:paddingRight="@dimen/padding_default"
+                                    android:text=":"
+                                    android:textColor="@color/black" />
+
+                                <TextView
+                                    android:id="@+id/currencyTV"
+                                    style="@style/textViewYellow"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.6"
+                                    android:text="Select Currency"
+                                    android:textSize="@dimen/font_14" />
+
+
+                                <LinearLayout
+                                    style="@style/blueBorderEditText"
+                                    android:layout_width="0dp"
+                                    android:layout_height="30dp"
+                                    android:layout_weight="0.7"
+                                    android:visibility="gone">
+
+                                    <Spinner
+                                        android:id="@+id/currencySpinner"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.7"
+                                        android:overScrollMode="never"
+                                        android:scrollbars="none"
+                                        android:spinnerMode="dropdown"></Spinner>
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/projectLinearLayout"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:orientation="horizontal"
+                                android:visibility="gone"
+                                android:weightSum="1">
+
+                                <TextView
+                                    style="@style/textView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.4"
+                                    android:padding="5dp"
+                                    android:text="Project"
+                                    android:textSize="@dimen/font_14" />
+
+                                <TextView
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="@dimen/padding_default"
+                                    android:paddingRight="@dimen/padding_default"
+                                    android:text=":"
+                                    android:textColor="@color/black" />
+
+                                <TextView
+                                    android:id="@+id/projectTV"
+                                    style="@style/textViewYellow"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.6"
+
+                                    android:background="@color/transparent"
+                                    android:text="Select Project"
+                                    android:textSize="@dimen/font_14" />
+
+
+                                <LinearLayout
+                                    style="@style/blueBorderEditText"
+                                    android:layout_width="0dp"
+                                    android:layout_height="30dp"
+                                    android:layout_weight="0.7"
+                                    android:visibility="gone">
+
+                                    <Spinner
+                                        android:id="@+id/projectSpinner"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="0.7"
+                                        android:overScrollMode="never"
+                                        android:scrollbars="none"
+                                        android:spinnerMode="dropdown"></Spinner>
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/approverLl"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:orientation="horizontal"
+                                android:weightSum="1">
+
+                                <TextView
+                                    style="@style/textView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.4"
+                                    android:padding="5dp"
+
+                                    android:text="Approver"
+                                    android:textSize="@dimen/font_14" />
+
+                                <TextView
+
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="@dimen/padding_default"
+                                    android:paddingRight="@dimen/padding_default"
+                                    android:text=":"
+                                    android:textColor="@color/black" />
+
+                                <TextView
+                                    android:id="@+id/approverTV"
+                                    style="@style/textViewYellow"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.6"
+                                    android:hint="Approver"
+                                    android:textSize="@dimen/font_14"
+
+                                    />
+
+
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <TextView
+                                    style="@style/textView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="5dp"
+                                    android:text="Description"
+                                    android:textSize="@dimen/font_14" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:orientation="horizontal"
+                                android:weightSum="1">
+
+
+
+                                <EditText
+                                    android:id="@+id/detailsET"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/margin_70"
+                                    android:layout_marginBottom="@dimen/margin_7"
+                                    android:layout_weight="0.7"
+                                    android:background="@drawable/focus_style_gray"
+                                    android:ems="10"
+                                    android:padding="@dimen/margin_default"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/font_14" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <include layout="@layout/expense_line_item_layout"></include>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/advance_adjustment_Ll">
+
+                        <include layout="@layout/advance_adjustment_layout"></include>
+                    </LinearLayout>
+
+                    <!--    <android.support.v7.widget.CardView
+                            android:id="@+id/card_view1"
+                            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            card_view:cardBackgroundColor="@color/white"
+                            card_view:cardCornerRadius="2dp"
+                            card_view:cardElevation="2dp"
+                            card_view:cardUseCompatPadding="true"
+                            android:paddingBottom="20dp">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/caldroid_halfday"
+                            android:orientation="horizontal"
+                            android:weightSum="1">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="0.7"
+                                android:paddingLeft="5dp"
+                                android:paddingTop="10dp"
+                                android:text="Expense Details"
+                                android:textColor="@color/black"
+                                android:textSize="14sp" />
+
+                            <ImageView
+                                android:id="@+id/add_expenseIV"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_weight="0.3"
+                                android:padding="@dimen/margin_5"
+                                android:src="@drawable/plus"
+                                android:visibility="gone" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/blueBorderEditText"
+                            android:layout_marginTop="50dp"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginRight="5dp"
+                            android:layout_marginLeft="5dp"
+                            android:visibility="gone"
+                            android:id="@+id/expenseErrorLl">
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:text="No Data"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/font_14"
+                                android:visibility="visible"/>
+                        </LinearLayout>
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/expenseDetailsRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="50dp"
+                            android:layout_marginBottom="@dimen/margin_10"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp"
+                            android:divider="@drawable/gradient_line">
+
+                        </android.support.v7.widget.RecyclerView>
+                        </android.support.v7.widget.CardView>-->
+
+                    <!--  <android.support.v7.widget.CardView
+                          xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          card_view:cardBackgroundColor="@color/white"
+                          card_view:cardCornerRadius="2dp"
+                          card_view:cardElevation="2dp"
+                          card_view:cardUseCompatPadding="true"
+                          android:paddingBottom="20dp">
+                      <LinearLayout
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:background="@color/caldroid_halfday"
+                          android:orientation="horizontal"
+                          android:weightSum="1"
+                          android:visibility="visible"
+                          >
+
+                          <TextView
+                              android:layout_width="0dp"
+                              android:layout_height="40dp"
+                              android:layout_weight="0.7"
+                              android:paddingLeft="5dp"
+                              android:paddingTop="10dp"
+                              android:text="Advances Adjustments"
+                              android:textColor="@color/black"
+                              android:textSize="14sp" />
+
+                      </LinearLayout>
+
+                          <LinearLayout
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content"
+                              style="@style/blueBorderEditText"
+                              android:orientation="vertical"
+                              android:id="@+id/advanceErrorLinearLayout"
+                              android:visibility="gone"
+                              android:layout_marginTop="50dp">
+                              <TextView
+                                  android:layout_width="fill_parent"
+                                  android:layout_height="wrap_content"
+                                  android:gravity="center"
+                                  android:padding="5dp"
+                                  android:text="No Data"
+                                  android:textColor="@color/black"
+                                  android:textSize="@dimen/font_14"
+                                  />
+                          </LinearLayout>
+
+                      <LinearLayout
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:id="@+id/requestVoucherLl"
+                          android:orientation="horizontal"
+                          android:layout_marginTop="50dp"
+                          android:visibility="visible">
+
+                          <FrameLayout
+                              android:layout_width="match_parent"
+                              android:layout_height="wrap_content">
+
+                              <ImageView
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:paddingStart="@dimen/margin_10"
+                                  android:paddingEnd="@dimen/margin_10"
+                                  android:layout_gravity="center"
+                                  android:src="@drawable/choicelist"/>
+
+                              <TextView
+                                  android:id="@+id/requestTV"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:layout_gravity="center"
+                                  android:background="@color/transparent"
+                                  android:paddingStart="@dimen/margin_20"
+                                  android:paddingEnd="@dimen/margin_20"
+                                  android:paddingBottom="@dimen/margin_10"
+                                  android:paddingTop="@dimen/margin_10"
+                                  android:text="Select Request"
+                                  android:textColor="@color/black"/>
+
+                          </FrameLayout>
+
+                      </LinearLayout>
+                      <android.support.v7.widget.RecyclerView
+                          android:id="@+id/advanceRV"
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="100dp"
+                          android:layout_marginBottom="@dimen/margin_10"
+                          android:layout_marginLeft="3dp"
+                          android:layout_marginRight="3dp"
+                          android:divider="@drawable/gradient_line"
+                          android:visibility="visible">
+
+                      </android.support.v7.widget.RecyclerView>
+                      </android.support.v7.widget.CardView>-->
+                    <!--   <android.support.v7.widget.CardView
+                           xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:paddingBottom="20dp"
+                           card_view:cardCornerRadius="2dp"
+                           card_view:cardElevation="2dp"
+                           card_view:cardUseCompatPadding="true">
+
+                           <LinearLayout
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:layout_margin="@dimen/margin_5"
+                               android:orientation="vertical">
+
+                               <LinearLayout
+                                   android:layout_width="fill_parent"
+                                   android:layout_height="wrap_content"
+                                   android:layout_marginTop="3dp"
+                                   android:orientation="horizontal"
+                                   android:weightSum="1">
+
+                                   <TextView
+                                       android:layout_width="0dp"
+                                       android:layout_height="wrap_content"
+                                       android:layout_weight="0.35"
+                                       android:padding="5dp"
+                                       android:text="Total Expense Claimed"
+                                       android:textColor="@color/black"
+                                       android:textSize="@dimen/font_14" />
+
+
+                                   <TextView
+                                       android:id="@+id/totalExpenseClaimedTV"
+                                       android:layout_width="0dp"
+                                       android:layout_height="wrap_content"
+                                       android:layout_gravity="center"
+                                       android:layout_weight="0.65"
+                                       android:hint="0.0"
+                                       android:paddingBottom="@dimen/margin_10"
+                                       android:paddingEnd="@dimen/margin_20"
+                                       android:paddingStart="@dimen/margin_20"
+                                       android:paddingTop="@dimen/margin_10"
+                                       android:textColor="@color/black"
+                                       android:textSize="@dimen/font_14"
+
+                                       />
+
+
+                               </LinearLayout>
+
+                               <LinearLayout
+                                   android:layout_width="fill_parent"
+                                   android:layout_height="wrap_content"
+                                   android:layout_marginTop="3dp"
+                                   android:orientation="horizontal"
+                                   android:weightSum="1">
+
+                                   <TextView
+                                       android:layout_width="0dp"
+                                       android:layout_height="wrap_content"
+                                       android:layout_weight="0.35"
+                                       android:padding="5dp"
+                                       android:text="Net Amount To Be Paid"
+                                       android:textColor="@color/black"
+                                       android:textSize="@dimen/font_14" />
+
+
+                                   <TextView
+                                       android:id="@+id/netAmountTV"
+                                       android:layout_width="0dp"
+                                       android:layout_height="wrap_content"
+                                       android:layout_gravity="center"
+                                       android:layout_weight="0.65"
+                                       android:hint="0.0"
+                                       android:paddingBottom="@dimen/margin_10"
+                                       android:paddingEnd="@dimen/margin_20"
+                                       android:paddingStart="@dimen/margin_20"
+                                       android:paddingTop="@dimen/margin_10"
+                                       android:textColor="@color/black"
+                                       android:textSize="@dimen/font_14" />
+
+
+                               </LinearLayout>
+
+                               <LinearLayout
+                                   android:layout_width="match_parent"
+                                   android:layout_height="wrap_content"
+                                   android:layout_marginTop="4dp"
+                                   android:orientation="horizontal"
+                                   android:weightSum="1">
+
+                                   <TextView
+                                       android:layout_width="0dp"
+                                       android:layout_height="wrap_content"
+                                       android:layout_weight="0.35"
+                                       android:padding="5dp"
+                                       android:text="Remarks"
+                                       android:textColor="@color/black"
+                                       android:textSize="@dimen/font_14" />
+
+                                   <EditText
+                                       android:id="@+id/remarksET"
+                                       android:layout_width="0dp"
+                                       android:layout_height="75dp"
+                                       android:layout_marginBottom="@dimen/margin_7"
+                                       android:layout_weight="0.65"
+                                       android:background="@drawable/focus_style_gray"
+                                       android:ems="10"
+                                       android:padding="@dimen/margin_default"
+                                       android:textColor="@color/black"
+                                       android:textSize="@dimen/font_14" />
+
+                               </LinearLayout>
+                           </LinearLayout>
+                       </android.support.v7.widget.CardView>-->
+                    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="20dp"
+                        card_view:cardCornerRadius="2dp"
+                        card_view:cardElevation="2dp"
+                        card_view:cardUseCompatPadding="true">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/margin_5"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:orientation="horizontal"
+                                android:weightSum="1">
+
+                                <TextView
+                                    style="@style/textView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.53"
+                                    android:padding="5dp"
+                                    android:text="Total Expense Claimed"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/font_14" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="@dimen/padding_default"
+                                    android:paddingRight="@dimen/padding_default"
+                                    android:text=":"
+                                    android:textColor="@color/black" />
+
+
+                                <TextView
+                                    android:id="@+id/totalExpenseClaimedTV"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.4"
+
+                                    android:hint="0.00"
+
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/font_14" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:orientation="horizontal"
+                                android:weightSum="1">
+
+                                <TextView
+                                    style="@style/textView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.53"
+                                    android:padding="5dp"
+                                    android:text="Net Amount To Be Paid"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/font_14" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingLeft="@dimen/padding_default"
+                                    android:paddingRight="@dimen/padding_default"
+                                    android:text=":"
+                                    android:textColor="@color/black" />
+
+                                <TextView
+                                    android:id="@+id/netAmountTV"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="0.4"
+                                    android:hint="0.0"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/font_14" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:orientation="vertical"
+                                android:weightSum="1">
+
+                                <TextView
+                                    style="@style/textView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="5dp"
+                                    android:text="Remarks"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/font_14" />
+                                <EditText
+                                    android:id="@+id/remarksET"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/margin_70"
+                                    android:layout_marginBottom="@dimen/margin_7"
+                                    android:background="@drawable/focus_style_gray"
+                                    android:ems="10"
+                                    android:padding="@dimen/margin_default"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/font_14" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+
+                    <!--  <LinearLayout
+                          android:layout_width="match_parent"
+                          android:layout_height="wrap_content">
+                          <include layout="@layout/expense_remarks_layout"></include>
+                      </LinearLayout>-->
+                    <!--   <LinearLayout
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:layout_margin="@dimen/margin_5"
+                           android:background="@color/white"
+                           android:orientation="vertical">
+
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:padding="@dimen/margin_10"
+                               android:text="Remarks"
+                               android:textColor="@color/black" />
+
+                           <LinearLayout
+                               android:id="@+id/remarksLinearLayout"
+                               style="@style/blueBorderEditText"
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:layout_margin="@dimen/margin_10"
+                               android:visibility="gone">
+
+                               <TextView
+                                   android:layout_width="fill_parent"
+                                   android:layout_height="wrap_content"
+                                   android:gravity="center"
+                                   android:padding="5dp"
+                                   android:text="No data"
+                                   android:textColor="@color/black"
+                                   android:textSize="@dimen/font_14" />
+                           </LinearLayout>
+
+                           <LinearLayout
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:layout_margin="@dimen/margin_10">
+
+                               <android.support.v7.widget.RecyclerView
+                                   android:id="@+id/remarksRV"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="wrap_content"
+                                   android:visibility="visible"></android.support.v7.widget.RecyclerView>
+                           </LinearLayout>
+                       </LinearLayout>-->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <include layout="@layout/remarks_layout">
+
+                        </include>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <include layout="@layout/payment_layout"></include>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <include layout="@layout/upload_document_layout">
+
+                        </include>
+                    </LinearLayout>
+                    <!--
+                                    <android.support.v7.widget.CardView
+                                        android:id="@+id/card_view"
+                                        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        card_view:cardBackgroundColor="@color/white"
+
+                                        card_view:cardCornerRadius="2dp"
+                                        card_view:cardElevation="2dp"
+                                        card_view:cardUseCompatPadding="true"
+                                        android:paddingBottom="20dp">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:background="@color/caldroid_halfday"
+                                        android:orientation="horizontal"
+                                        android:weightSum="1">
+
+                                        <TextView
+                                            android:layout_width="0dp"
+                                            android:layout_height="40dp"
+                                            android:layout_weight="0.7"
+                                            android:paddingLeft="5dp"
+                                            android:paddingTop="10dp"
+                                            android:text="Supportings"
+                                            android:textColor="@color/black"
+                                            android:textSize="16sp" />
+
+                                        <ImageView
+                                            android:id="@+id/plus_create_newIV"
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignParentRight="true"
+                                            android:layout_centerVertical="true"
+                                            android:layout_weight="0.3"
+                                            android:padding="@dimen/margin_5"
+                                            android:src="@drawable/plus"
+                                            android:visibility="visible" />
+                                    </LinearLayout>
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        style="@style/blueBorderEditText"
+                                        android:layout_marginTop="55dp"
+                                        android:layout_marginBottom="10dp"
+                                        android:visibility="gone"
+                                        android:layout_marginRight="5dp"
+                                        android:layout_marginLeft="5dp"
+                                        android:id="@+id/errorLinearLayout">
+                                        <TextView
+                                            android:layout_width="fill_parent"
+                                            android:layout_height="wrap_content"
+                                            android:gravity="center"
+                                            android:padding="10dp"
+                                            android:text="No supporting documents"
+                                            android:textColor="@color/black"
+                                            android:textSize="@dimen/font_14"
+                                            android:visibility="visible"/>
+                                    </LinearLayout>
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical">
+
+                                        <android.support.v7.widget.RecyclerView
+                                            android:id="@+id/documentRV"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="50dp"
+                                            android:layout_marginBottom="@dimen/margin_10"
+                                            android:layout_marginLeft="3dp"
+                                            android:layout_marginRight="3dp"
+                                            android:visibility="gone"
+                                            >
+                                        </android.support.v7.widget.RecyclerView>
+                                    </LinearLayout>
+                                    </android.support.v7.widget.CardView>-->
+
+                    <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_centerHorizontal="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                            <include layout="@layout/action_button_layout"></include>
+                        </LinearLayout>
+
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+            </FrameLayout>
+        </ScrollView>
+    </RelativeLayout>
+</RelativeLayout>

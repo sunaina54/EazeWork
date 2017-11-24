@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:background="@color/accent"
+        android:id="@+id/leave_header"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tv_leave_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="@dimen/padding_mini"
+            android:text="20"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_32"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tv_leave_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="@dimen/margin_mini"
+            android:text="Casual Leaves"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_24"/>
+
+        <TextView
+            android:id="@+id/tv_apply_current_leave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primary_dark"
+            android:gravity="center"
+            android:padding="@dimen/margin_mini"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_20"/>
+
+    </LinearLayout>
+</LinearLayout>

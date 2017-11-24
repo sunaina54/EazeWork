@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <FrameLayout
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <include
+                android:id="@+id/ll_main_sub_layout_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_large"
+                layout="@layout/profile_detail_sub_layout" />
+
+            <ImageView
+                android:id="@+id/img_material_icon"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="bottom|right"
+                android:background="@drawable/abc_switch_thumb_material"
+                android:scaleType="fitXY"
+                android:src="@drawable/view_profile" />
+        </FrameLayout>
+
+        <ListView
+            android:id="@+id/list_profile_items"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@drawable/gradient_line"
+            android:dividerHeight="@dimen/tiny_gap_default"
+            android:listSelector="@android:color/transparent"
+            android:paddingLeft="@dimen/padding_default"
+            android:paddingRight="@dimen/padding_default" >
+        </ListView>
+    </LinearLayout>

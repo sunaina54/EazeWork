@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_5"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_13">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="0.35"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date"
+                    style="@style/textView"
+                    android:textSize="@dimen/font_12" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:text=":"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/dateTV"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.65"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    style="@style/textViewYellow"
+                    android:textSize="@dimen/font_12" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mode"
+                    android:layout_weight="0.35"
+                    style="@style/textView"
+                    android:textSize="@dimen/font_12" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:text=":"
+                    android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/modeTV"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.65"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    style="@style/textViewYellow"
+                    android:textSize="@dimen/font_12" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/details"
+                    android:layout_weight="0.35"
+                    style="@style/textView"
+                    android:textSize="@dimen/font_12" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:text=":"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/detailsTV"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.65"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    style="@style/textViewYellow"
+                    android:textSize="@dimen/font_12" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/amount"
+                    android:layout_weight="0.35"
+                    style="@style/textView"
+                    android:textSize="@dimen/font_12" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:text=":"
+                    android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/amountTV"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.65"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    style="@style/textViewYellow"
+                    android:textSize="@dimen/font_12" />
+            </LinearLayout>
+            <TextView
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/gradient_line"
+                />
+        </LinearLayout>
+
+
+
+
+</LinearLayout>
+

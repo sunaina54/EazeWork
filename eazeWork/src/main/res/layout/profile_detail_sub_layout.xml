@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/profile_header"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/primary"
+        android:layout_height="wrap_content">
+        <hr.eazework.com.ui.util.custom.RoundedImageView
+
+            android:id="@+id/img_user_img"
+            android:layout_width="@dimen/margin_82"
+            android:layout_height="@dimen/margin_82"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="@dimen/margin_default"
+            android:background="@drawable/profile_image"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/tv_profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:text=""
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/tv_department"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/msg_department"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/tv_role"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/msg_role"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/tv_employee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/msg_employee_id"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

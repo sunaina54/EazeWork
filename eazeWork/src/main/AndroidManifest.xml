@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="hr.eazework.com"
+    android:versionCode="21"
+    android:versionName="1.1.0">
+
+    <uses-sdk
+        android:minSdkVersion="17"
+        android:targetSdkVersion="25" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
+    <application
+        android:name=".application.MyApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:theme="@style/AppActivityTheme"
+        tools:replace="android:icon,android:theme">
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".geofence.GeofenceBroadcaster"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="hr.eazework.com.ACTION_GEOFENCE_RECEIVER" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".geofence.GeolocationService"
+            android:icon="@drawable/ic_launcher"
+            android:label="@string/app_name" />
+
+        <receiver android:name=".ui.broadcasters.NetworkBroadcaster">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".ui.services.UploadInOutLocationService" />
+
+        <activity
+            android:name=".ui.fragment.CameraActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".BaseActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SearchOnbehalfActivity"
+            android:screenOrientation="portrait" />
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDVVftgEfOLTlPQszTt1roUYA92WHCQJVg" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="46027071bb12057a8883cfe7ac7e9cb7e3139dec" />
+
+        <activity android:name=".AddExpenseActivity" />
+        <activity android:name=".ViewDocumentActivity"></activity>
+    </application>
+
+</manifest>

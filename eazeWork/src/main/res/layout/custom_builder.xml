@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00000000"
+    android:focusableInTouchMode="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/margin_10">
+
+    <LinearLayout
+        android:id="@+id/llView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/grey_commoborder"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_5">
+
+        <LinearLayout
+            android:id="@+id/custom_dialog_header"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_50"
+            android:background="@color/accent"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_10"
+            >
+
+            <TextView
+                android:id="@+id/tvTitleBuider"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                android:gravity="center_vertical|left"
+                android:padding="@dimen/margin_5"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/text_18"
+                />
+            <RelativeLayout
+                android:id="@+id/llPopupClose"
+                android:layout_width="0dip"
+                android:layout_weight="0.2"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                >
+                <ImageView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                     />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/margin_1"
+            android:background="@android:color/white" />
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/llSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/margin_5"
+            android:padding="@dimen/margin_5">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/ivSearchicon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <EditText
+                    android:visibility="gone"
+                    android:id="@+id/etSearch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:hint="Search"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_14" />
+
+                <ImageView
+                    android:id="@+id/ivSearchCross"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/margin_1"
+                android:layout_marginTop="@dimen/margin_5"
+                android:paddingLeft="@dimen/margin_5"
+                android:paddingRight="@dimen/margin_5"/>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/lvSelectCountry"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_1"
+            android:layout_marginRight="@dimen/margin_1"
+            android:layout_marginTop="@dimen/margin_5"
+            android:layout_marginBottom="@dimen/margin_5"
+            android:layout_weight="1"
+            android:cacheColorHint="@null"
+            android:scrollbars="none"
+            android:visibility="gone"></ListView>
+
+
+        <TextView
+            android:id="@+id/tvNoSearchFound"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_margin="@dimen/margin_10"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="No_matching_record_found"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>
