@@ -78,7 +78,6 @@ public class AdvanceRequestSummaryFragment extends BaseFragment {
         filterAdvanceList = new ArrayList<>();
         summaryRecyclerView = (RecyclerView) view.findViewById(R.id.summaryRecyclerView);
         searchET = (EditText) view.findViewById(R.id.searchET);
-        //searchET.setVisibility(View.GONE);
         searchParentLayout = (LinearLayout) view.findViewById(R.id.searchParentLayout);
         searchParentLayout.setVisibility(View.GONE);
         errorLinearLayout = (LinearLayout) view.findViewById(R.id.errorLinearLayout);
@@ -340,8 +339,6 @@ public class AdvanceRequestSummaryFragment extends BaseFragment {
             case CommunicationConstant.API_GET_ADVANCE_REQUEST_SUMMARY:
                 String str = response.getResponseData();
                 Log.d("TAG", "Advance Response : " + str);
-               /* searchIV.setVisibility(View.GONE);
-                filterIV.setVisibility(View.GONE);*/
                 summaryRecyclerView.setVisibility(View.GONE);
                 errorLinearLayout.setVisibility(View.VISIBLE);
                 searchParentLayout.setVisibility(View.GONE);

@@ -292,7 +292,6 @@ public class CalenderUtils {
                 Calendar calendar = Calendar.getInstance();
 
                 calendar.set(year, monthOfYear, dayOfMonth);
-                //textView.setText(dateFormatter.format(newDate.getTime()));
 
                 dayTV.setText(String.format("%1$tA", calendar));
                 String formatedData = String.format("%1$td/%1$tm/%1$tY", calendar);
@@ -315,8 +314,6 @@ public class CalenderUtils {
                 Calendar calendar = Calendar.getInstance();
 
                 calendar.set(year, monthOfYear, dayOfMonth);
-                //textView.setText(dateFormatter.format(newDate.getTime()));
-              //  String monthname=(String)android.text.format.DateFormat.format("MMMM", new Date());
 
                 dayTV.setText(String.format(Locale.US,"%tB",calendar));
 

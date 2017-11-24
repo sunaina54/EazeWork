@@ -47,7 +47,7 @@ public class CameraFragment extends Fragment implements Camera.PictureCallback{
     private static final String TAG = CameraFragment.class.getName();
     private Camera camera;
     private CameraPreview previewClass;
- //   private Camera.PictureCallback pictureCallback;
+
     private ImageButton imageButton;
     private static final int MEDIA_TYPE_IMAGE_FRONT = 1;
     private static final int MEDIA_TYPE_IMAGE_BACK = 2;

@@ -26,7 +26,7 @@ public class ChangePasswordFragment extends BaseFragment {
         this.setShowPlusMenu(true);
 		rootView=inflater.inflate(R.layout.change_password_dialog_root_container, container, false);
 		rootView.findViewById(R.id.btn_change_pass).setOnClickListener(this);
-		return rootView;//super.onCreateView(inflater, container, savedInstanceState);
+		return rootView;
 	}
 	private boolean validate() {
 		boolean validate = true;

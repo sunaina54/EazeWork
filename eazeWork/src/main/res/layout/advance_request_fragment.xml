@@ -246,62 +246,6 @@
                         <include layout="@layout/upload_document_layout"></include>
                     </LinearLayout>
 
-                    <!-- <LinearLayout
-                         android:layout_width="match_parent"
-                         android:layout_height="wrap_content"
-                         android:background="@color/caldroid_halfday"
-                         android:orientation="horizontal"
-                         android:layout_marginTop="5dp"
-                         android:weightSum="1">
-
-                         <TextView
-                             android:layout_width="0dp"
-                             android:layout_height="40dp"
-                             android:layout_weight="0.7"
-                             android:paddingLeft="5dp"
-                             android:paddingTop="10dp"
-                             android:text="Supportings"
-                             android:textColor="@color/black"
-                             android:textSize="@dimen/font_14" />
-
-                         <ImageView
-                             android:id="@+id/plus_create_newIV"
-                             android:layout_width="0dp"
-                             android:layout_height="wrap_content"
-                             android:layout_alignParentRight="true"
-                             android:layout_centerVertical="true"
-                             android:layout_weight="0.3"
-                             android:padding="@dimen/margin_5"
-                             android:src="@drawable/plus"
-                             android:visibility="visible" />
-                     </LinearLayout>
-
-                     <LinearLayout
-                         android:layout_width="match_parent"
-                         android:layout_height="wrap_content"
-                         style="@style/blueBorderEditText"
-                         android:layout_marginTop="8dp"
-                         android:visibility="gone"
-                         android:id="@+id/errorTV">
-                         <TextView
-                             android:layout_width="fill_parent"
-                             android:layout_height="wrap_content"
-                             android:gravity="center"
-                             android:padding="10dp"
-                             android:text="No supporting documents"
-                             android:textColor="@color/black"
-                             android:textSize="@dimen/font_14"
-                             android:visibility="visible"/>
-                     </LinearLayout>
-
-                     <android.support.v7.widget.RecyclerView
-                         android:id="@+id/expenseRecyclerView"
-                         android:layout_width="match_parent"
-                         android:layout_height="wrap_content"
-                         android:layout_marginTop="10dp"
-                         android:visibility="gone"
-                       >
-                     </android.support.v7.widget.RecyclerView>-->
 
                 </LinearLayout>
             </FrameLayout>

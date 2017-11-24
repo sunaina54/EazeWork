@@ -76,25 +76,6 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
     public void onCreate(Bundle savedInstanceState) {
         this.setShowPlusMenu(false);
         this.setShowEditTeamButtons(true);
-       /* LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
-        if (loginUserModel != null && loginUserModel.getUserModel() != null) {
-            MainActivity.isAnimationLoaded = false;
-            CommunicationManager.getInstance().sendPostRequest(this,
-                    AppRequestJSONString.getEmpLeavesData(loginUserModel.getUserModel().getEmpId()), CommunicationConstant.API_EMP_LEAVES,
-                    true);
-
-            CommunicationManager.getInstance().sendPostRequest(this,
-                    AppRequestJSONString.getEmpLeaveBalancesData(loginUserModel.getUserModel().getEmpId()), CommunicationConstant.API_EMP_RH_LEAVES,
-                    false);
-
-            CommunicationManager.getInstance().sendPostRequest(
-                    this,
-                    AppRequestJSONString.getEmpLeaveBalancesData(loginUserModel.getUserModel().getEmpId()),
-                    CommunicationConstant.API_GET_EMP_LEAVE_BALANCES, false);
-
-
-        }*/
-
         super.onCreate(savedInstanceState);
     }
 
@@ -226,18 +207,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                     employItem=item;
                 }
                 leaveTypeModel=null;
-               /* EmpLeaveModel leaveModel = ModelManager.getInstance()
-                        .getEmpLeaveModel() != null ? ModelManager
-                        .getInstance().getEmpLeaveModel()
-                        .getEmpLeaveById(leaveTypeModel.getLeaveId())
-                        : null;
-               */
-               /* ModelManager.getInstance().setLeaveTypeModel(null);
-                if (ModelManager.getInstance().getLeaveTypeModel() == null) {*/
                 showHideProgressView(true);
-               /* } else {
-                    showHideProgressView(false);
-                }*/
                 setupLeave();
 
                 updateLeaveAvailablity(null);
@@ -320,7 +290,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
             isSubmitClicked = true;
             return;
         }
-        // if (getTotalDay(startDate, toDate) <= availableLeaves) {
+
         showHideProgressView(true);
         String startDate = String.format("%1$td/%1$tm/%1$tY", this.startDate);
         String endDate = String.format("%1$td/%1$tm/%1$tY", this.toDate);
@@ -440,11 +410,11 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
             rootView.findViewById(R.id.ll_consume_leaves).setVisibility(View.GONE);
             ((TextView) rootView.findViewById(R.id.tv_from_day))
                     .setText(defaultFromDateLabel);
-            // String formatedData = String.format("%1$td/%1$tm/%1$tY", calendar);
+
             ((TextView) rootView.findViewById(R.id.tv_from_date)).setText(value);
             ((TextView) rootView.findViewById(R.id.tv_to_day))
                     .setText(defaultToDateLable);
-            // String formatedData = String.format("%1$td/%1$tm/%1$tY", calendar);
+
             ((TextView) rootView.findViewById(R.id.tv_to_date)).setText(value);
             ((TextView) rootView.findViewById(R.id.tv_select_leave_type)).setText(defaultLeaveLable);
             rootView.findViewById(R.id.rg_leave_time_type).setVisibility(View.GONE);
@@ -602,12 +572,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         String empCode=String.valueOf(employItem.getEmpID());
                         jsonObject = (new JSONObject(response.getResponseData())).optJSONObject("GetLeaveReqTotalDaysResult");
                         double d = jsonObject.optDouble("TotalDays", 0);
-                        //      if (d > 0) {
                         showHideProgressView(true);
-                           /* LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
-                            if(loginUserModel != null && loginUserModel.getUserModel() != null) {*/
-                                /*UserModel userModel = loginUserModel.getUserModel();
-                                String empId = userModel.getEmpId();*/
 
                         String fromDateFormatted = String.format("%1$td/%1$tm/%1$tY", startDate);
                         String toDateFormatted = String.format("%1$td/%1$tm/%1$tY", toDate);
@@ -623,13 +588,6 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                                         remark),
                                 CommunicationConstant.API_SAVE_LEAVE_REQUEST,
                                 true);
-
-                        //}
-                        /*} else {
-                            isSubmitClicked=true;
-                            String messageString = jsonObject.optString("ErrorMessage", "");
-                            new AlertCustomDialog(getActivity(), messageString.equalsIgnoreCase("") ? "Please select some valid dates." : messageString);
-                        }*/
                     } catch (JSONException e) {
                         Log.e(TAG, e.getMessage(), e);
                         Crashlytics.logException(e);
@@ -665,7 +623,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                     }
 
                     break;
-/////
+
 
                 case CommunicationConstant.API_GET_CORPEMP_PARAM:
                     try {
@@ -715,7 +673,6 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
 
                 break;
             case R.id.btn_submit:
-                // if (availableLeaves > 0) {
                 String empCode=String.valueOf(employItem.getEmpID());
                 LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
                 EditText etRemark = (EditText) rootView.findViewById(R.id.et_remark);
@@ -790,13 +747,6 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                                 CommunicationConstant.API_LEAVE_REQ_TOTAL_DAY, true);
                     }
                 }
-            /*
-             * } else { Toast.makeText( getActivity(), "" + availableLeaves +
-			 * " Days leave available only.", Toast.LENGTH_LONG).show(); }
-			 *
-			 * *} else { Toast.makeText(getActivity(), "No leave available.",
-			 * Toast.LENGTH_LONG).show(); }
-			 */
 
                 break;
             case R.id.tv_select_rest_leaves:
@@ -850,8 +800,6 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
 
                 break;
             case R.id.ll_from_date:
-
-                // Setup caldroid to use as dialog
                 dialogCaldroidFragment = new CaldroidFragment();
                 dialogCaldroidFragment.setCaldroidListener(new CaldroidListener() {
                     @Override
@@ -859,7 +807,6 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         Calendar calendarCurrent = Calendar.getInstance();
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTime(date);
-                        // if (calendar.compareTo(calendarCurrent) >= 0) {
                         CreateNewLeaveFragment.this.startDate = calendar;
                         ((TextView) rootView.findViewById(R.id.tv_from_day))
                                 .setText(String.format("%1$tA", calendar));
@@ -920,11 +867,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         if(isCompensatory) {
                             updateCompasatory(isCompensatory);
                         }
-					/*
-					 * } else { Toast.makeText(getActivity(),
-					 * "Please select valid date.", Toast.LENGTH_LONG) .show();
-					 * }
-					 */
+
                     }
                 });
                 // If activity is recovered from rotation

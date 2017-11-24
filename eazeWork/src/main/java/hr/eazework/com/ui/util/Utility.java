@@ -108,18 +108,6 @@ public class Utility {
     public static String sizeMsg ="File size should not be greater than "+maxLimit +" MB";
 
     public static int calcBase64SizeInKBytes(String base64String) {
-       /* Double result = -1.0;
-        if(base64String!=null) {
-            Integer padding = 0;
-            if(base64String.endsWith("==")) {
-                padding = 2;
-            }
-            else {
-                if (base64String.endsWith("=")) padding = 1;
-            }
-            result = (Math.ceil(base64String.length() / 4) * 3 ) - padding;
-        }
-        return result / 1000;*/
        int result = (base64String.length()*3/4)/(1048576);
        return result;
     }
@@ -184,13 +172,11 @@ public class Utility {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static Animator[] getAnimators(View view, boolean isIn) {
         if (isIn) {
-            return new Animator[]{ /*ObjectAnimator.ofFloat(view,
-                    "translationY", Utilities.deviceHeight - view.getY(), 0),*/
+            return new Animator[]{
                     ObjectAnimator.ofFloat(view, "alpha", 0f, 1f),
                     ObjectAnimator.ofFloat(view, "scaleX", 0, 1),
                     ObjectAnimator.ofFloat(view, "scaleY", 0, 1),
-             /*ObjectAnimator.ofFloat(view, "translationX",
-             view.getRootView().getWidth(), 0)*/
+
             };
         } else {
             return new Animator[]{ /*ObjectAnimator.ofFloat(
@@ -200,8 +186,6 @@ public class Utility {
                     ObjectAnimator.ofFloat(view, "alpha", 1f, 0f),
                     ObjectAnimator.ofFloat(view, "scaleX", 1, 0),
                     ObjectAnimator.ofFloat(view, "scaleY", 1, 0),
-			/* ObjectAnimator.ofFloat(view, "translationX",
-			 0, -view.getRootView().getWidth())*/
             };
         }
     }
@@ -495,7 +479,6 @@ public class Utility {
 
                     NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.notify(455, mBuilder.build());
-                 //   activity.unregisterReceiver(onComplete);
 
                 }
 
@@ -569,9 +552,6 @@ public class Utility {
 
     }
 
-    public static void setLineItemLabel(LinearLayout layout,LineItemsModel lineItem,ArrayList<LineItemColumnsItem> lineItemColumns){
-
-    }
     public static void refreshLineItem(TextView currency,ArrayList<LineItemsModel> list){
         boolean isAllDeleted=true;
         for(LineItemsModel itemsModel : list){
@@ -592,7 +572,6 @@ public class Utility {
     }
 
     public static ArrayList<ExpenseItemListModel> prepareFilterList(List<ExpenseItemListModel> list){
-            // Set set1 = new LinkedHashSet(list);
             Set set = new TreeSet(new Comparator() {
                 @Override
                 public int compare(Object o1, Object o2) {

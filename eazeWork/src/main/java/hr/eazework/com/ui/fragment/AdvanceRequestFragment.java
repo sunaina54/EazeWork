@@ -86,7 +86,6 @@ public class AdvanceRequestFragment extends BaseFragment {
     private ImageView plus_create_newIV;
     private RecyclerView expenseRecyclerView;
     private static int UPLOAD_DOC_REQUEST = 1;
-    //private ExpenseAdapter expenseAdapter;
     private Bitmap bitmap = null;
     private String purpose = "";
     private AdvanceRequestResponseModel advanceRequestResponseModel;
@@ -105,7 +104,6 @@ public class AdvanceRequestFragment extends BaseFragment {
     private ProgressBar progressBar;
     private String currencyValue;
     private AdvanceListModel advanceListModel;
-    private ArrayList<ExpenseImageList> imageList;
     private boolean isClicked;
 
     public AdvanceListModel getAdvanceListModel() {
@@ -158,11 +156,7 @@ public class AdvanceRequestFragment extends BaseFragment {
                 MenuItemModel menuItemModel = ModelManager.getInstance().getMenuItemModel();
                 if (menuItemModel != null) {
                     MenuItemModel itemModel = menuItemModel.getItemModel(MenuItemModel.EDIT_PROFILE_KEY);
-                   /* if (itemModel != null && itemModel.isAccess()) {
-                        mUserActionListener.performUserAction(IAction.ADVANCE_REQUEST, null, null);
-                    } else {*/
                     mUserActionListener.performUserAction(IAction.HOME_VIEW, null, null);
-                    //}
                 }
             }
         });
@@ -199,21 +193,20 @@ public class AdvanceRequestFragment extends BaseFragment {
                                         PermissionUtil.askAllPermission(AdvanceRequestFragment.this);
                                     }
                                     if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext()) ) {
-                                       // if (Utility.isLocationEnabled(getContext())) {
-                                           // if (Utility.isNetworkAvailable(getContext())) {
+                                        if (Utility.isLocationEnabled(getContext())) {
+                                            if (Utility.isNetworkAvailable(getContext())) {
                                                 Utility.openCamera(getActivity(), AdvanceRequestFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore",screenName);
                                                 customBuilder.dismiss();
-                                            /*} else {
+                                            } else {
                                                 Utility.showNetworkNotAvailableDialog(getContext());
-                                            }*/
-                                        /*} else {
+                                            }
+                                        } else {
                                             Utility.requestToEnableGPS(getContext(), new Preferences(getContext()));
-                                        }*/
+                                        }
                                     } else {
                                         Utility.displayMessage(getContext(), "Please provide all permissions");
                                     }
                                 } else if (selectedObject.toString().equalsIgnoreCase("Gallery")) {
-
                                     galleryIntent();
                                     customBuilder.dismiss();
                                 }
@@ -231,29 +224,34 @@ public class AdvanceRequestFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.reasonTV:
-                //if (advanceRequestResponseModel.getGetAdvancePageInitResult().getAdvanceProcessYN().equalsIgnoreCase("Y")) {
-                ReasonCodeListModel reasonCodeListModel = advanceRequestResponseModel.getGetAdvancePageInitResult().getReasonCodeList();
-                if (reasonCodeListModel != null) {
-                    ArrayList<ReasonCodeListItemModel> reasonCodeList = reasonCodeListModel.getReasonCodeList();
+                if(advanceRequestResponseModel!=null && advanceRequestResponseModel.getGetAdvancePageInitResult()!=null
+                        && advanceRequestResponseModel.getGetAdvancePageInitResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)
+                        && advanceRequestResponseModel.getGetAdvancePageInitResult().getReasonCodeList()!=null
+                        && advanceRequestResponseModel.getGetAdvancePageInitResult().getReasonCodeList().getReasonCodeList().size()>0) {
+                    ReasonCodeListModel reasonCodeListModel = advanceRequestResponseModel.getGetAdvancePageInitResult().getReasonCodeList();
+                    if (reasonCodeListModel != null) {
+                        ArrayList<ReasonCodeListItemModel> reasonCodeList = reasonCodeListModel.getReasonCodeList();
 
-                    CustomBuilder reasonDialog = new CustomBuilder(getContext(), "Select Reason", true);
-                    reasonDialog.setSingleChoiceItems(reasonCodeList, null, new CustomBuilder.OnClickListener() {
-                        @Override
-                        public void onClick(CustomBuilder builder, Object selectedObject) {
-                            reasonCodeModel = (ReasonCodeListItemModel) selectedObject;
-                            reasonTV.setText(reasonCodeModel.getReason());
-                            reasonCode = reasonCodeModel.getReasonCode();
-                            builder.dismiss();
+                        CustomBuilder reasonDialog = new CustomBuilder(getContext(), "Select Reason", true);
+                        reasonDialog.setSingleChoiceItems(reasonCodeList, null, new CustomBuilder.OnClickListener() {
+                            @Override
+                            public void onClick(CustomBuilder builder, Object selectedObject) {
+                                reasonCodeModel = (ReasonCodeListItemModel) selectedObject;
+                                reasonTV.setText(reasonCodeModel.getReason());
+                                reasonCode = reasonCodeModel.getReasonCode();
+                                builder.dismiss();
 
-                        }
-                    });
-                    reasonDialog.show();
+                            }
+                        });
+                        reasonDialog.show();
+                    }
+                }else {
+                    new AlertCustomDialog(context,advanceRequestResponseModel.getGetAdvancePageInitResult().getErrorMessage());
+                    return;
                 }
-                //  }
                 break;
             case R.id.currencyTV:
                 currencyListModel = advanceRequestResponseModel.getGetAdvancePageInitResult().getCurrencyList();
-
                 if (currencyListModel != null) {
                     ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(currencyListModel.getCurrencyList()));
                     CustomBuilder currencyDialog = new CustomBuilder(getContext(), "Select Currency", true);
@@ -274,66 +272,6 @@ public class AdvanceRequestFragment extends BaseFragment {
         }
         super.onClick(v);
     }
-/*
-    private void prepareReasonSpinner(final AdvanceRequestResponseModel item) {
-      *//*  reasonList = new ArrayList<>();
-        reasonList.add("Select Reason");
-        if (item.getGetAdvancePageInitResult() != null && item.getGetAdvancePageInitResult().getReasonCodeList().getReasonCodeList() != null) {
-            for (ReasonCodeListItemModel reason : item.getGetAdvancePageInitResult().getReasonCodeList().getReasonCodeList()) {
-                reasonList.add(reason.getReason());
-            }
-        }
-        ArrayAdapter<String> reasonAdapter = new ArrayAdapter<>(context, R.layout.custom_drop_down, R.id.textView, reasonList);
-        reasonSpinner.setAdapter(reasonAdapter);
-        reasonSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(final AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-
-                } else {
-                    int currentPos = position - 1;
-                    reason = item.getGetAdvancePageInitResult().getReasonCodeList().getReasonCodeList().get(currentPos).getReason();
-                    reasonCode = item.getGetAdvancePageInitResult().getReasonCodeList().getReasonCodeList().get(currentPos).getReasonCode();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                //CustomDialog.alertWithOk(context, "Please Select Reason");
-            }
-        });*//*
-    }
-
-    private void prepareCurrencySpinner(AdvanceRequestResponseModel item) {
-        currency = null;
-        currencyList = new ArrayList<>();
-        currencyList.add("Select Currency");
-        if (item.getGetAdvancePageInitResult() != null && item.getGetAdvancePageInitResult().getCurrencyList().getCurrencyList() != null) {
-            for (String currency : item.getGetAdvancePageInitResult().getCurrencyList().getCurrencyList())
-                currencyList.add(currency);
-        }
-
-        ArrayAdapter<String> currencyAdapter = new ArrayAdapter<>(context, R.layout.custom_drop_down, R.id.textView, currencyList);
-        currencySpinner.setAdapter(currencyAdapter);
-        currencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(final AdapterView<?> parent, View view, int position, long id) {
-               if (position == 0) {
-
-                } else {
-                    int currentPos = position;
-                    currency = currencyList.get(currentPos);
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                //CustomDialog.alertWithOk(context, "Please Select Currency");
-            }
-        });
-    }*/
-
 
     private void galleryIntent() {
         // Use the GET_CONTENT intent from the utility class
@@ -361,16 +299,19 @@ public class AdvanceRequestFragment extends BaseFragment {
                 String str = response.getResponseData();
                 Log.d("TAG", "Advance Response : " + str);
                 advanceRequestResponseModel = AdvanceRequestResponseModel.create(str);
-                if (advanceRequestResponseModel != null && advanceRequestResponseModel.getGetAdvancePageInitResult() != null
-                        && advanceRequestResponseModel.getGetAdvancePageInitResult().getCurrencyList() != null
-                        && advanceRequestResponseModel.getGetAdvancePageInitResult().getCurrencyList().getCurrencyList() != null) {
-                    currencyListModel = advanceRequestResponseModel.getGetAdvancePageInitResult().getCurrencyList();
-                    ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(currencyListModel.getCurrencyList()));
-                    if (arrayList.size() == 1) {
-                        currencyValue = arrayList.get(0);
-                        currencyTV.setText(arrayList.get(0));
-                    }
+                if(advanceRequestResponseModel!=null &&
+                        advanceRequestResponseModel.getGetAdvancePageInitResult()!=null && advanceRequestResponseModel.getGetAdvancePageInitResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
+                    if (advanceRequestResponseModel != null && advanceRequestResponseModel.getGetAdvancePageInitResult() != null
+                            && advanceRequestResponseModel.getGetAdvancePageInitResult().getCurrencyList() != null
+                            && advanceRequestResponseModel.getGetAdvancePageInitResult().getCurrencyList().getCurrencyList() != null) {
+                        currencyListModel = advanceRequestResponseModel.getGetAdvancePageInitResult().getCurrencyList();
+                        ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(currencyListModel.getCurrencyList()));
+                        if (arrayList.size() == 1) {
+                            currencyValue = arrayList.get(0);
+                            currencyTV.setText(arrayList.get(0));
+                        }
 
+                    }
                 }
 
                 break;
@@ -389,25 +330,6 @@ public class AdvanceRequestFragment extends BaseFragment {
                     getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     new AlertCustomDialog(getActivity(), advanceDataResponseModel.getSaveAdvanceResult().getErrorMessage());
                 }
-                   /* MenuItemModel menuItemModel = ModelManager.getInstance().getMenuItemModel();
-                    if (menuItemModel != null) {
-                        MenuItemModel itemModel = menuItemModel.getItemModel(MenuItemModel.CREATE_ADVANCE_KEY);
-                        if (itemModel != null && itemModel.isAccess()) {
-                            progressBar.setVisibility(View.GONE);
-                            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                            CustomDialog.alertOkWithFinishFragment(context, advanceDataResponseModel.getSaveAdvanceResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
-                        } else {
-                            progressBar.setVisibility(View.GONE);
-                            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                            CustomDialog.alertOkWithFinishFragment(context, advanceDataResponseModel.getSaveAdvanceResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
-                        }
-                    }
-                } else {
-                    progressBar.setVisibility(View.GONE);
-                    getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    CustomDialog.alertWithOk(context, advanceDataResponseModel.getSaveAdvanceResult().getErrorMessage());
-                }*/
-
                 break;
             default:
                 break;
@@ -428,7 +350,6 @@ public class AdvanceRequestFragment extends BaseFragment {
                 String path = data.getStringExtra("path");
                 System.out.print(path);
                 Uri uploadedFilePath = data.getData();
-              //  File file=new File(uploadedFilePath);
                 String filename = getFileName(uploadedFilePath);
                 filename=filename.toLowerCase();
                 String fileDesc = getFileName(uploadedFilePath);
@@ -458,7 +379,6 @@ public class AdvanceRequestFragment extends BaseFragment {
 
                     bitmap = null;
                     try {
-                        //fileObj.setBitmap(bitmap);
                         bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -528,7 +448,7 @@ public class AdvanceRequestFragment extends BaseFragment {
                     fileObj.setDocFile(filename);
                     fileObj.setName(fileDesc);
                 }
-              //  Log.d("TTAg","Bitmap Size : "+bitmap.getByteCount());
+
 
                 if(Utility.calcBase64SizeInKBytes(encodeFileToBase64Binary)>Utility.maxLimit){
                     CustomDialog.alertWithOk(context, Utility.sizeMsg);
@@ -539,8 +459,6 @@ public class AdvanceRequestFragment extends BaseFragment {
                         for (int i = 1; i <= uploadFileList.size(); i++) {
                             fileObj.setBase64Data(encodeFileToBase64Binary);
                             fileObj.setFlag("N");
-                            //fileObj.setSeqNo(i + 1);
-                          //  fileObj.setBitmap(bitmap);
                             String seqNo = String.valueOf(i + 1);
                             Log.d("seqNo", "seqNo");
                             uploadFileList.add(fileObj);
@@ -550,11 +468,8 @@ public class AdvanceRequestFragment extends BaseFragment {
                     } else {
                         fileObj.setBase64Data(encodeFileToBase64Binary);
                         fileObj.setFlag("N");
-                       // fileObj.setBitmap(bitmap);
-                        // fileObj.setSeqNo(1);
                         uploadFileList.add(fileObj);
                     }
-                   // Log.d("encodedFile", encodeFileToBase64Binary);
                 }
                 refreshList();
 
@@ -562,14 +477,12 @@ public class AdvanceRequestFragment extends BaseFragment {
         }
 
         if (requestCode == AppsConstant.REQ_CAMERA && resultCode == RESULT_OK) {
-          // String encodeFileToBase64Binary=null;
             final Intent intent = data;//new Intent();
             String path = intent.getStringExtra("response");
             Uri uri = Uri.fromFile(new File(path));
             if (uri == null) {
                 Log.d("uri", "null");
             } else {
-                //  Uri extras = data.getData();
                 bitmap = null;
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
@@ -622,21 +535,14 @@ public class AdvanceRequestFragment extends BaseFragment {
                         fileObj.setName(filenameET.getText().toString() + ".jpg");
 
                         boolean fileShow1 = true;
-/*
-                        if(Utility.calcBase64SizeInKBytes(encodeFileToBase64Binary)>Utility.maxLimit){
-                            CustomDialog.alertWithOk(context, "File size should not greater than 2 MB");
-                            return;
-                        }*/
 
                         if (fileShow1) {
-                           String encodeFileToBase64Binary = Utility.converBitmapToBase64(bitmap) ;//fileToBase64Conversion(data.getData());
-                          //Log.d("Image Size","Image Size"+ String.valueOf(Utility.calcBase64SizeInKBytes(encodeFileToBase64Binary)));
+                           String encodeFileToBase64Binary = Utility.converBitmapToBase64(bitmap) ;
+
                             if (uploadFileList.size() > 0) {
                                 for (int i = 1; i <= uploadFileList.size(); i++) {
                                     fileObj.setBase64Data(encodeFileToBase64Binary);
                                     fileObj.setFlag("N");
-                                  //  fileObj.setBitmap(bitmap);
-                                    //fileObj.setSeqNo(i + 1);
                                     String seqNo = String.valueOf(i + 1);
                                     Log.d("seqNo", "seqNo");
                                     uploadFileList.add(fileObj);
@@ -646,11 +552,9 @@ public class AdvanceRequestFragment extends BaseFragment {
                             } else {
                                 fileObj.setBase64Data(encodeFileToBase64Binary);
                                 fileObj.setFlag("N");
-                               // fileObj.setBitmap(bitmap);
-                                // fileObj.setSeqNo(1);
+
                                 uploadFileList.add(fileObj);
                             }
-                           // Log.d("encodedFile", encodeFileToBase64Binary);
                         }
                         refreshList();
                         dialog.dismiss();
@@ -737,7 +641,6 @@ public class AdvanceRequestFragment extends BaseFragment {
                     filename.contains(".png") || filename.contains(".jpeg")
                     || filename.contains(".bmp") || filename.contains(".BMP")  ) {
                 try {
-                   // holder.img_icon.setImageBitmap(fileObject.getBitmap());
                     holder.fileNameTV.setText(filename);
                     holder.fileDescriptionTV.setText(name);
                 } catch (Exception e) {
@@ -795,22 +698,12 @@ public class AdvanceRequestFragment extends BaseFragment {
 
                 }
             }
-           /* final String finalFileType = fileType;
-            holder.img_icon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                    intent1.setDataAndType(uploadedFilePath, finalFileType);
-                    startActivity(intent1);
-                }
-            });*/
 
             holder.img_menu_icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View v) {
                     ArrayList<String> list = new ArrayList<>();
                     list.add("Edit");
-                    //list.add("Download");
                     list.add("Delete");
                     CustomBuilder customBuilder = new CustomBuilder(getContext(), "Options", false);
                     customBuilder.setSingleChoiceItems(list, null, new CustomBuilder.OnClickListener() {
@@ -834,7 +727,6 @@ public class AdvanceRequestFragment extends BaseFragment {
                                 (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        //  SupportDocsItemModel docItem = new SupportDocsItemModel();
                                         fileObject.setName(editFilenameET.getText().toString());
                                         if (uploadFileList != null && uploadFileList.size() > 0) {
                                             uploadFileList.set(uploadFileList.indexOf(fileObject), fileObject);
@@ -856,23 +748,6 @@ public class AdvanceRequestFragment extends BaseFragment {
                                 });
 
                                 dialog.show();
-                            }else if (selectedObject.toString().equalsIgnoreCase("Download")) {
-                               //Utility.downloadPdf(fileObject.ge);
-                               // Utility.downloadPdf(null,fileObject.getDocPathUri(),fileObject.getDocFile(),context,getActivity());
-                                /*Uri selectedUri = fileObject.getDocPathUri();
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                intent.setData(selectedUri);
-                               // intent.setDataAndType(selectedUri, "resource/folder");
-
-                                if (intent.resolveActivityInfo(context.getPackageManager(), 0) != null)
-                                {
-                                    startActivity(intent);
-                                }
-                                else
-                                {
-                                    // if you reach this place, it means there is no any file
-                                    // explorer app installed on your device
-                                }*/
                             }
                             else if (selectedObject.toString().equalsIgnoreCase("Delete")) {
                                 mDataset.remove(position);
@@ -934,7 +809,6 @@ public class AdvanceRequestFragment extends BaseFragment {
                 for (int i = 0; i < uploadFileList.size(); i++) {
                     SupportDocsItemModel model = uploadFileList.get(i);
                     model.setSeqNo(i + 1);
-                   // model.setBitmap(null);
                     uploadFileList.set(i, model);
                 }
             }
@@ -968,112 +842,9 @@ public class AdvanceRequestFragment extends BaseFragment {
         return result.toLowerCase();
     }
 
-
-    /*private static String encodeFileToBase64Binary(File fileName) throws IOException {
-        //byte[] bytes = File(fileName);
-        RandomAccessFile f=null;
-        if(fileName!=null){
-
-        f= new RandomAccessFile(fileName, "r");}
-        else {
-            Log.d("fileName","file not found");
-        }
-        byte[] b = new byte[(int)f.length()];
-        f.readFully(b);
-      //  byte[] encoded = Base64.encodeBase64(bytes);
-
-       // String encodedString = new String(encoded);
-        String encodedString=Base64.encodeToString(b,1);
-
-        return encodedString;
-    }*/
-/*    public static String convertFileToByteArray(File f) {
-        byte[] byteArray = null;
-        try {
-            InputStream inputStream = new FileInputStream(f);
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            byte[] b = new byte[1024 * 11];
-            int bytesRead = 0;
-
-            while ((bytesRead = inputStream.read(b)) != -1) {
-                bos.write(b, 0, bytesRead);
-            }
-
-            byteArray = bos.toByteArray();
-
-            Log.e("Byte array", ">" + byteArray);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return Base64.encodeToString(byteArray, Base64.NO_WRAP);
-    }*/
-
-  /*  public String getStringFile(File f) {
-        InputStream inputStream = null;
-        String encodedFile= "", lastVal;
-        try {
-            inputStream = new FileInputStream(f.getAbsolutePath());
-
-            byte[] buffer = new byte[10240];//specify the size to allow
-            int bytesRead;
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            Base64OutputStream output64 = new Base64OutputStream(output, Base64.DEFAULT);
-
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                output64.write(buffer, 0, bytesRead);
-            }
-            output64.close();
-            encodedFile =  output.toString();
-        }
-        catch (FileNotFoundException e1 ) {
-            e1.printStackTrace();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        lastVal = encodedFile;
-        return lastVal;
-    }*/
-
-   /* private String encodeFileToBase64Binary(String fileName)
-            throws IOException {
-
-        File file = new File(fileName);
-        byte[] bytes = loadFile(file);
-        // byte[] encoded = Base64.encodeBase64String(bytes);
-        String encodedString = android.util.Base64.encodeToString(bytes, Base64.NO_WRAP);
-
-        return encodedString;
-    }
-
-    private static byte[] loadFile(File file) throws IOException {
-        InputStream is = new FileInputStream(file);
-
-        long length = file.length();
-        if (length > Integer.MAX_VALUE) {
-            // File is too large
-        }
-        byte[] bytes = new byte[(int) length];
-
-        int offset = 0;
-        int numRead = 0;
-        while (offset < bytes.length
-                && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
-            offset += numRead;
-        }
-
-        if (offset < bytes.length) {
-            throw new IOException("Could not completely read file " + file.getName());
-        }
-
-        is.close();
-        return bytes;
-    }*/
-
     private String fileToBase64Conversion(Uri file) {
         String attachedFile;
-        InputStream inputStream = null;//You can get an inputStream using any IO API
+        InputStream inputStream = null;
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
             inputStream = context.getContentResolver().openInputStream(file);

@@ -51,8 +51,6 @@ public class ExpenseApprovalFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        /*this.setShowPlusMenu(false);
-        this.setShowEditTeamButtons(true);*/
         super.onCreate(savedInstanceState);
     }
 
@@ -67,7 +65,6 @@ public class ExpenseApprovalFragment extends BaseFragment {
     private void setupScreen(View view) {
         expenseApprovalRecyclerView = (RecyclerView) view.findViewById(R.id.expenseApprovalRecyclerView);
         searchET = (EditText) view.findViewById(R.id.searchET);
-        // searchET.setVisibility(View.GONE);
         searchParentLayout = (LinearLayout) view.findViewById(R.id.searchParentLayout);
         searchParentLayout.setVisibility(View.GONE);
         errorLinearLayout= (LinearLayout) view.findViewById(R.id.errorLinearLayout);
@@ -250,16 +247,12 @@ public class ExpenseApprovalFragment extends BaseFragment {
             case CommunicationConstant.API_GET_EMPLOYEE_EXPENSE_APPROVAL:
                 String str = response.getResponseData();
                 Log.d("TAG", "Advance Response : " + str);
-                /*searchIV.setVisibility(View.GONE);
-                filterIV.setVisibility(View.GONE);*/
                 expenseApprovalRecyclerView.setVisibility(View.GONE);
                 errorLinearLayout.setVisibility(View.VISIBLE);
                 searchParentLayout.setVisibility(View.GONE);
                 expenseApprovalResponseModel = ExpenseApprovalResponseModel.create(str);
                 if (expenseApprovalResponseModel != null && expenseApprovalResponseModel.getGetEmpExpenseApprovalResult() != null && expenseApprovalResponseModel.getGetEmpExpenseApprovalResult().getExpenseApprovalList() != null && expenseApprovalResponseModel.getGetEmpExpenseApprovalResult().getExpenseApprovalList().size() > 0) {
                     if (expenseApprovalResponseModel.getGetEmpExpenseApprovalResult().getExpenseApprovalList().get(0) != null) {
-                      /*  searchIV.setVisibility(View.VISIBLE);
-                        filterIV.setVisibility(View.VISIBLE);*/
                         expenseApprovalRecyclerView.setVisibility(View.VISIBLE);
                         errorLinearLayout.setVisibility(View.GONE);
                         searchParentLayout.setVisibility(View.VISIBLE);
@@ -325,7 +318,6 @@ public class ExpenseApprovalFragment extends BaseFragment {
         public ExpenseApprovalAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.expense_approval_item, parent, false);
-            //view.setOnClickListener(MainActivity.myOnClickListener);
             ExpenseApprovalAdapter.MyViewHolder myViewHolder = new ExpenseApprovalAdapter.MyViewHolder(view);
             return myViewHolder;
         }
@@ -353,34 +345,6 @@ public class ExpenseApprovalFragment extends BaseFragment {
                     fragmentTransaction.replace(R.id.expense_approval, advanceRequestFragment);
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
-              /*      ArrayList<String> list = new ArrayList<>();
-                    list.add("Approve");
-                    list.add("Reject");
-                    list.add("Edit");
-                    list.add("Return");
-                    CustomBuilder customBuilder = new CustomBuilder(getContext(), "Options", false);
-                    customBuilder.setSingleChoiceItems(list, null, new CustomBuilder.OnClickListener() {
-                        @Override
-                        public void onClick(CustomBuilder builder, Object selectedObject) {
-                            if (selectedObject.toString().equalsIgnoreCase("Approve")) {
-
-                            } else if (selectedObject.toString().equalsIgnoreCase("Reject")) {
-
-                            } else if (selectedObject.toString().equalsIgnoreCase("Edit")) {
-                                EditExpenseApprovalFragment advanceRequestFragment = new EditExpenseApprovalFragment();
-                                advanceRequestFragment.setExpenseApprovalList(dataSet.get(listPosition));
-                                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                fragmentTransaction.replace(R.id.expense_approval, advanceRequestFragment);
-                                fragmentTransaction.addToBackStack(null);
-                                fragmentTransaction.commit();
-                            } else if (selectedObject.toString().equalsIgnoreCase("Return")) {
-
-                            }
-                            builder.dismiss();
-                        }
-                    });
-                    customBuilder.show();*/
                 }
             });
 

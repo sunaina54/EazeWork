@@ -53,7 +53,6 @@ import hr.eazework.com.ui.fragment.AddExpenseFragment;
 import hr.eazework.com.ui.fragment.AdvanceApprovalFragment;
 import hr.eazework.com.ui.fragment.AdvanceRequestFragment;
 import hr.eazework.com.ui.fragment.AdvanceRequestSummaryFragment;
-import hr.eazework.com.ui.fragment.AdvanceSubmissionFragment;
 import hr.eazework.com.ui.fragment.ApproveScreen;
 import hr.eazework.com.ui.fragment.AttandanceFragment;
 import hr.eazework.com.ui.fragment.AttendanceHistory;
@@ -64,13 +63,11 @@ import hr.eazework.com.ui.fragment.CreateNewLeaveFragment;
 import hr.eazework.com.ui.fragment.CreateStoreFragment;
 import hr.eazework.com.ui.fragment.EditAdvanceApprovalFragment;
 import hr.eazework.com.ui.fragment.EditExpenseApprovalFragment;
-import hr.eazework.com.ui.fragment.EditExpenseFragment;
 import hr.eazework.com.ui.fragment.EditStoreFragment;
 import hr.eazework.com.ui.fragment.EditTeamMember;
 import hr.eazework.com.ui.fragment.EditViewExpenseClaimFragment;
 import hr.eazework.com.ui.fragment.ExpenseApprovalFragment;
 import hr.eazework.com.ui.fragment.ExpenseClaimSummaryFragment;
-import hr.eazework.com.ui.fragment.ExpenseHomeFragment;
 import hr.eazework.com.ui.fragment.HistoryTrackFragment;
 import hr.eazework.com.ui.fragment.HomeFragment;
 import hr.eazework.com.ui.fragment.LeaveBalanceDetailFragment;
@@ -189,9 +186,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                             performUserAction(IAction.CREATE_EMPLOYEE_VIEW, null, null);
                         } else if (selectedObject.toString().equalsIgnoreCase("Leave")) {
                             performUserAction(IAction.CREATE_NEW_LEAVE, null, null);
-                        }/*else if (selectedObject.toString().equalsIgnoreCase("Expense Home")) {
-                            performUserAction(IAction.EXPENSE_HOME, null, null);
-                        }*/ else if (selectedObject.toString().equalsIgnoreCase("Advance")) {
+                        }else if (selectedObject.toString().equalsIgnoreCase("Advance")) {
                             performUserAction(IAction.ADVANCE_REQUEST, null, null);
                         } else if (selectedObject.toString().equalsIgnoreCase("Expense")) {
                             performUserAction(IAction.ADD_EXPENSE_CLAIM, null, null);
@@ -254,7 +249,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                                                 true);
                             } else {
                                 if (Utility.isNetworkAvailable(getApplicationContext())) {
-                                    //               startService(new Intent(MainActivity.this, UploadInOutLocationService.class));
                                 } else {
                                     new AlertCustomDialog(
                                             MainActivity.this,
@@ -281,9 +275,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             MenuItemModel itemModel = ModelManager.getInstance()
                     .getMenuItemModel().getItemModelByDesc(title);
             if (itemModel != null) {
-                /*if (MenuItemModel.ATTANDANCE_KEY.equalsIgnoreCase(itemModel.getmObjectId())) {
-                    performUserAction(IAction.ATTANDANCE_CALENDER, null, null);
-				}*/
                 if (MenuItemModel.LEAVE_KEY.equalsIgnoreCase(itemModel.getmObjectId())) {
                     performUserAction(IAction.LEAVE_BALANCE_DETAIL, null, null);
                 } else if (MenuItemModel.PAY_SLIP_KEY.equalsIgnoreCase(itemModel.getmObjectId())) {
@@ -382,16 +373,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                             AdvanceApprovalFragment.TAG);
                 }
                 break;
-            case IAction.EDIT_EXPENSE:
-                if (isFragmentExistsInBackStack(PendingActivityFragment.TAG)) {
-                    if (getTopFragment() instanceof EditExpenseFragment)
-                        return;
-                    popBackStack(EditExpenseFragment.TAG, 0);
-                } else {
-                    addFragment(R.id.content_frame, new EditExpenseFragment(),
-                            EditExpenseFragment.TAG);
-                }
-                break;
             case IAction.MEMBER_APPROVAL:
 
                 if (isFragmentExistsInBackStack(PendingEmployeeApprovalFragment.TAG)) {
@@ -488,19 +469,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                     addFragment(R.id.content_frame, new LoginFragment(), LoginFragment.TAG);
                 }
                 break;
-
-            /*case IAction.HOME_PROFILE_VIEW:
-
-                if (isFragmentExistsInBackStack(UserProfileFragment.TAG)) {
-                    if (getTopFragment() instanceof UserProfileFragment)
-                        return;
-                    popBackStack(UserProfileFragment.TAG, 0);
-                } else {
-                    addFragment(R.id.content_frame, new UserProfileFragment(),
-                            UserProfileFragment.TAG);
-                }
-                break;
-*/
             case IAction.ATTANDANCE_CALENDER:
 
                 if (isFragmentExistsInBackStack(AttandanceFragment.TAG)) {
@@ -522,18 +490,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                     addFragment(R.id.content_frame, new AttendanceHistory(), AttendanceHistory.TAG);
                 }
                 break;
-            /*case IAction.LEAVE_BALANCE:
 
-                if (isFragmentExistsInBackStack(LeaveBalanceFragment.TAG)) {
-                    if (getTopFragment() instanceof LeaveBalanceFragment)
-                        return;
-                    popBackStack(LeaveBalanceFragment.TAG, 0);
-                } else {
-                    addFragment(R.id.content_frame, new LeaveBalanceFragment(),
-                            LeaveBalanceFragment.TAG);
-                }
-                break;
-          */
             case IAction.LEAVE_BALANCE_DETAIL:
 
                 if (isFragmentExistsInBackStack(LeaveBalanceDetailFragment.TAG)) {
@@ -774,12 +731,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         // fragment.setRetainInstance(true);
         final FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment topFragment = getTopFragment();
-        /*
-         * if (topFragment instanceof OffersFragment) { FragmentTransaction
-		 * trans = fragmentManager.beginTransaction();
-		 * trans.remove(topFragment); trans.commit();
-		 * fragmentManager.popBackStack(); }
-		 */
 
         try {
 
@@ -795,7 +746,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                         .beginTransaction();
                 fragmentTransaction.commitAllowingStateLoss();
             } catch (Exception exception) {
-                // exception.printStackTrace();
             }
 
         }
@@ -804,17 +754,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     protected void setFragmentCustomAnimations(
             FragmentTransaction pFragmentTransaction) {
 
-		/*
-         * pFragmentTransaction.setCustomAnimations(android.R.anim.slide_in_left,
-		 * android.R.anim.slide_out_right, android.R.anim.slide_in_left,
-		 * android.R.anim.slide_out_right);
-		 */
-
-		/*
-		 * pFragmentTransaction.setCustomAnimations(
-		 * R.anim.fragment_slide_left_enter, R.anim.fragment_slide_left_exit,
-		 * R.anim.fragment_slide_right_enter, R.anim.fragment_slide_right_exit);
-		 */
     }
 
     public void onSectionAttached(int number) {
@@ -857,40 +796,12 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-		/*if (id == R.id.action_notification) {
-			new AlertCustomDialog(this, "Currently no notification available");
-			return true;
-		} else*/
         if (id == R.id.home) {
             if (!(getTopFragment() instanceof HomeFragment)) {
                 onBackPressed();
                 return false;
             }
         }
-		/*if(id == R.id.plus_create_new) {
-			CustomBuilder builder = new CustomBuilder(MainActivity.this,"Create New",true);
-			builder.setSingleChoiceItems(getMenuItems(),null, new CustomBuilder.OnClickListener() {
-				@Override
-				public void onClick(CustomBuilder builder, Object selectedObject) {
-					if(selectedObject.toString().equalsIgnoreCase(getString(R.string.msg_location))) {
-						performUserAction(IAction.CREATE_LOCATION_VIEW,null,null);
-					} else if(selectedObject.toString().equalsIgnoreCase(getString(R.string.msg_employee))) {
-						performUserAction(IAction.CREATE_EMPLOYEE_VIEW,null,null);
-					} else if(selectedObject.toString().equalsIgnoreCase(getString(R.string.msg_leaves))) {
-						performUserAction(IAction.CREATE_NEW_LEAVE,null,null);
-					}
-					builder.dismiss();
-				}
-			});
-			builder.setCancelListener(new CustomBuilder.OnCancelListener() {
-				@Override
-				public void onCancel() {
-
-				}
-			});
-			builder.show();
-		}*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -1217,8 +1128,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             return "Expense Approval";
         } else if (fragment instanceof AdvanceApprovalFragment) {
             return "Advance Approval";
-        } else if (fragment instanceof EditExpenseFragment) {
-            return "Edit Expense";
         } else {
             return "";
         }
@@ -1240,7 +1149,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 actionBarView.setVisibility(View.GONE);
             }
             getSupportActionBar().hide();
-            // mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             getSupportActionBar().setShowHideAnimationEnabled(true);
             if (mDrawerLayout != null)
                 mDrawerLayout
@@ -1268,7 +1176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                                 Toast.LENGTH_SHORT).show();
                     } else {
                         finish();
-                        // super.onBackPressed();
+
                     }
 
                 } else if (fragment != null && (fragment instanceof StoreListFragment || fragment instanceof LeaveBalanceDetailFragment || fragment instanceof AttendanceHistory || fragment instanceof AttandanceFragment || fragment instanceof PaySlipDownloadFragment || fragment instanceof ApproveScreen || fragment instanceof UserProfile || fragment instanceof ChangePasswordFragment || fragment instanceof MarkAttendance)) {
@@ -1290,15 +1198,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
                 Crashlytics.log(exception.getMessage());
                 Crashlytics.logException(exception);
-                // Toast.makeText(getApplicationContext(),
-                // ""+exception.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
-		/*
-		 * if (selectedPosition == 7) { Intent intent = new Intent(
-		 * BaseActivityReceiver.FINISH_ALL_ACTIVITIES_ACTIVITY_ACTION);
-		 * sendBroadcast(intent); } else { super.onBackPressed(); }
-		 */
     }
 
     public static void updataProfileData(Context context, View rootView) {
@@ -1387,7 +1288,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            if ((fragment instanceof AddExpenseFragment) || (fragment instanceof AdvanceSubmissionFragment) ||
+            if ((fragment instanceof AddExpenseFragment)||
                     (fragment instanceof AdvanceRequestFragment) || (fragment instanceof EditAdvanceApprovalFragment) ||
                     (fragment instanceof AdvanceApprovalFragment) || (fragment instanceof EditViewExpenseClaimFragment)
                     || (fragment instanceof EditExpenseApprovalFragment)) {

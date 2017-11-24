@@ -2,8 +2,6 @@ package hr.eazework.com;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.media.Image;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,14 +17,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import hr.eazework.com.model.DocListModel;
 import hr.eazework.com.model.LineItemsModel;
-import hr.eazework.com.model.MenuItemModel;
-import hr.eazework.com.model.ModelManager;
 import hr.eazework.com.model.SupportDocsItemModel;
 import hr.eazework.com.ui.customview.CustomBuilder;
-import hr.eazework.com.ui.fragment.ViewDocumentFragment;
-import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.util.Preferences;
 import hr.eazework.com.ui.util.Utility;
 import hr.eazework.selfcare.communication.CommunicationConstant;
@@ -146,58 +139,8 @@ public class ViewDocumentActivity extends BaseActivity {
                         public void onClick(CustomBuilder builder, Object selectedObject) {
 
                             if (selectedObject.toString().equalsIgnoreCase("Edit")) {
-                  /*      final Dialog dialog = new Dialog(context);
-                        dialog.setContentView(R.layout.filename_advance_expense);
-                        preferences = new Preferences(getContext());
-                        int textColor = Utility.getTextColorCode(preferences);
-                        int bgColor = Utility.getBgColorCode(context, preferences);
-                        FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
-                        fl_actionBarContainer.setBackgroundColor(bgColor);
-                        TextView tv_header_text = (TextView) dialog.findViewById(R.id.tv_header_text);
-                        tv_header_text.setTextColor(textColor);
-                        tv_header_text.setText("Edit");
 
-                        final EditText editFilenameET = (EditText) dialog.findViewById(R.id.editFilenameET);
-                        editFilenameET.setText(name);
-
-                        (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                //  SupportDocsItemModel docItem = new SupportDocsItemModel();
-                                fileObject.setName(editFilenameET.getText().toString());
-                                if (uploadFileList != null && uploadFileList.size() > 0) {
-                                    uploadFileList.set(uploadFileList.indexOf(fileObject), fileObject);
-
-                                } else {
-                                    uploadFileList = new ArrayList<SupportDocsItemModel>();
-                                    uploadFileList.add(fileObject);
-                                }
-                                refreshList(uploadFileList);
-                                dialog.dismiss();
-
-                            }
-                        });
-                        (dialog).findViewById(R.id.ibWrong).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                        dialog.show();*/
                             } else if (selectedObject.toString().equalsIgnoreCase("Delete")) {
-                       /* SupportDocsItemModel doc = mDataset.get(position);
-                        if (doc.getDocID() != 0 && doc.getFlag().equalsIgnoreCase(AppsConstant.OLD_FLAG)) {
-                            doc.setFlag(AppsConstant.DELETE_FLAG);
-                            mDataset.set(position, doc);
-                        } else if (doc.getDocID() == 0 && doc.getFlag().equalsIgnoreCase(AppsConstant.NEW_FLAG)) {
-                            mDataset.remove(position);
-                        }
-                        EditAdvanceApprovalFragment.DocumentUploadAdapter.this.notifyDataSetChanged();
-                        if (mDataset.size() == 0) {
-                            errorTV.setVisibility(View.VISIBLE);
-                        }
-*/
                             } else if (selectedObject.toString().equalsIgnoreCase("Download")) {
 
                                 String filePath = item.getDocPath().replace("~", "");

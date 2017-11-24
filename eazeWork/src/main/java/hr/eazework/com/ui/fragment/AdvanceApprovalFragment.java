@@ -84,7 +84,6 @@ public class AdvanceApprovalFragment extends BaseFragment {
 
     private void setupScreen(View view) {
         searchET = (EditText) view.findViewById(R.id.searchET);
-        //searchET.setVisibility(View.GONE);
         searchIV = (ImageView) view.findViewById(R.id.searchIV);
         searchIV.setOnClickListener(this);
         search_layout = (RelativeLayout) view.findViewById(R.id.search_layout);
@@ -263,7 +262,6 @@ public class AdvanceApprovalFragment extends BaseFragment {
             case CommunicationConstant.API_GET_ADVANCE_APPROVAL_ROLE:
                 String responseData = response.getResponseData();
                 Log.d("TAG", "Advance Response : " + responseData);
-             //   searchIV.setVisibility(View.GONE);
                 approvalRoleResponseModel = ApprovalRoleResponseModel.create(responseData);
                 roleFrameLayout.setVisibility(View.GONE);
                 if (approvalRoleResponseModel != null && approvalRoleResponseModel.getGetAdvanceApprovalRoleResult() != null &&
@@ -279,20 +277,6 @@ public class AdvanceApprovalFragment extends BaseFragment {
                         roleTV.setText(approvalRoleResponseModel.getGetAdvanceApprovalRoleResult().getRoleList().get(0).getRoleDesc());
                         sendAdvanceApprovalData();
                         refresh(advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult().getAdvanceList());
-                       /* for (RoleListItem item : roleListItems) {
-                            if (item.getRoleID().equalsIgnoreCase("E001000011") || item.getRoleDesc().equalsIgnoreCase("Manager")) {
-                                roleTV.setText(item.getRoleDesc());
-                                roleId = item.getRoleID();
-                                sendAdvanceApprovalData();
-                                if (advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult().getAdvanceList().get(0) != null) {
-                                   // searchIV.setVisibility(View.VISIBLE);
-                                    searchParentLayout.setVisibility(View.VISIBLE);
-                                    refresh(advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult().getAdvanceList());
-                                }
-
-                            }
-
-                        }*/
                     }
                 }
 

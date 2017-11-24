@@ -75,8 +75,6 @@ public class ExpenseClaimSummaryFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       /* this.setShowPlusMenu(true);
-        this.setShowEditTeamButtons(false);*/
         showHideProgressView(true);
     }
     private void setupScreen(View view) {
@@ -90,7 +88,6 @@ public class ExpenseClaimSummaryFragment extends BaseFragment {
         searchParentLayout.setVisibility(View.GONE);
         errorLinearLayout = (LinearLayout) view.findViewById(R.id.errorLinearLayout);
         errorLinearLayout.setVisibility(View.GONE);
-        // searchET.setVisibility(View.GONE);
         searchIV = (ImageView) view.findViewById(R.id.searchIV);
         searchIV.setOnClickListener(this);
         filterIV = (ImageView) view.findViewById(R.id.filterIV);
@@ -217,14 +214,6 @@ public class ExpenseClaimSummaryFragment extends BaseFragment {
             case R.id.filterIV:
                 ArrayList<String> list = new ArrayList<>();
                 list.add("All");
-                /*list.add("Submitted");
-                list.add("Paid");
-                list.add("Approved");
-                list.add("Draft");
-                list.add("Rejected");
-                list.add("Payment In Process");
-                list.add("Returned");
-                list.add("Withdrawn");*/
                 ArrayList<ExpenseItemListModel> listModels= Utility.prepareFilterList( expenseClaimSummaryResponseModel.getGetEmpExpenseResult().getExpenseItemList());
                 if(listModels!=null && listModels.size()>0) {
                     for (ExpenseItemListModel model : listModels) {
@@ -291,15 +280,11 @@ public class ExpenseClaimSummaryFragment extends BaseFragment {
                 summaryRecyclerView.setVisibility(View.GONE);
                 errorLinearLayout.setVisibility(View.VISIBLE);
                 searchParentLayout.setVisibility(View.GONE);
-         /*       searchIV.setVisibility(View.GONE);
-                filterIV.setVisibility(View.GONE);*/
                 expenseClaimSummaryResponseModel = ExpenseClaimSummaryResponseModel.create(str);
                 if (expenseClaimSummaryResponseModel != null && expenseClaimSummaryResponseModel.getGetEmpExpenseResult() != null &&
                         expenseClaimSummaryResponseModel.getGetEmpExpenseResult().getExpenseItemList() != null &&
                         expenseClaimSummaryResponseModel.getGetEmpExpenseResult().getExpenseItemList().size() > 0) {
                     if (expenseClaimSummaryResponseModel.getGetEmpExpenseResult().getExpenseItemList().get(0) != null) {
-                      /*  searchIV.setVisibility(View.VISIBLE);
-                        filterIV.setVisibility(View.VISIBLE);*/
                         summaryRecyclerView.setVisibility(View.VISIBLE);
                         errorLinearLayout.setVisibility(View.GONE);
                         searchParentLayout.setVisibility(View.VISIBLE);
@@ -376,7 +361,6 @@ public class ExpenseClaimSummaryFragment extends BaseFragment {
         public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.expense_claim_summary_item, parent, false);
-            //view.setOnClickListener(MainActivity.myOnClickListener);
             MyViewHolder myViewHolder = new MyViewHolder(view);
             return myViewHolder;
         }
@@ -391,10 +375,9 @@ public class ExpenseClaimSummaryFragment extends BaseFragment {
             holder.descriptionTV.setText(item.getDescription());
             holder.pendingWithTV.setText(item.getPendingWith());
             holder.statusTV.setText(item.getReqStatusDesc());
-            //holder.viewBTN.setText("View");
+
             holder.viewBTN.setText(item.getButtons()[0]);
             if (item.getReqStatusDesc() != null && item.getReqStatusDesc().equalsIgnoreCase("Draft")) {
-               // holder.viewBTN.setText("Edit");
                 holder.viewBTN.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -410,7 +393,6 @@ public class ExpenseClaimSummaryFragment extends BaseFragment {
                     }
                 });
             } else if (item.getReqStatusDesc() != null && item.getReqStatusDesc().equalsIgnoreCase("Submitted")) {
-               // holder.viewBTN.setText("Withdraw");
                 holder.viewBTN.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -424,7 +406,6 @@ public class ExpenseClaimSummaryFragment extends BaseFragment {
                     }
                 });
             } else if (item.getReqStatusDesc() != null && item.getReqStatusDesc().equalsIgnoreCase("Returned")) {
-               // holder.viewBTN.setText("Resubmit");
                 holder.viewBTN.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

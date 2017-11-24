@@ -85,8 +85,6 @@ public class RetakeFragment extends Fragment {
                 waitingForActivity = true;
             }
         } else if (path == null || (path != null && !path.exists())) {
-
-            //    goBackAction();
             waitingForActivity = true;
         }
 

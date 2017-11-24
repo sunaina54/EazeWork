@@ -102,30 +102,19 @@ import static hr.eazework.com.ui.util.ImageUtil.rotateImage;
 
 public class AddExpenseFragment extends MyBaseFragment  {
     public static final String TAG = "AddExpenseFragment";
-    private boolean isClicked;
     private boolean isComingFromEdit;
     private Preferences preferences;
     private LinearLayout dynamicLayout;
     private RecyclerView expenseRecyclerView;
-    private List<ExpenseImageList> expenseImageList;
-    private ExpenseAdapter expenseAdapter;
     private ImageView plus_create_newIV;
     private Context context;
-    private Calendar startDate;
-    private Calendar toDate;
-    private boolean isSubmitClicked = true;
-    private CaldroidFragment dialogCaldroidFragment;
-    private static int RESULT_LOAD_IMAGE = 1;
     private String purpose = "";
-    private Fragment fragment;
-    private static final int REQUEST_IMAGE_CAPTURE = 100;
     private ArrayList<ExpenseImageList> imageList;
     private Bitmap bitmap = null;
     private DatePickerDialog datePickerDialog1, datePickerDialog2, datePickerDialog3;
     private TextView tv_to_day, tv_to_date, tv_from_date, tv_from_day, categoryTypeTV, categoryHeadTV, tv_from_Month, tv_from_Year;
     private TextView tv_from_date_top;
     private CategoryListResponseModel categoryListResponseModel;
-    private HeadsItemModel headsItemList;
     private HeadCategoryListModel headCategoryList;
     private int category;
     private LinearLayout claimHeadLinearLayout, fromDateLinearLayout, todateLinearLayout;
@@ -146,11 +135,9 @@ public class AddExpenseFragment extends MyBaseFragment  {
     public static SaveExpenseRequestModel expenseRequestModel;
     private GetCategoryListResultModel getCategoryListResultModel;
     private LineItemsModel lineItemList;
-    private Button saveBTN;
     private TextView inputTV, periodTV, amountTV, inputRightTV;
     private String labelInput, labelAmount, labelPeriod, labelRight, periodDate;
     int reqId, empId;
-    private PeriodicExpenseResponseModel periodicExpenseResponseModel;
     private LinearLayout rl_edit_team_member;
     private View rootView;
 
@@ -193,21 +180,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
 
         saveLl = (RelativeLayout) rootView.findViewById(R.id.saveLl);
         saveLl.setVisibility(View.GONE);
-       /* if (expenseRequestModel.getScreenName() == AppsConstant.APPROVE_EDIT_EXPENSE_CLAIM_FRAGMENT ||
-                expenseRequestModel.getScreenName() == AppsConstant.VIEW_EDIT_EXPENSE_CLAIM_FRAGMENT) {
-            saveLl.setVisibility(View.GONE);
-            saveBTN = (Button) rootView.findViewById(R.id.saveBTN);
-            saveBTN.setVisibility(View.VISIBLE);
-            //reqId=Integer.parseInt(expenseRequestModel.getExpense().getExpenseItem().getReqID());
-            saveBTN.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    doSubmitOperation();
-                }
-            });
-
-        }*/
-
         empId = expenseRequestModel.getExpense().getExpenseItem().getForEmpID();
         reqId = Integer.parseInt(expenseRequestModel.getExpense().getExpenseItem().getReqID());
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
@@ -274,53 +246,12 @@ public class AddExpenseFragment extends MyBaseFragment  {
         ibWrongh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // doSubmitOperation();
                 getActivity().finish();
             }
         });
         rl_edit_team_member.setBackgroundColor(headerColr);
         ((TextView) rootView.findViewById(R.id.tv_header_text)).setTextColor(textColor);
-
         ((TextView) rootView.findViewById(R.id.tv_header_text)).setText("Add Expense");
-
-        /*((MainActivity) getActivity()).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doSubmitOperation();
-            }
-        });*/
-       /* ((MainActivity) getActivity()).findViewById(R.id.ibWrong).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Fragment fragment = null;
-                if (expenseRequestModel.getScreenName() == AppsConstant.ADD_EXPENSE_CLAIM_FRAGMENT) {
-                    AddExpenseClaimFragment addExpenseFragment = new AddExpenseClaimFragment();
-                    addExpenseFragment.setSaveExpenseRequestModel(expenseRequestModel);
-                    fragment = addExpenseFragment;
-                } else if (expenseRequestModel.getScreenName() == AppsConstant.VIEW_EDIT_EXPENSE_CLAIM_FRAGMENT) {
-                    EditViewExpenseClaimFragment editViewExpenseClaimFragment = new EditViewExpenseClaimFragment();
-                    editViewExpenseClaimFragment.setSaveExpenseRequestModel(expenseRequestModel);
-                    fragment = editViewExpenseClaimFragment;
-                } else if (expenseRequestModel.getScreenName() == AppsConstant.APPROVE_EDIT_EXPENSE_CLAIM_FRAGMENT) {
-                    EditExpenseApprovalFragment editExpenseApprovalFragment = new EditExpenseApprovalFragment();
-                    editExpenseApprovalFragment.setSaveExpenseRequestModel(expenseRequestModel);
-                    fragment = editExpenseApprovalFragment;
-                }
-
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(R.id.add_expense, fragment);
-                fragmentTransaction.commit();
-
-
-//                SharedPreference.saveSharedPreferenceData(CommunicationConstant.PROJECT_PREFERENCE, CommunicationConstant.ADD_EXPENSE_RESPONSE, lineItemList.serialize(), context);
-
-
-
-            }
-        });*/
-
         final FrameLayout frameLayout = (FrameLayout) rootView.findViewById(R.id.flCapture);
         frameLayout.setVisibility(View.GONE);
         plus_create_newIV = (ImageView) rootView.findViewById(R.id.plus_create_newIV);
@@ -330,10 +261,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                 DividerItemDecoration(expenseRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
         itemDecoration.setDrawable(ContextCompat.getDrawable(context, R.drawable.gradient_line));
         expenseRecyclerView.addItemDecoration(itemDecoration);
-
-        // expenseImageList = fill_with_data();
-
-
         plus_create_newIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -403,8 +330,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                                 if (lineItemList == null) {
                                     lineItemList = new LineItemsModel();
                                 }
-
-
                                 lineItemList.setCategoryID(category);
                                 categoryHeadTV.setText("Select Claim Head");
                                 selectedCategoryHeads = headCategoryList.getHeads();
@@ -465,82 +390,9 @@ public class AddExpenseFragment extends MyBaseFragment  {
         super.onClick(v);
     }
 
-    private void resetScreenAfterCategoryChange() {
-
-    }
-
-    private class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ViewHolder> {
-        private List<ExpenseImageList> mDataset;
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public TextView fileNameTV;
-            public ImageView img_icon, img_menu_icon;
-
-            public ViewHolder(View v) {
-                super(v);
-                fileNameTV = (TextView) v.findViewById(R.id.fileNameTV);
-                img_icon = (ImageView) v.findViewById(R.id.img_icon);
-                img_menu_icon = (ImageView) v.findViewById(R.id.img_menu_icon);
-
-            }
-        }
-
-        public ExpenseAdapter(List<ExpenseImageList> myDataset) {
-            mDataset = myDataset;
-
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                            int viewType) {
-            // create a new1 view
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.expense_list_item, parent, false);
-            // set the view's size, margins, paddings and layout parameters
-            ViewHolder vh = new ViewHolder(v);
-            return vh;
-        }
-
-        // Replace the contents of a view (invoked by the layout manager)
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-
-            ExpenseImageList item = mDataset.get(position);
-            holder.fileNameTV.setText(item.getFilename());
-            holder.img_icon.setImageBitmap(item.getImageBitmap());
-            holder.fileNameTV.setText(mDataset.get(position).getFilename());
-            holder.img_menu_icon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ArrayList<String> list = new ArrayList<>();
-                    list.add("Save as");
-                    list.add("Open");
-                    list.add("Delete");
-                    CustomBuilder customBuilder = new CustomBuilder(getContext(), "Options", false);
-                    customBuilder.setSingleChoiceItems(list, null, new CustomBuilder.OnClickListener() {
-                        @Override
-                        public void onClick(CustomBuilder builder, Object selectedObject) {
-
-                        }
-                    });
-                    customBuilder.show();
-                }
-            });
-        }
-
-
-        // Return the size of your dataset (invoked by the layout manager)
-        @Override
-        public int getItemCount() {
-            return mDataset.size();
-        }
-
-
-    }
-
     private void doSubmitOperation() {
         String fromDate = "", toDate = "";
         String amountValue = "";
-        // progressBar.setVisibility(View.VISIBLE);
         String details = detailsET.getText().toString();
         if (amountET != null)
             amountValue = amountET.getText().toString();
@@ -584,10 +436,7 @@ public class AddExpenseFragment extends MyBaseFragment  {
                 new AlertCustomDialog(context, "To date must be greater from date");
                 return;
             }
-
-
         }
-
 
         if (headsItemModel == null) {
             progressBar.setVisibility(View.GONE);
@@ -628,17 +477,12 @@ public class AddExpenseFragment extends MyBaseFragment  {
             lineItemList = new LineItemsModel();
             lineItemList.setPolicyID(visibilityResponseModel.getGetHeadDetailsWithPolicyResult().getPolicyID());
             lineItemList.setUnit(model.getUnit());
-
-
         }
 
-        Log.d("TAG", "hhhhhhh111111" + visibilityResponseModel);
         if (visibilityResponseModel != null) {
             lineItemList.setPolicyID(visibilityResponseModel.getGetHeadDetailsWithPolicyResult().getPolicyID());
-            Log.d("TAG", "hhhhhhh11111" + visibilityResponseModel.getGetHeadDetailsWithPolicyResult().getLimitedTo());
             lineItemList.setPolicyLimitValue(String.valueOf(visibilityResponseModel.getGetHeadDetailsWithPolicyResult().getLimitedTo()));
             lineItemList.setUnit(visibilityResponseModel.getGetHeadDetailsWithPolicyResult().getUnitDesc());
-            Log.d("TAG", "hhhhhhh" + visibilityResponseModel.getGetHeadDetailsWithPolicyResult());
             if (visibilityResponseModel.getGetHeadDetailsWithPolicyResult().getVisibility().get(0)
                     .getFieldTypeID().equalsIgnoreCase("MonthCalendar")) {
                 if ((tv_from_Month.getText().toString().equalsIgnoreCase("") ||
@@ -664,11 +508,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
             }
 
         }
-
-
-       /* if (lineItemList == null) {
-
-        }*/
 
         if (category == 1) {
             lineItemList.setDateFrom(fromDate);
@@ -717,25 +556,15 @@ public class AddExpenseFragment extends MyBaseFragment  {
             for (int i = 0; i < uploadFileList.size(); i++) {
                 SupportDocsItemModel model = uploadFileList.get(i);
                 model.setSeqNo(i + 1);
-               // model.setBitmap(null);
                 uploadFileList.set(i, model);
             }
             lineItemList.setDocListLineItem(uploadFileList);
         }
 
-        //Log.d("AddExpense", "AddExpense : " + visibilityResponseModel.getGetHeadDetailsWithPolicyResult().getPolicyID());
         lineItemList.setAmount2(amountValue);
-    /*    if(lineItemList.getLineItemID()!=0){
-            lineItemList.setLineItemID(lineItemList.getLineItemID());
-        }else{
-            lineItemList.setLineItemID(0);
-            lineItemList.setFlag("N");
-        }*/
-
-
         Log.d("AddExpense", "AddExpense : " + lineItemList.serialize());
 
-        ArrayList<LineItemsModel> lineItem;// = new ArrayList<>();
+        ArrayList<LineItemsModel> lineItem;
         int dataSize = 0;
         if (expenseRequestModel.getExpense().getExpenseItem().getLineItems() != null) {
             lineItem = expenseRequestModel.getExpense().getExpenseItem().getLineItems();
@@ -745,15 +574,7 @@ public class AddExpenseFragment extends MyBaseFragment  {
         } else {
             lineItem = new ArrayList<>();
         }
-       /* // To check mode edit / new add request to set the data
-        if (lineItem.contains(lineItemList)) {
-            int index = lineItem.indexOf(lineItemList);
-            lineItem.set(index, lineItemList);
-        } else {
-            lineItem.add(lineItemList);
 
-        }
-*/
         if(lineItem!=null){
             LineItemsModel tempModel=null;
             for(int i=0;i<lineItem.size();i++){
@@ -771,15 +592,12 @@ public class AddExpenseFragment extends MyBaseFragment  {
                     tempModel=lineItem.get(i);
                     lineItemList.setLineItemID(0);
                     lineItemList.setFlag("N");
-
                     lineItem.set(i, lineItemList);
                     break;
                 }
 
-
             }
             if(tempModel==null){
-              //  lineItemList.setResultModel(model);
                 lineItemList.setLineItemID(0);
                 lineItemList.setFlag("N");
                 lineItemList.setI(lineItem.size()+1);
@@ -852,14 +670,9 @@ public class AddExpenseFragment extends MyBaseFragment  {
             saveExpenseItem.setProjectID(expenseRequestModel.getExpense().getExpenseItem().getProjectID());
         }
 
-      /*  if (expenseRequestModel.getExpense().getExpenseItem().getClaimTypeDesc() != null) {
-
-            saveExpenseItem.setDescription(expenseRequestModel.getExpense().getExpenseItem().getClaimTypeDesc());
-        }*/
-
         saveExpenseItem.setAdvanceList(avanceListItem);
         saveExpenseItem.setLineItems(lineItem);
-        SaveExpenseModel saveExpModel;// = new SaveExpenseModel();
+        SaveExpenseModel saveExpModel;
 
         if (expenseRequestModel.getExpense() != null) {
             saveExpModel = expenseRequestModel.getExpense();
@@ -869,37 +682,8 @@ public class AddExpenseFragment extends MyBaseFragment  {
         saveExpModel.setExpenseItem(saveExpenseItem);
         expenseRequestModel.setExpense(saveExpModel);
         Intent theIntent=new Intent();
-        //theIntent.putExtra(AddExpenseActivity.SAVE_EXPENSE_REQUEST,expenseRequestModel);
         getActivity().setResult(AddExpenseActivity.REQUEST_CODE,theIntent);
         getActivity().finish();
-        //expenseRequestModel=null;
-       // lineItemList=null;
-       // AddExpenseActivity.saveExpenseRequestModel=null;
-        //AddExpenseActivity.lineItemsModel=null;
-
-       /* Fragment fragment = null;
-        if (expenseRequestModel.getScreenName() == AppsConstant.ADD_EXPENSE_CLAIM_FRAGMENT) {
-            AddExpenseClaimFragment addExpenseFragment = new AddExpenseClaimFragment();
-            addExpenseFragment.setSaveExpenseRequestModel(expenseRequestModel);
-            fragment = addExpenseFragment;
-        } else if (expenseRequestModel.getScreenName() == AppsConstant.VIEW_EDIT_EXPENSE_CLAIM_FRAGMENT) {
-            EditViewExpenseClaimFragment editViewExpenseClaimFragment = new EditViewExpenseClaimFragment();
-            editViewExpenseClaimFragment.setSaveExpenseRequestModel(expenseRequestModel);
-            fragment = editViewExpenseClaimFragment;
-        } else if (expenseRequestModel.getScreenName() == AppsConstant.APPROVE_EDIT_EXPENSE_CLAIM_FRAGMENT) {
-            EditExpenseApprovalFragment editExpenseApprovalFragment = new EditExpenseApprovalFragment();
-            editExpenseApprovalFragment.setSaveExpenseRequestModel(expenseRequestModel);
-            fragment = editExpenseApprovalFragment;
-        }
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.add_expense, fragment);
-*//*            fragmentTransaction.addToBackStack("addExpense");*//*
-        fragmentTransaction.commit();
-        SharedPreference.saveSharedPreferenceData(CommunicationConstant.PROJECT_PREFERENCE, CommunicationConstant.ADD_EXPENSE_RESPONSE, lineItemList.serialize(), context);*/
-           /* if(category==4){
-                lineItemList.s
-            }*/
     }
 
 
@@ -915,144 +699,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
             // The reason for the existence of aFileChooser
         }
     }
-
-    /*@Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK) {
-            Uri extras = data.getData();
-            bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), extras);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            File mediaFile = null;
-            if (bitmap != null) {
-                byte[] imageBytes = ImageUtil.bitmapToByteArray(rotateImage(bitmap, 270));
-
-                File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_DCIM), "");
-                mediaFile = new File(mediaStorageDir.getPath() + File.separator + purpose + ".jpg");
-                if (mediaFile != null) {
-                    try {
-                        FileOutputStream fos = new FileOutputStream(mediaFile);
-                        fos.write(imageBytes);
-                        fos.close();
-                    } catch (FileNotFoundException e) {
-                        Crashlytics.log(1, getClass().getName(), e.getMessage());
-                        Crashlytics.logException(e);
-                    } catch (IOException e) {
-                        Crashlytics.log(1, getClass().getName(), e.getMessage());
-                        Crashlytics.logException(e);
-                    }
-                }
-            }
-            final Dialog dialog = new Dialog(context);
-            dialog.setContentView(R.layout.image_preview_expense);
-            final TextView filenameET = (TextView) dialog.findViewById(R.id.filenameET);
-            ImageView imageView = (ImageView) dialog.findViewById(R.id.img_preview);
-            imageView.setImageBitmap(bitmap);
-
-            int textColor = Utility.getTextColorCode(preferences);
-            TextView tv_header_text = (TextView) dialog.findViewById(R.id.tv_header_text);
-            tv_header_text.setTextColor(textColor);
-            tv_header_text.setText("Supporting Documents");
-            (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ExpenseImageList imageItem = new ExpenseImageList();
-                    imageItem.setImageBitmap(bitmap);
-                    imageItem.setFilename(filenameET.getText().toString());
-                    imageList.add(imageItem);
-                    refreshRecycle();
-                    dialog.dismiss();
-
-                }
-            });
-            (dialog).findViewById(R.id.ibWrong).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
-
-
-        }
-
-        if (requestCode == AppsConstant.REQ_CAMERA && resultCode == RESULT_OK) {
-            Intent intent = data;//new Intent();
-            String path = intent.getStringExtra("response");
-            Uri uri = Uri.fromFile(new File(path));
-            if (uri == null) {
-                Log.d("uri", "null");
-            } else {
-                //  Uri extras = data.getData();
-                bitmap = null;
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                File mediaFile = null;
-                if (bitmap != null) {
-                    byte[] imageBytes = ImageUtil.bitmapToByteArray(rotateImage(bitmap, 270));
-
-                    File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_DCIM), "");
-                    mediaFile = new File(mediaStorageDir.getPath() + File.separator + purpose + ".jpg");
-                    if (mediaFile != null) {
-                        try {
-                            FileOutputStream fos = new FileOutputStream(mediaFile);
-                            fos.write(imageBytes);
-                            fos.close();
-                        } catch (FileNotFoundException e) {
-                            Crashlytics.log(1, getClass().getName(), e.getMessage());
-                            Crashlytics.logException(e);
-                        } catch (IOException e) {
-                            Crashlytics.log(1, getClass().getName(), e.getMessage());
-                            Crashlytics.logException(e);
-                        }
-                    }
-                }
-            }
-            final Dialog dialog = new Dialog(context);
-            dialog.setContentView(R.layout.image_preview_expense);
-            int textColor = Utility.getTextColorCode(preferences);
-            int bgColor = Utility.getBgColorCode(context, preferences);
-            FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
-            fl_actionBarContainer.setBackgroundColor(bgColor);
-            final TextView filenameET = (TextView) dialog.findViewById(R.id.filenameET);
-            ImageView imageView = (ImageView) dialog.findViewById(R.id.img_preview);
-            imageView.setImageBitmap(bitmap);
-            // imageView.setImageURI(uri);
-
-            TextView tv_header_text = (TextView) dialog.findViewById(R.id.tv_header_text);
-            tv_header_text.setTextColor(textColor);
-            tv_header_text.setText("Supporting Documents");
-            (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ExpenseImageList imageItem = new ExpenseImageList();
-                    imageItem.setImageBitmap(bitmap);
-                    imageItem.setFilename(filenameET.getText().toString());
-                    imageList.add(imageItem);
-                    refreshRecycle();
-                    dialog.dismiss();
-
-                }
-            });
-            (dialog).findViewById(R.id.ibWrong).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
-            dialog.show();
-
-
-        }
-    }*/
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, final Intent data) {
@@ -1099,7 +745,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                     File mediaFile = null;
                     if (bitmap != null) {
                         encodeFileToBase64Binary = Utility.converBitmapToBase64(bitmap);
-                       // fileObj.setBitmap(bitmap);
                         byte[] imageBytes = ImageUtil.bitmapToByteArray(rotateImage(bitmap, 270));
 
                         File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_DCIM), "");
@@ -1162,9 +807,7 @@ public class AddExpenseFragment extends MyBaseFragment  {
                     encodeFileToBase64Binary=fileToBase64Conversion(data.getData());
                     fileObj.setDocFile(filename);
                     fileObj.setName(fileDesc);
-                } /*else {
-                    CustomDialog.alertWithOk(context, " Allowed file types - .doc, .pdf, .docx format only.");
-                }*/
+                }
                 if(Utility.calcBase64SizeInKBytes(encodeFileToBase64Binary)>Utility.maxLimit){
                     CustomDialog.alertWithOk(context, Utility.sizeMsg);
                     return;
@@ -1174,8 +817,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                     for (int i = 1; i <= uploadFileList.size(); i++) {
                         fileObj.setBase64Data(encodeFileToBase64Binary);
                         fileObj.setFlag("N");
-                        //fileObj.setBitmap(bitmap);
-                        // fileObj.setSeqNo(i + 1);
                         String seqNo = String.valueOf(i + 1);
                         Log.d("seqNo", "seqNo");
                         uploadFileList.add(fileObj);
@@ -1184,12 +825,10 @@ public class AddExpenseFragment extends MyBaseFragment  {
                 } else {
                     fileObj.setBase64Data(encodeFileToBase64Binary);
                     fileObj.setFlag("N");
-                    //   fileObj.setSeqNo(1);
                     uploadFileList.add(fileObj);
                 }
 
                 refreshList();
-
                 Log.d("encodedFile", encodeFileToBase64Binary);
 
 
@@ -1198,13 +837,12 @@ public class AddExpenseFragment extends MyBaseFragment  {
 
         if (requestCode == AppsConstant.REQ_CAMERA && resultCode == RESULT_OK) {
 
-            final Intent intent = data;//new Intent();
+            final Intent intent = data;
             String path = intent.getStringExtra("response");
             Uri uri = Uri.fromFile(new File(path));
             if (uri == null) {
                 Log.d("uri", "null");
             } else {
-                //  Uri extras = data.getData();
                 bitmap = null;
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
@@ -1258,14 +896,11 @@ public class AddExpenseFragment extends MyBaseFragment  {
 
                         boolean fileShow1 = true;
                         if (fileShow1) {
-                            //String encodeFileToBase64Binary = fileToBase64Conversion(data.getData());
                             String encodeFileToBase64Binary = Utility.converBitmapToBase64(bitmap);
                             if (uploadFileList.size() > 0) {
                                 for (int i = 1; i <= uploadFileList.size(); i++) {
                                     fileObj.setBase64Data(encodeFileToBase64Binary);
                                     fileObj.setFlag("N");
-                                    //fileObj.setBitmap(bitmap);
-                                    //fileObj.setSeqNo(i + 1);
                                     String seqNo = String.valueOf(i + 1);
                                     Log.d("seqNo", "seqNo");
                                     uploadFileList.add(fileObj);
@@ -1275,8 +910,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                             } else {
                                 fileObj.setBase64Data(encodeFileToBase64Binary);
                                 fileObj.setFlag("N");
-                               // fileObj.setBitmap(bitmap);
-                                // fileObj.setSeqNo(1);
                                 uploadFileList.add(fileObj);
                             }
                             Log.d("encodedFile", encodeFileToBase64Binary);
@@ -1293,17 +926,13 @@ public class AddExpenseFragment extends MyBaseFragment  {
                 }
             });
             dialog.show();
-
-
         }
-
     }
 
     private void refreshList() {
         if (uploadFileList != null && uploadFileList.size() > 0) {
             errorTV.setVisibility(View.GONE);
             expenseRecyclerView.setVisibility(View.VISIBLE);
-
             DocumentUploadAdapter adapter = new DocumentUploadAdapter(uploadFileList);
             expenseRecyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
@@ -1338,7 +967,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent,
                                                                    int viewType) {
-            // create a new1 view
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.expense_list_item, parent, false);
             // set the view's size, margins, paddings and layout parameters
             ViewHolder vh = new ViewHolder(v);
@@ -1367,7 +995,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                     }
                 } else if (filename.contains(".jpg") || filename.contains(".png") || filename.contains(".jpeg") ||
                         filename.contains(".BMP") || filename.contains(".bmp")) {
-                   // holder.img_icon.setImageBitmap(fileObject.getBitmap());
                     holder.fileNameTV.setText(filename);
                     holder.fileDescriptionTV.setText(name);
 
@@ -1424,16 +1051,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                     }
                 }
 
-           /* final String finalFileType = fileType;
-            holder.img_icon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                    intent1.setDataAndType(uploadedFilePath, finalFileType);
-                    startActivity(intent1);
-                }
-            });*/
-
                 holder.img_menu_icon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
@@ -1468,7 +1085,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                                     (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            //  SupportDocsItemModel docItem = new SupportDocsItemModel();
                                             fileObject.setName(editFilenameET.getText().toString());
                                             if (uploadFileList != null && uploadFileList.size() > 0) {
                                                 uploadFileList.set(uploadFileList.indexOf(fileObject), fileObject);
@@ -1497,7 +1113,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                                     } else {
                                         uploadFileList.remove(position);
                                     }
-                                    //   DocumentUploadAdapter.this.notifyDataSetChanged();
                                     refreshList();
                                     if (mDataset.size() == 0) {
                                         errorTV.setVisibility(View.VISIBLE);
@@ -1576,16 +1191,8 @@ public class AddExpenseFragment extends MyBaseFragment  {
         return attachedFile;
     }
 
-   /* private void refreshRecycle() {
-        expenseAdapter = new ExpenseAdapter(imageList);
-        expenseRecyclerView.setAdapter(expenseAdapter);
-        expenseAdapter.notifyDataSetChanged();
-
-    }*/
 
     public void sendExpenseCategoryData() {
-       /* LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
-        String empId = loginUserModel.getUserModel().getEmpId();*/
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.getCategoryData(empId, reqId),
                 CommunicationConstant.API_GET_CATEGORY_LIST_DETAILS, true);
@@ -1594,9 +1201,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
 
 
     public void sendHeadDetailsWithPolicyData() {
-      /*  LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
-        String empId = String.valueOf(expenseRequestModel.getExpense().getExpenseItem().getForEmpID());*///loginUserModel.getUserModel().getEmpId();
-
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.getHeadDetailsWithPolicyData(empId, category, headId, expenseRequestModel.getExpense().getExpenseItem().getCurrencyCode(), reqId),
                 CommunicationConstant.API_GET_HEAD_DETAILS_WITH_POLICY, true);
@@ -1617,7 +1221,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
             if (lineItemList.getCategoryID() == headCategoryListModels.get(i).getCategory()) {
                 headCategoryList = headCategoryListModels.get(i);
                 categoryTypeTV.setText(headCategoryList.getCategoryDesc());
-                //   categoryTypeTV.setEnabled(false);
                 categoryDesc = headCategoryList.getCategoryDesc();
                 category = headCategoryList.getCategory();
                 selectedCategoryHeads = headCategoryList.getHeads();
@@ -1626,10 +1229,8 @@ public class AddExpenseFragment extends MyBaseFragment  {
                         todateLinearLayout.setVisibility(View.VISIBLE);
                         fromDateLinearLayout.setVisibility(View.VISIBLE);
                         tv_from_date_top.setText("From Date");
-
                         tv_from_date.setText(lineItemList.getDateFrom());
                         tv_to_date.setText(lineItemList.getDateTo());
-
 
                     } else {
                         todateLinearLayout.setVisibility(View.GONE);
@@ -1663,7 +1264,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                         if (lineItemList.getHeadID().equalsIgnoreCase(selectedCategoryHeads.get(j).getHeadID())) {
                             headsItemModel = selectedCategoryHeads.get(j);
                             categoryHeadTV.setText(headsItemModel.getHeadDesc());
-                            // categoryHeadTV.setEnabled(false);
                             headDesc = headsItemModel.getHeadDesc();
                             headId = headsItemModel.getHeadID();
                             setEditedVisibilityData();
@@ -1690,7 +1290,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
     }
 
     private void setEditedVisibilityData() {
-
         if (lineItemList.getInputUnit() != null && lineItemList.getInputUnit().equalsIgnoreCase("")) {
             lineItemList.setInputUnit("0.00");
         }
@@ -1729,11 +1328,8 @@ public class AddExpenseFragment extends MyBaseFragment  {
                 public void afterTextChanged(Editable s) {
                     double amountValue=0;
                     if (inputValue != null && !inputValue.equalsIgnoreCase("") && lineItemList.getInputUnit() != null) {
-                        //  String amountValue = String.valueOf(Double.parseDouble(inputValue) * Double.parseDouble(lineItemList.getInputUnit()));
                         amountValue = Double.parseDouble(inputValue) * model.getLimitedTo().doubleValue();
                         amountET.setText(amountValue+"");
-                        //   amountET.addTextChangedListener(this);
-
                         DecimalFormat twoDForm = new DecimalFormat("#.##");
                         String tempStr = twoDForm.format(amountValue);
                         amountValue = Double.parseDouble(tempStr);
@@ -1760,7 +1356,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
             String[] periodDate1 = lineItemList.getDateTo().split("-");
             tv_from_Year.setText(periodDate1[0]);
             tv_from_Month.setText(periodDate1[1]);
-          //  =lineItemList.getDateTo();
             periodDate=lineItemList.getDateTo();
 
         }
@@ -1777,9 +1372,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                 headCategoryListModels = categoryListResponseModel.getGetCategoryListResult().getHeadCategoryList();
                 if (headCategoryListModels != null && headCategoryListModels.size() > 0) {
                     if (lineItemList != null && lineItemList.getLineItemID() == 0) {
-                        //Edit mode
-                        //model=lineItemList.getResultModel();
-                      //  setEditedData();
                         callApiForSetEditedData();
                     } else if (lineItemList != null ) {
                         callApiForSetEditedData();
@@ -1801,7 +1393,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
 
                 } else {
                     if (visibilityResponseModel != null && visibilityResponseModel.getGetHeadDetailsWithPolicyResult() != null) {
-                        resetClaimHeadView();
                         addLayout(visibilityResponseModel);
                     }
                 }
@@ -1820,38 +1411,20 @@ public class AddExpenseFragment extends MyBaseFragment  {
             if (model != null && model.getShowInput().equalsIgnoreCase("Y")) {
                 for (VisibilityDataModel visibility : model.getVisibility()) {
                     if (visibility.getFieldTypeID() != null && visibility.getFieldTypeID().equalsIgnoreCase("MonthCalendar")) {
-
-                       /* calendarLinearLayout.setVisibility(View.VISIBLE);
-                        periodTV.setText(visibility.getFieldLabel());*/
                         labelPeriod = visibility.getFieldLabel();
-
-
                     } else if (visibility.getFieldTypeID() != null && visibility.getFieldTypeID().equalsIgnoreCase("TextBox")) {
 
                         if (visibility.getFieldLabel() != null && visibility.getFieldCode().equalsIgnoreCase("txtInput")) {
-
-                            // inputLinearLayout.setVisibility(View.VISIBLE);
-
-                            //inputTV.setText(visibility.getFieldLabel());
                             labelInput = visibility.getFieldLabel();
-                            //inputRightTV.setText(visibility.getLabelRight());
                             labelRight = visibility.getLabelRight();
 
 
                         } else if (visibility.getFieldLabel() != null && visibility.getFieldCode().equalsIgnoreCase("txtAmount")) {
-                            //  amountTV.setText(visibility.getFieldLabel());
                             labelAmount = visibility.getFieldLabel();
-                            //amountLinearLayout.setVisibility(View.VISIBLE);
-
-
                         }
 
                     }
                 }
-              /*  String year = "", month = "";
-                year = tv_from_Year.getText().toString();
-                month = tv_from_Month.getText().toString();
-                periodDate = year + "-" + month;*/
 
             } else if (model != null && model.getShowInput().equalsIgnoreCase("N")) {
                 for (VisibilityDataModel visibility : model.getVisibility()) {
@@ -1861,11 +1434,7 @@ public class AddExpenseFragment extends MyBaseFragment  {
                         labelAmount = visibility.getFieldLabel();
                         amountLinearLayout.setVisibility(View.VISIBLE);
                         inputLinearLayout.setVisibility(View.GONE);
-
-
                     }
-                        /*LinearLayout layout = prepareEditText(visibility);
-                        dynamicLayout.addView(layout);*/
                 }
             }
         }
@@ -1877,24 +1446,12 @@ public class AddExpenseFragment extends MyBaseFragment  {
 
     }
 
-
-    private void resetClaimHeadView() {
-       /* if (dynamicLayout!=null){
-            dynamicLayout.invalidate();
-        }*/
-    }
-
     private void addLayout(VisibilityResponseModel responseModel) {
         dynamicLayout = (LinearLayout) rootView.findViewById(R.id.dynamicLayout);
-       /* calendarLinearLayout=(LinearLayout) dynamicLayout.findViewById(R.id.calendarLinearLayout);
-        inputLinearLayout=(LinearLayout)dynamicLayout.findViewById(R.id.inputLinearLayout) ;
-        amountLinearLayout=(LinearLayout)dynamicLayout.findViewById(R.id.amountLinearLayout) ;*/
-
         calendarLinearLayout.setVisibility(View.GONE);
         inputLinearLayout.setVisibility(View.GONE);
         amountLinearLayout.setVisibility(View.GONE);
         amountET.setText("");
-       // amountET.setHint("Amount");
         inputValue = "";
         inputET.setText("");
         if (responseModel != null) {
@@ -1914,20 +1471,11 @@ public class AddExpenseFragment extends MyBaseFragment  {
                             }
                         });
 
-                    /*    String year = "", month = "";
-                        year = tv_from_Year.getText().toString();
-                        month = tv_from_Month.getText().toString();
-                        periodDate = year + "-" + month;*/
-
                     } else if (visibility.getFieldTypeID() != null && visibility.getFieldTypeID().equalsIgnoreCase("TextBox")) {
 
                         if (visibility.getFieldLabel() != null && visibility.getFieldCode().equalsIgnoreCase("txtInput")) {
 
                             inputLinearLayout.setVisibility(View.VISIBLE);
-                           /* amountET=(EditText)inputLinearLayout.findViewById(R.id.amountET);
-                            amountET.setText("");
-                            amountET.setHint("Amount");*/
-                            // amountET.invalidate();
                             inputTV.setText(visibility.getFieldLabel());
                             labelInput = visibility.getFieldLabel();
                             inputRightTV.setText(visibility.getLabelRight());
@@ -1946,9 +1494,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                                 @Override
                                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                                     inputValue = inputET.getText().toString();
-                                   /* String amountValue= String.valueOf(Integer.parseInt(inputValue)*Integer.parseInt(model.getUnit()));
-                                    amountET.setText(amountValue);
-                                    amountET.addTextChangedListener(this);*/
                                 }
 
                                 @Override
@@ -1960,22 +1505,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                                         }else{
                                             amountValue = Double.parseDouble(inputValue);
                                         }
-                                        // String.format("%.2f", amountValue);
-                                       /* amountValue = amountValue*100;
-                                        amountValue = Math.round(amountValue);
-                                        amountValue = amountValue /100;*/
-                                       /* DecimalFormat formatter;
-
-                                       if (amountValue - (int) amountValue > 0.0)
-                                            formatter = new DecimalFormat("0.00"); //Here you can also deal with rounding if you wish..
-                                        else
-                                            formatter = new DecimalFormat("0");
-                                        formatter.setMaximumFractionDigits(2);
-                                        // amountValue=9.9999999999999E13;
-                                        //  DecimalFormat twoDForm = new DecimalFormat("#.##");
-                                        String tempStr = formatter.format(amountValue);
-                                        amountValue = Double.parseDouble(tempStr);*/
-                                        ///DecimalFormat formatter=null;
                                         DecimalFormat twoDForm = new DecimalFormat("#.##");
                                         String tempStr = twoDForm.format(amountValue);
                                         amountValue = Double.parseDouble(tempStr);
@@ -1985,73 +1514,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                                     }
                                 }
                             });
-                           /* inputET.addTextChangedListener(new TextWatcher() {
-                                @Override
-                                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                                }
-
-                                @Override
-                                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                    inputValue = inputET.getText().toString();
-                                   *//* String amountValue= String.valueOf(Integer.parseInt(inputValue)*Integer.parseInt(model.getUnit()));
-                                    amountET.setText(amountValue);
-                                    amountET.addTextChangedListener(this);*//*
-                                }
-
-                                @Override
-                                public void afterTextChanged(Editable s) {
-                                    if (!inputValue.equalsIgnoreCase("")) {
-                                        double amountValue;
-                                        if( model.getPolicyID()!=null && !model.getPolicyID().equalsIgnoreCase("")) {
-                                            amountValue = Double.parseDouble(inputValue) * model.getLimitedTo();
-                                        }else{
-                                            amountValue = Double.parseDouble(inputValue);
-                                        }
-                                        // String.format("%.2f", amountValue);
-                                       *//* amountValue = amountValue*100;
-                                        amountValue = Math.round(amountValue);
-                                        amountValue = amountValue /100;*//*
-                                       *//* DecimalFormat formatter;
-
-                                       if (amountValue - (int) amountValue > 0.0)
-                                            formatter = new DecimalFormat("0.00"); //Here you can also deal with rounding if you wish..
-                                        else
-                                            formatter = new DecimalFormat("0");
-                                        formatter.setMaximumFractionDigits(2);
-                                        // amountValue=9.9999999999999E13;
-                                        //  DecimalFormat twoDForm = new DecimalFormat("#.##");
-                                        String tempStr = formatter.format(amountValue);
-                                        amountValue = Double.parseDouble(tempStr);*//*
-                                        DecimalFormat formatter=null;
-                                        DecimalFormat twoDForm = new DecimalFormat("#.##");
-                                        String tempStr = formatter.format(amountValue);
-                                        amountValue = Double.parseDouble(tempStr);
-                                        amountET.setText(amountValue + "");
-                                    }else{
-                                        amountET.setText("");
-                                    }
-                             *//*       if (!inputValue.equalsIgnoreCase("")) {
-                                        double amountValue = Double.parseDouble(inputValue) * model.getLimitedTo();
-                                        // String.format("%.2f", amountValue);
-                                       *//**//* amountValue = amountValue*100;
-                                        amountValue = Math.round(amountValue);
-                                        amountValue = amountValue /100;*//**//*
-                                        DecimalFormat formatter;
-
-                                        if (amountValue - (int) amountValue > 0.0)
-                                            formatter = new DecimalFormat("0.00"); //Here you can also deal with rounding if you wish..
-                                        else
-                                            formatter = new DecimalFormat("0");
-                                        formatter.setMaximumFractionDigits(2);
-                                        // amountValue=9.9999999999999E13;
-                                        //  DecimalFormat twoDForm = new DecimalFormat("#.##");
-                                        String tempStr = formatter.format(amountValue);
-                                        amountValue = Double.parseDouble(tempStr);
-                                        amountET.setText(amountValue + "");
-                                    }*//*
-                                }
-                            });*/
 
 
                         } else if (visibility.getFieldLabel() != null && visibility.getFieldCode().equalsIgnoreCase("txtAmount")) {
@@ -2063,10 +1525,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
 
                     }
                 }
-              /*  String year = "", month = "";
-                year = tv_from_Year.getText().toString();
-                month = tv_from_Month.getText().toString();
-                periodDate = year + "-" + month;*/
 
             } else if (model != null && model.getShowInput().equalsIgnoreCase("N")) {
                 for (VisibilityDataModel visibility : model.getVisibility()) {
@@ -2076,11 +1534,8 @@ public class AddExpenseFragment extends MyBaseFragment  {
                         labelAmount = visibility.getFieldLabel();
                         amountLinearLayout.setVisibility(View.VISIBLE);
                         inputLinearLayout.setVisibility(View.GONE);
-
-
                     }
-                        /*LinearLayout layout = prepareEditText(visibility);
-                        dynamicLayout.addView(layout);*/
+
                 }
             }
         }
@@ -2096,13 +1551,8 @@ public class AddExpenseFragment extends MyBaseFragment  {
                                   int dayOfMonth) {
                 // TODO Auto-generated method stub
                 Calendar calendar = Calendar.getInstance();
-
                 calendar.set(yearr, monthOfYear, dayOfMonth);
-                //textView.setText(dateFormatter.format(newDate.getTime()));
-                //  String monthname=(String)android.text.format.DateFormat.format("MMMM", new Date());
-
                 tv_from_Month.setText(String.format(Locale.US, "%tB", calendar));
-
                 String formatedData = String.format("%1$tY", calendar);
                 tv_from_Year.setText(formatedData);
                 String year = "", month = "";
@@ -2117,7 +1567,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                 newCalendar.get(Calendar.DAY_OF_MONTH));
         return datePickerDialog;
     }
-
 }
 
 

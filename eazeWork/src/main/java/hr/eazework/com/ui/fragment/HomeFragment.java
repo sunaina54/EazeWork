@@ -155,7 +155,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
         } else {
             showHideProgressView(false);
         }
-        //	((MainActivity) getActivity()).updateHeaderImage();
+
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -393,19 +393,12 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                             R.drawable.attendance_red);
                     item.setObjectId(itemModel.getmObjectId());
                     itemList.add(item);
-                    /*itemList.add(new MainItemModel(itemModel.getmObjectDesc(),
-                            getString(R.string.msg_mark_attandance),
-                            getString(R.string.msg_today_in_time), "--:--",
-                            R.drawable.attendance_red));*/
                 } else {
                     MainItemModel item=new MainItemModel(getString(R.string.msg_attandance),
                             getString(R.string.msg_mark_attandance),
                             R.drawable.attendance_red, false, true);
                     item.setObjectId(itemModel.getmObjectId());
                     itemList.add(item);
-                  /*  itemList.add(new MainItemModel(getString(R.string.msg_attandance),
-                            getString(R.string.msg_mark_attandance),
-                            R.drawable.attendance_red, false, true));*/
                 }
 
 
@@ -419,11 +412,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                         "View Team",
                         "" + (employeeProfileModel == null ? "0" :
                                 employeeProfileModel.getmTeamSize()), R.drawable.team_blue);
-                /*itemList.add(new MainItemModel(itemModel.getmObjectDesc(),
-                        getString(R.string.msg_team),
-                        "View Team",
-                        "" + (employeeProfileModel == null ? "0" :
-                                employeeProfileModel.getmTeamSize()), R.drawable.team_blue));*/
                 item.setObjectId(itemModel.getmObjectId());
                 itemList.add(item);
             }
@@ -439,12 +427,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                         R.drawable.leave_red);
                 item.setObjectId(itemModel.getmObjectId());
                 itemList.add(item);
-
-                /*itemList.add(new MainItemModel(itemModel.getmObjectDesc(),
-                        getString(R.string.msg_view_leaves),
-                        getString(R.string.msg_leave_balance), ""
-                        + (leaveBalanceModel == null ? "0" : leaveBalanceModel.getmAvailable()),
-                        R.drawable.leave_red));*/
             }
 
             itemModel = menuItemModel.getItemModel(MenuItemModel.PAY_SLIP_KEY);
@@ -459,11 +441,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                             true);
                     item.setObjectId(itemModel.getmObjectId());
                     itemList.add(item);
-                    /*itemList.add(new MainItemModel(itemModel.getmObjectDesc(),
-                            getString(R.string.msg_check_pay_slip),
-                            getString(R.string.msg_last_pay_slip),
-                            getString(R.string.msg_download), R.drawable.payslip_blue,
-                            true));*/
                 }
             }
             itemModel = menuItemModel.getItemModel(MenuItemModel.APPROVAL_KEY);
@@ -504,25 +481,14 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                         R.drawable.location_blue);
                 item.setObjectId(itemModel.getmObjectId());
                 itemList.add(item);
-             /*   itemList.add(new MainItemModel(itemModel.getmObjectDesc(),
-                        "View Location Details", "Total", "" + (locationCountModel == null ? "0"
-                        : locationCountModel.getList().get(0).getValue()),
-                        R.drawable.location_blue));*/
             }
 
 
             itemModel = menuItemModel.getItemModel(MenuItemModel.CREATE_ADVANCE_KEY);
             if(itemModel!=null && itemModel.isAccess()) {
-             /*   MainItemModel item=new MainItemModel("View Advance",
-                        getString(R.string.msg_advance_detail),
-                        "", "", R.drawable.advance_expense);
-                item.setObjectId(itemModel.getmObjectId());
-                itemList.add(item);*/
                 ExpenseStatusModel expenseStatusModel = ModelManager.getInstance().getExpenseStatusModel();
-             //   Log.d("Expense Status",expenseStatusModel.serialize());
-
                 if (expenseStatusModel != null && expenseStatusModel.getExpenseStatusData()!=null) {
-                    //if(expenseStatusModel.getExpenseStatusData().size()>0) {
+
                         if (expenseStatusModel.getExpenseStatusData().get(0) != null) {
                             ExpenseStatusData expenseStatusData = expenseStatusModel.getExpenseStatusData().get(0);
                             MainItemModel item = new MainItemModel("Advance",
@@ -531,20 +497,13 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                             item.setObjectId(itemModel.getmObjectId());
                             itemList.add(item);
                         }
-                    //}
+
                 }
             }
 
             itemModel = menuItemModel.getItemModel(MenuItemModel.CREATE_EXPENSE_KEY);
             if (itemModel != null && itemModel.isAccess()) {
-            /*    MainItemModel item= new MainItemModel("Expense",
-                        getString(R.string.msg_expense),
-                        "","", R.drawable.expense_claim);
-                item.setObjectId(itemModel.getmObjectId());
-                itemList.add(item);*/
                 ExpenseStatusModel expenseStatusModel = ModelManager.getInstance().getExpenseStatusModel();
-              //  Log.d("Expense Status",expenseStatusModel.serialize());
-
                 if (expenseStatusModel != null && expenseStatusModel.getExpenseStatusData()!=null
                         && expenseStatusModel.getExpenseStatusData().size()>0) {
                     if(expenseStatusModel.getExpenseStatusData().get(1)!=null) {
@@ -559,26 +518,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
 
 
             }
-           /* itemModel = menuItemModel.getItemModel(MenuItemModel.EXPENSE_KEY);
-            if (itemModel != null && itemModel.isAccess()) {
-                EmployeeProfileModel employeeProfileModel = ModelManager.getInstance().getEmployeeProfileModel();
-                itemList.add(new MainItemModel(itemModel.getmObjectDesc(),
-                        getString(R.string.msg_expense),
-                        "View Expense",
-                        "" + (employeeProfileModel == null ? "0" :
-                                " "), R.drawable.expense_claim));
-            }
-            itemModel = menuItemModel.getItemModel(MenuItemModel.ADVANCE_KEY);
-            if (itemModel != null && itemModel.isAccess()) {
-                EmployeeProfileModel employeeProfileModel = ModelManager.getInstance().getEmployeeProfileModel();
-                itemList.add(new MainItemModel(itemModel.getmObjectDesc(),
-                        getString(R.string.msg_expense),
-                        "View Expense",
-                        "" + (employeeProfileModel == null ? "0" :
-                               " "), R.drawable.advance_expense));
-            }*/
-
-
 
             ArrayList<String> list = new ArrayList<>();
 
@@ -597,30 +536,11 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
             itemModel = menuItemModel.getItemModel(MenuItemModel.CREATE_ADVANCE_KEY);
             if (itemModel != null && itemModel.isAccess()) {
                 list.add("Advance");
-
-                //if (itemModel != null && !itemModel.isAccess() ) {
-                /*itemModel = menuItemModel.getItemModel(MenuItemModel.ADVANCE_KEY);
-
-                EmployeeProfileModel employeeProfileModel = ModelManager.getInstance().getEmployeeProfileModel();
-                    itemList.add(new MainItemModel(itemModel.getmObjectDesc(),
-                            getString(R.string.msg_expense),
-                            "View Expense",
-                            "" + (employeeProfileModel == null ? "0" :
-                                    " "), R.drawable.advance_expense));
-               // }*/
             }
             itemModel = menuItemModel.getItemModel(MenuItemModel.CREATE_EXPENSE_KEY);
             if (itemModel != null && itemModel.isAccess()) {
                 list.add("Expense");
-              /*  MainItemModel item= new MainItemModel("View Expense",
-                        getString(R.string.msg_expense),
-                        "","", R.drawable.expense_claim);
-                item.setObjectId(itemModel.getmObjectId());
-                itemList.add(item);*/
-
             }
-
-
             if (list.size() > 0) {
                 ((MainActivity) getActivity()).setMenuList(list);
                 ((MainActivity) getActivity()).menuPlus.setVisibility(View.VISIBLE);
@@ -635,10 +555,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            /*case R.id.img_material_icon:
-                mUserActionListener.performUserAction(IAction.HOME_PROFILE_VIEW, null, null);
-                break;
-            */
             case R.id.btn_check_in_out:
             case R.id.btn_check_breack:
                 if (Utility.isLocationEnabled(getContext())) {
@@ -678,12 +594,10 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                                             }
                                         }
                                         if (v != null) {
-                                            //               performAttandanceAction(currentReqType);
                                             getLocationAddress(latitude, longitude);
                                         }
 
                                     } else if (currentReqType == 1 || currentReqType == 2) {
-                                        //                 performAttandanceAction(currentReqType);
                                         getLocationAddress(latitude, longitude);
                                     }
                                 }
@@ -730,11 +644,7 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
 
         if (menuItemModel != null) {
             MenuItemModel itemModel = menuItemModel.getItemModel(model.getObjectId());
-             // MenuItemModel itemModel = menuItemModel.getItemModelByDesc(model.getmLeftTitle());
-
-//            Log.d("TAG","id : "+itemModel.getmObjectId());
             if (MenuItemModel.ATTANDANCE_KEY.equalsIgnoreCase(itemModel.getmObjectId())) {
-                //mUserActionListener.performUserAction(IAction.ATTANDANCE_CALENDER, null, null);
                 mUserActionListener.performUserAction(IAction.ATTANDANCE_HISTORY, null, null);
             } else if (MenuItemModel.LEAVE_KEY.equalsIgnoreCase(itemModel.getmObjectId())) {
                 mUserActionListener.performUserAction(IAction.LEAVE_BALANCE_DETAIL, null, null);
@@ -808,19 +718,10 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
     private void updateEmpPendingApprovalReqCount(JSONObject mainResponseJson) {
         int totalPendingRequests = mainResponseJson.optInt("ReqCount", 0);
         ModelManager.getInstance().setUserTotalPendingRequests(totalPendingRequests);
-        /*for (MainItemModel item : itemList) {
-            if (item.getmLeftTitle().equalsIgnoreCase(getString(R.string.msg_approval))) {
-                int userTotalPendingRequests = ModelManager.getInstance().getUserTotalPendingRequests();
-                item.setmRightSubTitle("" + userTotalPendingRequests);
-            }
-        }
-        mAdapter.updateData(itemList);*/
     }
 
     private void updateEmpProfileData(JSONObject responseData) {
         ModelManager.getInstance().setEmployeeProfileModel(responseData);
-
-        //   MainActivity.updataProfileData(getContext(), rootView);
         populateHomeData();
         updateHomeData();
         saveEmpConfig(preferences);
