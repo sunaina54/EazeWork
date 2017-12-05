@@ -331,8 +331,9 @@
                                         style="@style/edittext"
                                         android:id="@+id/distanceET"
                                         android:layout_width="fill_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="0.7"
+                                        android:layout_height="@dimen/margin_40"
+                                        android:text="dhgsjh"
+                                        android:paddingBottom="@dimen/margin_5"
                                         android:inputType="number"
                                         android:textColor="@color/black" />
                                 </LinearLayout>
@@ -364,11 +365,12 @@
                                         style="@style/edittext"
                                         android:id="@+id/daysET"
                                         android:layout_width="fill_parent"
-                                        android:layout_height="wrap_content"
+                                        android:layout_height="40dp"
                                         android:layout_weight="0.7"
                                         android:hint="Distance"
                                         android:inputType="number"
                                         android:paddingStart="@dimen/margin_20"
+                                        android:paddingBottom="@dimen/margin_5"
                                         android:textColor="@color/black" />
                                 </LinearLayout>
                             </LinearLayout>
@@ -478,10 +480,12 @@
                                                 style="@style/edittext"
                                                 android:id="@+id/inputET"
                                                 android:layout_width="0dp"
-                                                android:layout_height="wrap_content"
+                                                android:layout_height="@dimen/margin_40"
                                                 android:layout_weight="0.7"
                                                 android:inputType="number"
                                                 android:maxLength="5"
+                                                android:paddingBottom="@dimen/margin_5"
+
                                                  />
 
                                             <TextView
@@ -514,8 +518,9 @@
                                         <EditText
                                             style="@style/edittext"
                                             android:id="@+id/amountET"
+                                            android:paddingBottom="@dimen/margin_5"
                                             android:layout_width="fill_parent"
-                                            android:layout_height="wrap_content"
+                                            android:layout_height="@dimen/margin_40"
                                             android:inputType="number" />
 
                                     </LinearLayout>

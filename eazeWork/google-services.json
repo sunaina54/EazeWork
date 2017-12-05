@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "330993285825",
+    "firebase_url": "https://eazework-e1307.firebaseio.com",
+    "project_id": "eazework-e1307",
+    "storage_bucket": "eazework-e1307.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:330993285825:android:8b43a9113dc98adf",
+        "android_client_info": {
+          "package_name": "hr.eazework.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "330993285825-fu2j97vg6ok0aalnaen85m6dqcde4ggc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXBm3PxHitzPknyFyP3fiiRwWK8H5JKGc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

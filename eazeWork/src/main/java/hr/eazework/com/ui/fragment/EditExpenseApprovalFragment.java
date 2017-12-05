@@ -691,7 +691,7 @@ public class EditExpenseApprovalFragment extends BaseFragment {
                 saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems().size() > 0) {
             for (LineItemsModel itemsModel : saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems()) {
                 if (itemsModel.getCategoryID() == AppsConstant.PERIODIC_EXPENSE) {
-                    list.add(itemsModel.getDateTo());
+                    list.add(itemsModel.getHeadID()+"#"+itemsModel.getDateTo());
                 }
             }
 
@@ -750,7 +750,7 @@ public class EditExpenseApprovalFragment extends BaseFragment {
             String[] monthList = sendPeriodicMonthData();
             if (monthList != null && monthList.length > 0) {
                 CommunicationManager.getInstance().sendPostRequest(this,
-                        AppRequestJSONString.getPeriodicMonthData(empId, 0, monthList),
+                        AppRequestJSONString.getPeriodicMonthData(empId, Integer.parseInt(requestId), monthList),
                         CommunicationConstant.API_GET_MONTH_LIST, true);
             } else {
 
@@ -797,7 +797,7 @@ public class EditExpenseApprovalFragment extends BaseFragment {
                 String[] monthList = sendPeriodicMonthData();
                 if (monthList != null && monthList.length > 0) {
                     CommunicationManager.getInstance().sendPostRequest(this,
-                            AppRequestJSONString.getPeriodicMonthData(empId, 0, monthList),
+                            AppRequestJSONString.getPeriodicMonthData(empId, Integer.parseInt(requestId), monthList),
                             CommunicationConstant.API_GET_MONTH_LIST, true);
                 } else {
 
@@ -876,7 +876,9 @@ public class EditExpenseApprovalFragment extends BaseFragment {
                     }
                     updateUI(viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem());
 
+                    saveExpenseRequestModel.getExpense().getExpenseItem().setReqID(viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getReqID()+"");
                     saveExpenseRequestModel.getExpense().getExpenseItem().setLineItems(viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getLineItems());
+
                     refresh(viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getLineItems());
 
                     saveExpenseRequestModel.setButtons(viewClaimSummaryResponseModel.getGetExpenseDetailResult().getButtons());

@@ -80,7 +80,7 @@ import static hr.eazework.com.ui.util.ImageUtil.rotateImage;
 
 public class AdvanceRequestFragment extends BaseFragment {
     public static final String TAG = "AdvanceRequestFragment";
-    private String screenName= "AdvanceRequestFragment";
+    private String screenName = "AdvanceRequestFragment";
     private Context context;
     private Preferences preferences;
     private ImageView plus_create_newIV;
@@ -143,8 +143,8 @@ public class AdvanceRequestFragment extends BaseFragment {
         ((MainActivity) getActivity()).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!isClicked) {
-                    isClicked=true;
+                if (!isClicked) {
+                    isClicked = true;
                     setAdvanceData();
                 }
             }
@@ -192,10 +192,10 @@ public class AdvanceRequestFragment extends BaseFragment {
                                     if (!PermissionUtil.checkCameraPermission(getContext()) || !PermissionUtil.checkStoragePermission(getContext())) {
                                         PermissionUtil.askAllPermission(AdvanceRequestFragment.this);
                                     }
-                                    if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext()) ) {
+                                    if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext())) {
                                         if (Utility.isLocationEnabled(getContext())) {
                                             if (Utility.isNetworkAvailable(getContext())) {
-                                                Utility.openCamera(getActivity(), AdvanceRequestFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore",screenName);
+                                                Utility.openCamera(getActivity(), AdvanceRequestFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore", screenName);
                                                 customBuilder.dismiss();
                                             } else {
                                                 Utility.showNetworkNotAvailableDialog(getContext());
@@ -224,10 +224,10 @@ public class AdvanceRequestFragment extends BaseFragment {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.reasonTV:
-                if(advanceRequestResponseModel!=null && advanceRequestResponseModel.getGetAdvancePageInitResult()!=null
+                if (advanceRequestResponseModel != null && advanceRequestResponseModel.getGetAdvancePageInitResult() != null
                         && advanceRequestResponseModel.getGetAdvancePageInitResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)
-                        && advanceRequestResponseModel.getGetAdvancePageInitResult().getReasonCodeList()!=null
-                        && advanceRequestResponseModel.getGetAdvancePageInitResult().getReasonCodeList().getReasonCodeList().size()>0) {
+                        && advanceRequestResponseModel.getGetAdvancePageInitResult().getReasonCodeList() != null
+                        && advanceRequestResponseModel.getGetAdvancePageInitResult().getReasonCodeList().getReasonCodeList().size() > 0) {
                     ReasonCodeListModel reasonCodeListModel = advanceRequestResponseModel.getGetAdvancePageInitResult().getReasonCodeList();
                     if (reasonCodeListModel != null) {
                         ArrayList<ReasonCodeListItemModel> reasonCodeList = reasonCodeListModel.getReasonCodeList();
@@ -245,8 +245,8 @@ public class AdvanceRequestFragment extends BaseFragment {
                         });
                         reasonDialog.show();
                     }
-                }else {
-                    new AlertCustomDialog(context,advanceRequestResponseModel.getGetAdvancePageInitResult().getErrorMessage());
+                } else {
+                    new AlertCustomDialog(context, advanceRequestResponseModel.getGetAdvancePageInitResult().getErrorMessage());
                     return;
                 }
                 break;
@@ -294,41 +294,49 @@ public class AdvanceRequestFragment extends BaseFragment {
 
     @Override
     public void validateResponse(ResponseData response) {
+        Log.d("TAG", "response data " + response.isSuccess());
         switch (response.getRequestData().getReqApiId()) {
             case CommunicationConstant.API_GET_ADVANCE_PAGE_INIT:
                 String str = response.getResponseData();
                 Log.d("TAG", "Advance Response : " + str);
-                advanceRequestResponseModel = AdvanceRequestResponseModel.create(str);
-                if(advanceRequestResponseModel!=null &&
-                        advanceRequestResponseModel.getGetAdvancePageInitResult()!=null && advanceRequestResponseModel.getGetAdvancePageInitResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    if (advanceRequestResponseModel != null && advanceRequestResponseModel.getGetAdvancePageInitResult() != null
-                            && advanceRequestResponseModel.getGetAdvancePageInitResult().getCurrencyList() != null
-                            && advanceRequestResponseModel.getGetAdvancePageInitResult().getCurrencyList().getCurrencyList() != null) {
-                        currencyListModel = advanceRequestResponseModel.getGetAdvancePageInitResult().getCurrencyList();
-                        ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(currencyListModel.getCurrencyList()));
-                        if (arrayList.size() == 1) {
-                            currencyValue = arrayList.get(0);
-                            currencyTV.setText(arrayList.get(0));
-                        }
+                if (str!=null && !str.equalsIgnoreCase("")) {
+                    advanceRequestResponseModel = AdvanceRequestResponseModel.create(str);
+                    if (advanceRequestResponseModel != null &&
+                            advanceRequestResponseModel.getGetAdvancePageInitResult() != null && advanceRequestResponseModel.getGetAdvancePageInitResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
+                        if (advanceRequestResponseModel != null && advanceRequestResponseModel.getGetAdvancePageInitResult() != null
+                                && advanceRequestResponseModel.getGetAdvancePageInitResult().getCurrencyList() != null
+                                && advanceRequestResponseModel.getGetAdvancePageInitResult().getCurrencyList().getCurrencyList() != null) {
+                            currencyListModel = advanceRequestResponseModel.getGetAdvancePageInitResult().getCurrencyList();
+                            ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(currencyListModel.getCurrencyList()));
+                            if (arrayList.size() == 1) {
+                                currencyValue = arrayList.get(0);
+                                currencyTV.setText(arrayList.get(0));
+                            }
 
+                        }
                     }
+                } else {
+                    CustomDialog.alertOkWithFinishFragment(context, context.getResources().getResourceName(R.string.network_error), mUserActionListener, IAction.HOME_VIEW, true);
                 }
 
                 break;
             case CommunicationConstant.API_GET_SAVE_ADVANCE:
-                isClicked=false;
+                isClicked = false;
                 String responseData = response.getResponseData();
                 Log.d("TAG", "Advance request Response : " + responseData);
+                if(responseData!=null && !responseData.equalsIgnoreCase("")){
                 AdvanceDataResponseModel advanceDataResponseModel = AdvanceDataResponseModel.create(responseData);
                 if (advanceDataResponseModel != null && advanceDataResponseModel.getSaveAdvanceResult() != null
                         && advanceDataResponseModel.getSaveAdvanceResult().getErrorCode().equalsIgnoreCase("0")) {
                     progressBar.setVisibility(View.GONE);
                     getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     CustomDialog.alertOkWithFinishFragment(context, advanceDataResponseModel.getSaveAdvanceResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
-                }else {
+                } else {
                     progressBar.setVisibility(View.GONE);
                     getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     new AlertCustomDialog(getActivity(), advanceDataResponseModel.getSaveAdvanceResult().getErrorMessage());
+                }}else {
+                    CustomDialog.alertOkWithFinishFragment(context, context.getResources().getResourceName(R.string.network_error), mUserActionListener, IAction.HOME_VIEW, true);
                 }
                 break;
             default:
@@ -345,19 +353,19 @@ public class AdvanceRequestFragment extends BaseFragment {
         if (requestCode == UPLOAD_DOC_REQUEST && resultCode == RESULT_OK) {
             boolean fileShow = true;
             final Uri uri = data.getData();
-            String encodeFileToBase64Binary=null;
+            String encodeFileToBase64Binary = null;
             if (data != null) {
                 String path = data.getStringExtra("path");
                 System.out.print(path);
                 Uri uploadedFilePath = data.getData();
                 String filename = getFileName(uploadedFilePath);
-                filename=filename.toLowerCase();
+                filename = filename.toLowerCase();
                 String fileDesc = getFileName(uploadedFilePath);
                 String[] extList = filename.split("\\.");
                 System.out.print(extList[1].toString());
                 String extension = "." + extList[extList.length - 1];
                 encodeFileToBase64Binary = fileToBase64Conversion(data.getData());
-                Log.d("TAG","RAR Base 64 :"+encodeFileToBase64Binary);
+                Log.d("TAG", "RAR Base 64 :" + encodeFileToBase64Binary);
                 List<String> extensionList = Arrays.asList(advanceRequestResponseModel.getGetAdvancePageInitResult().getDocValidation().getExtensions());
                 if (!extensionList.contains(extension.toLowerCase())) {
                     CustomDialog.alertWithOk(context, advanceRequestResponseModel.getGetAdvancePageInitResult().getDocValidation().getMessage());
@@ -375,7 +383,7 @@ public class AdvanceRequestFragment extends BaseFragment {
                         System.out.print(e.toString());
                     }
                 } else if (filename.contains(".jpg") || filename.contains(".png") ||
-                        filename.contains(".jpeg") ||  filename.contains(".bmp") || filename.contains(".BMP")) {
+                        filename.contains(".jpeg") || filename.contains(".bmp") || filename.contains(".BMP")) {
 
                     bitmap = null;
                     try {
@@ -408,7 +416,7 @@ public class AdvanceRequestFragment extends BaseFragment {
                     }
                 } else if (filename.contains(".docx") || filename.contains(".doc")) {
                     try {
-                        encodeFileToBase64Binary=fileToBase64Conversion(data.getData());
+                        encodeFileToBase64Binary = fileToBase64Conversion(data.getData());
                         fileObj.setDocFile(filename);
                         fileObj.setName(fileDesc);
 
@@ -416,9 +424,9 @@ public class AdvanceRequestFragment extends BaseFragment {
                     } catch (Exception e) {
 
                     }
-                }else if (filename.contains(".xlsx") || filename.contains(".xls")) {
+                } else if (filename.contains(".xlsx") || filename.contains(".xls")) {
                     try {
-                        encodeFileToBase64Binary=fileToBase64Conversion(data.getData());
+                        encodeFileToBase64Binary = fileToBase64Conversion(data.getData());
                         fileObj.setDocFile(filename);
                         fileObj.setName(fileDesc);
 
@@ -428,29 +436,29 @@ public class AdvanceRequestFragment extends BaseFragment {
                     }
                 } else if (filename.contains(".txt")) {
                     try {
-                        encodeFileToBase64Binary=fileToBase64Conversion(data.getData());
+                        encodeFileToBase64Binary = fileToBase64Conversion(data.getData());
                         fileObj.setDocFile(filename);
                         fileObj.setName(fileDesc);
 
                     } catch (Exception e) {
 
                     }
-                } else if(filename.contains(".gif")){
-                    encodeFileToBase64Binary=fileToBase64Conversion(data.getData());
+                } else if (filename.contains(".gif")) {
+                    encodeFileToBase64Binary = fileToBase64Conversion(data.getData());
                     fileObj.setDocFile(filename);
                     fileObj.setName(fileDesc);
-                }else if(filename.contains(".rar")){
-                    encodeFileToBase64Binary=fileToBase64Conversion(data.getData());
+                } else if (filename.contains(".rar")) {
+                    encodeFileToBase64Binary = fileToBase64Conversion(data.getData());
                     fileObj.setDocFile(filename);
                     fileObj.setName(fileDesc);
-                }else if(filename.contains(".zip")){
-                    encodeFileToBase64Binary=fileToBase64Conversion(data.getData());
+                } else if (filename.contains(".zip")) {
+                    encodeFileToBase64Binary = fileToBase64Conversion(data.getData());
                     fileObj.setDocFile(filename);
                     fileObj.setName(fileDesc);
                 }
 
 
-                if(Utility.calcBase64SizeInKBytes(encodeFileToBase64Binary)>Utility.maxLimit){
+                if (Utility.calcBase64SizeInKBytes(encodeFileToBase64Binary) > Utility.maxLimit) {
                     CustomDialog.alertWithOk(context, Utility.sizeMsg);
                     return;
                 }
@@ -530,14 +538,14 @@ public class AdvanceRequestFragment extends BaseFragment {
 
                     if (filenameET.getText().toString().equalsIgnoreCase("")) {
                         new AlertCustomDialog(context, "Please enter file name");
-                    }else {
+                    } else {
                         fileObj.setDocFile(filenameET.getText().toString() + ".jpg");
                         fileObj.setName(filenameET.getText().toString() + ".jpg");
 
                         boolean fileShow1 = true;
 
                         if (fileShow1) {
-                           String encodeFileToBase64Binary = Utility.converBitmapToBase64(bitmap) ;
+                            String encodeFileToBase64Binary = Utility.converBitmapToBase64(bitmap);
 
                             if (uploadFileList.size() > 0) {
                                 for (int i = 1; i <= uploadFileList.size(); i++) {
@@ -611,7 +619,7 @@ public class AdvanceRequestFragment extends BaseFragment {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                   int viewType) {
+                                             int viewType) {
             // create a new1 view
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.expense_list_item, parent, false);
             // set the view's size, margins, paddings and layout parameters
@@ -639,7 +647,7 @@ public class AdvanceRequestFragment extends BaseFragment {
                 }
             } else if (filename.contains(".jpg") ||
                     filename.contains(".png") || filename.contains(".jpeg")
-                    || filename.contains(".bmp") || filename.contains(".BMP")  ) {
+                    || filename.contains(".bmp") || filename.contains(".BMP")) {
                 try {
                     holder.fileNameTV.setText(filename);
                     holder.fileDescriptionTV.setText(name);
@@ -655,7 +663,7 @@ public class AdvanceRequestFragment extends BaseFragment {
                 } catch (Exception e) {
 
                 }
-            }  else if (filename.toString().contains(".xlsx") || filename.toString().contains(".xls")) {
+            } else if (filename.toString().contains(".xlsx") || filename.toString().contains(".xls")) {
                 fileType = "application/word";
                 try {
                     holder.img_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.doc_icon));
@@ -673,7 +681,7 @@ public class AdvanceRequestFragment extends BaseFragment {
                 } catch (Exception e) {
 
                 }
-            }else if(filename.contains(".gif")){
+            } else if (filename.contains(".gif")) {
                 try {
                     holder.img_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.gif_icon));
                     holder.fileNameTV.setText(filename);
@@ -681,7 +689,7 @@ public class AdvanceRequestFragment extends BaseFragment {
                 } catch (Exception e) {
 
                 }
-            }else if(filename.contains(".rar")){
+            } else if (filename.contains(".rar")) {
                 try {
                     holder.img_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.rar_icon));
                     holder.fileNameTV.setText(filename);
@@ -689,7 +697,7 @@ public class AdvanceRequestFragment extends BaseFragment {
                 } catch (Exception e) {
 
                 }
-            }else if(filename.contains(".zip")){
+            } else if (filename.contains(".zip")) {
                 try {
                     holder.img_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.zip_icon));
                     holder.fileNameTV.setText(filename);
@@ -748,8 +756,7 @@ public class AdvanceRequestFragment extends BaseFragment {
                                 });
 
                                 dialog.show();
-                            }
-                            else if (selectedObject.toString().equalsIgnoreCase("Delete")) {
+                            } else if (selectedObject.toString().equalsIgnoreCase("Delete")) {
                                 mDataset.remove(position);
                                 DocumentUploadAdapter.this.notifyDataSetChanged();
                                 if (mDataset.size() == 0) {
@@ -781,7 +788,7 @@ public class AdvanceRequestFragment extends BaseFragment {
         String empId = loginUserModel.getUserModel().getEmpId();
         String requestId = String.valueOf(0);
         String fromButton = "Submit";
-        String approvalLevel="0";
+        String approvalLevel = "0";
         progressBar.setVisibility(View.VISIBLE);
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
@@ -789,18 +796,18 @@ public class AdvanceRequestFragment extends BaseFragment {
         if (reasonCodeModel == null) {
             progressBar.setVisibility(View.GONE);
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            isClicked=false;
+            isClicked = false;
             new AlertCustomDialog(context, "Please Select Reason");
             return;
         } else if (currencyListModel == null) {
             progressBar.setVisibility(View.GONE);
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            isClicked=false;
+            isClicked = false;
             new AlertCustomDialog(context, "Please Select Currency");
             return;
         } else if (amount.equalsIgnoreCase("")) {
             progressBar.setVisibility(View.GONE);
-            isClicked=false;
+            isClicked = false;
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             new AlertCustomDialog(context, "Please Enter Amount");
             return;
@@ -813,7 +820,7 @@ public class AdvanceRequestFragment extends BaseFragment {
                 }
             }
             CommunicationManager.getInstance().sendPostRequest(this,
-                    AppRequestJSONString.getAdvanceRequestData(fromButton, requestId, approvalLevel,remarks, amount, currencyValue, empId, reasonCode, reason, uploadFileList),
+                    AppRequestJSONString.getAdvanceRequestData(fromButton, requestId, approvalLevel, remarks, amount, currencyValue, empId, reasonCode, reason, uploadFileList),
                     CommunicationConstant.API_GET_SAVE_ADVANCE, true);
 
         }

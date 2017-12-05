@@ -39,7 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.games.appcontent.AppContentUtils;
+
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -922,7 +922,7 @@ if(saveExpenseRequestModel!=null) {
         ArrayList<String> list=new ArrayList<>();
         for (LineItemsModel itemsModel : saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems()) {
             if (itemsModel.getCategoryID() == 4) {
-                list.add(itemsModel.getDateTo());
+                list.add(itemsModel.getHeadID()+"#"+itemsModel.getDateTo());
             }
         }
 
@@ -977,7 +977,7 @@ if(saveExpenseRequestModel!=null) {
             String[] monthList=sendPeriodicMonthData();
             if(monthList!=null && monthList.length>0) {
                 CommunicationManager.getInstance().sendPostRequest(this,
-                        AppRequestJSONString.getPeriodicMonthData(empId, 0, monthList),
+                        AppRequestJSONString.getPeriodicMonthData(empId, Integer.parseInt(requestId), monthList),
                         CommunicationConstant.API_GET_MONTH_LIST, true);
             }else{
 
@@ -1001,7 +1001,7 @@ if(saveExpenseRequestModel!=null) {
                 String[] monthList=sendPeriodicMonthData();
                 if(monthList!=null && monthList.length>0) {
                     CommunicationManager.getInstance().sendPostRequest(this,
-                            AppRequestJSONString.getPeriodicMonthData(empId, 0, monthList),
+                            AppRequestJSONString.getPeriodicMonthData(empId, Integer.parseInt(requestId), monthList),
                             CommunicationConstant.API_GET_MONTH_LIST, true);
                 }else{
 

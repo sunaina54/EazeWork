@@ -100,7 +100,7 @@ import static hr.eazework.com.ui.util.ImageUtil.rotateImage;
  * Created by Dell3 on 10-08-2017.
  */
 
-public class AddExpenseFragment extends MyBaseFragment  {
+public class AddExpenseFragment extends MyBaseFragment {
     public static final String TAG = "AddExpenseFragment";
     private boolean isComingFromEdit;
     private Preferences preferences;
@@ -168,7 +168,7 @@ public class AddExpenseFragment extends MyBaseFragment  {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.add_expense_fragment, container, false);
+        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.add_expense_fragment, container, false);
         context = getActivity();
         imageList = new ArrayList<>();
         preferences = new Preferences(getActivity());
@@ -181,7 +181,10 @@ public class AddExpenseFragment extends MyBaseFragment  {
         saveLl = (RelativeLayout) rootView.findViewById(R.id.saveLl);
         saveLl.setVisibility(View.GONE);
         empId = expenseRequestModel.getExpense().getExpenseItem().getForEmpID();
-        reqId = Integer.parseInt(expenseRequestModel.getExpense().getExpenseItem().getReqID());
+        if (expenseRequestModel!=null && expenseRequestModel.getExpense()!=null &&
+                expenseRequestModel.getExpense().getExpenseItem()!=null && expenseRequestModel.getExpense().getExpenseItem().getReqID() != null) {
+            reqId = Integer.parseInt(expenseRequestModel.getExpense().getExpenseItem().getReqID());
+        }
         progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
         progressBar.bringToFront();
         progressBar.setVisibility(View.GONE);
@@ -233,16 +236,16 @@ public class AddExpenseFragment extends MyBaseFragment  {
         });
 
         int textColor = Utility.getTextColorCode(preferences);
-        int headerColr = Utility.getBgColorCode(context,preferences);
-        rl_edit_team_member=(LinearLayout)rootView.findViewById(R.id.rl_edit_team_member);
-        ImageView ibRight=(ImageView)rootView.findViewById(R.id.ibRight);
+        int headerColr = Utility.getBgColorCode(context, preferences);
+        rl_edit_team_member = (LinearLayout) rootView.findViewById(R.id.rl_edit_team_member);
+        ImageView ibRight = (ImageView) rootView.findViewById(R.id.ibRight);
         ibRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 doSubmitOperation();
             }
         });
-        ImageView ibWrongh=(ImageView)rootView.findViewById(R.id.ibWrong);
+        ImageView ibWrongh = (ImageView) rootView.findViewById(R.id.ibWrong);
         ibWrongh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -278,7 +281,7 @@ public class AddExpenseFragment extends MyBaseFragment  {
                                     if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext()) && PermissionUtil.checkLocationPermission(getContext())) {
                                         if (Utility.isLocationEnabled(getContext())) {
                                             if (Utility.isNetworkAvailable(getContext())) {
-                                                Utility.openCamera(getActivity(), AddExpenseFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore",TAG);
+                                                Utility.openCamera(getActivity(), AddExpenseFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore", TAG);
                                                 customBuilder.dismiss();
                                             } else {
                                                 Utility.showNetworkNotAvailableDialog(getContext());
@@ -575,21 +578,21 @@ public class AddExpenseFragment extends MyBaseFragment  {
             lineItem = new ArrayList<>();
         }
 
-        if(lineItem!=null){
-            LineItemsModel tempModel=null;
-            for(int i=0;i<lineItem.size();i++){
+        if (lineItem != null) {
+            LineItemsModel tempModel = null;
+            for (int i = 0; i < lineItem.size(); i++) {
 
-                if(lineItem.get(i).getLineItemID()==lineItemList.getLineItemID() && !lineItem.get(i).getFlag().equalsIgnoreCase(AppsConstant.NEW_FLAG)){
-                    tempModel=lineItem.get(i);
-                    if(lineItemList.getLineItemID()!=0){
+                if (lineItem.get(i).getLineItemID() == lineItemList.getLineItemID() && !lineItem.get(i).getFlag().equalsIgnoreCase(AppsConstant.NEW_FLAG)) {
+                    tempModel = lineItem.get(i);
+                    if (lineItemList.getLineItemID() != 0) {
                         lineItemList.setLineItemID(lineItemList.getLineItemID());
                     }
                     lineItem.set(i, lineItemList);
                     break;
                 }
 
-                if(lineItem.get(i).getI()==lineItemList.getI() && lineItemList.getFlag()!=null && lineItemList.getFlag().equalsIgnoreCase(AppsConstant.NEW_FLAG)){
-                    tempModel=lineItem.get(i);
+                if (lineItem.get(i).getI() == lineItemList.getI() && lineItemList.getFlag() != null && lineItemList.getFlag().equalsIgnoreCase(AppsConstant.NEW_FLAG)) {
+                    tempModel = lineItem.get(i);
                     lineItemList.setLineItemID(0);
                     lineItemList.setFlag("N");
                     lineItem.set(i, lineItemList);
@@ -597,10 +600,10 @@ public class AddExpenseFragment extends MyBaseFragment  {
                 }
 
             }
-            if(tempModel==null){
+            if (tempModel == null) {
                 lineItemList.setLineItemID(0);
                 lineItemList.setFlag("N");
-                lineItemList.setI(lineItem.size()+1);
+                lineItemList.setI(lineItem.size() + 1);
                 lineItem.add(lineItemList);
             }
 
@@ -681,8 +684,8 @@ public class AddExpenseFragment extends MyBaseFragment  {
         }
         saveExpModel.setExpenseItem(saveExpenseItem);
         expenseRequestModel.setExpense(saveExpModel);
-        Intent theIntent=new Intent();
-        getActivity().setResult(AddExpenseActivity.REQUEST_CODE,theIntent);
+        Intent theIntent = new Intent();
+        getActivity().setResult(AddExpenseActivity.REQUEST_CODE, theIntent);
         getActivity().finish();
     }
 
@@ -775,17 +778,7 @@ public class AddExpenseFragment extends MyBaseFragment  {
                     } catch (Exception e) {
 
                     }
-                }else if (filename.contains(".xlsx") || filename.contains(".xls")) {
-                    try {
-                        encodeFileToBase64Binary=fileToBase64Conversion(data.getData());
-                        fileObj.setDocFile(filename);
-                        fileObj.setName(fileDesc);
-
-
-                    } catch (Exception e) {
-
-                    }
-                }  else if (filename.contains(".txt")) {
+                } else if (filename.contains(".xlsx") || filename.contains(".xls")) {
                     try {
                         encodeFileToBase64Binary = fileToBase64Conversion(data.getData());
                         fileObj.setDocFile(filename);
@@ -795,20 +788,30 @@ public class AddExpenseFragment extends MyBaseFragment  {
                     } catch (Exception e) {
 
                     }
-                }else if(filename.contains(".gif")){
-                    encodeFileToBase64Binary=fileToBase64Conversion(data.getData());
+                } else if (filename.contains(".txt")) {
+                    try {
+                        encodeFileToBase64Binary = fileToBase64Conversion(data.getData());
+                        fileObj.setDocFile(filename);
+                        fileObj.setName(fileDesc);
+
+
+                    } catch (Exception e) {
+
+                    }
+                } else if (filename.contains(".gif")) {
+                    encodeFileToBase64Binary = fileToBase64Conversion(data.getData());
                     fileObj.setDocFile(filename);
                     fileObj.setName(fileDesc);
-                }else if(filename.contains(".rar")){
-                    encodeFileToBase64Binary=fileToBase64Conversion(data.getData());
+                } else if (filename.contains(".rar")) {
+                    encodeFileToBase64Binary = fileToBase64Conversion(data.getData());
                     fileObj.setDocFile(filename);
                     fileObj.setName(fileDesc);
-                }else if(filename.contains(".zip")){
-                    encodeFileToBase64Binary=fileToBase64Conversion(data.getData());
+                } else if (filename.contains(".zip")) {
+                    encodeFileToBase64Binary = fileToBase64Conversion(data.getData());
                     fileObj.setDocFile(filename);
                     fileObj.setName(fileDesc);
                 }
-                if(Utility.calcBase64SizeInKBytes(encodeFileToBase64Binary)>Utility.maxLimit){
+                if (Utility.calcBase64SizeInKBytes(encodeFileToBase64Binary) > Utility.maxLimit) {
                     CustomDialog.alertWithOk(context, Utility.sizeMsg);
                     return;
                 }
@@ -966,7 +969,7 @@ public class AddExpenseFragment extends MyBaseFragment  {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                   int viewType) {
+                                             int viewType) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.expense_list_item, parent, false);
             // set the view's size, margins, paddings and layout parameters
             ViewHolder vh = new ViewHolder(v);
@@ -978,9 +981,9 @@ public class AddExpenseFragment extends MyBaseFragment  {
         public void onBindViewHolder(final ViewHolder holder, final int position) {
 
             final SupportDocsItemModel fileObject = mDataset.get(position);
-            if(fileObject.getDocID()!=0 && fileObject.getFlag().equalsIgnoreCase(AppsConstant.DELETE_FLAG)){
+            if (fileObject.getDocID() != 0 && fileObject.getFlag().equalsIgnoreCase(AppsConstant.DELETE_FLAG)) {
 
-            }else {
+            } else {
                 String fileType = "";
                 final String filename = fileObject.getDocFile();
                 final String name = fileObject.getName();
@@ -1055,11 +1058,11 @@ public class AddExpenseFragment extends MyBaseFragment  {
                     @Override
                     public void onClick(final View v) {
                         ArrayList<String> list = new ArrayList<>();
-                        if(fileObject.getDocID()!=0) {
+                        if (fileObject.getDocID() != 0) {
                             list.add("Edit");
                             list.add("Delete");
                             list.add("Download");
-                        }else {
+                        } else {
                             list.add("Edit");
                             list.add("Delete");
                         }
@@ -1120,7 +1123,7 @@ public class AddExpenseFragment extends MyBaseFragment  {
 
                                 } else if (selectedObject.toString().equalsIgnoreCase("Download")) {
 
-                                    if(fileObject.getDocID()==0){
+                                    if (fileObject.getDocID() == 0) {
                                         return;
                                     }
                                     String filePath = fileObject.getDocPath().replace("~", "");
@@ -1197,7 +1200,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                 AppRequestJSONString.getCategoryData(empId, reqId),
                 CommunicationConstant.API_GET_CATEGORY_LIST_DETAILS, true);
     }
-
 
 
     public void sendHeadDetailsWithPolicyData() {
@@ -1326,10 +1328,16 @@ public class AddExpenseFragment extends MyBaseFragment  {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    double amountValue=0;
+                    double amountValue = 0;
                     if (inputValue != null && !inputValue.equalsIgnoreCase("") && lineItemList.getInputUnit() != null) {
-                        amountValue = Double.parseDouble(inputValue) * model.getLimitedTo().doubleValue();
-                        amountET.setText(amountValue+"");
+
+                        if (model.getPolicyID() != null && !model.getPolicyID().equalsIgnoreCase("")) {
+                            amountValue = Double.parseDouble(inputValue) * model.getLimitedTo().doubleValue();
+                        } else {
+                            amountValue = Double.parseDouble(inputValue);
+                        }
+                       /* amountValue = Double.parseDouble(inputValue) * model.getLimitedTo().doubleValue();
+                        amountET.setText(amountValue + "");*/
                         DecimalFormat twoDForm = new DecimalFormat("#.##");
                         String tempStr = twoDForm.format(amountValue);
                         amountValue = Double.parseDouble(tempStr);
@@ -1340,7 +1348,6 @@ public class AddExpenseFragment extends MyBaseFragment  {
                     }
                 }
             });
-
 
         } else {
             inputLinearLayout.setVisibility(View.GONE);
@@ -1356,7 +1363,7 @@ public class AddExpenseFragment extends MyBaseFragment  {
             String[] periodDate1 = lineItemList.getDateTo().split("-");
             tv_from_Year.setText(periodDate1[0]);
             tv_from_Month.setText(periodDate1[1]);
-            periodDate=lineItemList.getDateTo();
+            periodDate = lineItemList.getDateTo();
 
         }
     }
@@ -1373,7 +1380,7 @@ public class AddExpenseFragment extends MyBaseFragment  {
                 if (headCategoryListModels != null && headCategoryListModels.size() > 0) {
                     if (lineItemList != null && lineItemList.getLineItemID() == 0) {
                         callApiForSetEditedData();
-                    } else if (lineItemList != null ) {
+                    } else if (lineItemList != null) {
                         callApiForSetEditedData();
                     }
                 }
@@ -1382,7 +1389,8 @@ public class AddExpenseFragment extends MyBaseFragment  {
                 String strResponse = response.getResponseData();
                 Log.d("TAG", "Advance Response : " + strResponse);
                 try {
-                    visibilityResponseModel = VisibilityResponseModel.create(strResponse);Log.d("TAG", "Advance Response : " + visibilityResponseModel.serialize());
+                    visibilityResponseModel = VisibilityResponseModel.create(strResponse);
+                    Log.d("TAG", "Advance Response : " + visibilityResponseModel.serialize());
                 } catch (Exception e) {
                     Log.d("TAG", "Advance Response : " + e.toString());
                 }
@@ -1412,6 +1420,13 @@ public class AddExpenseFragment extends MyBaseFragment  {
                 for (VisibilityDataModel visibility : model.getVisibility()) {
                     if (visibility.getFieldTypeID() != null && visibility.getFieldTypeID().equalsIgnoreCase("MonthCalendar")) {
                         labelPeriod = visibility.getFieldLabel();
+                        datePickerDialog3 = pickYearMonthFromCalender(context, AppsConstant.DATE_YEAR_MONTH_FORMAT);// CalenderUtils.pickYearMonthFromCalender(context, tv_from_Year, tv_from_Month, AppsConstant.DATE_YEAR_MONTH_FORMAT);
+                        periodLinearLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                datePickerDialog3.show();
+                            }
+                        });
                     } else if (visibility.getFieldTypeID() != null && visibility.getFieldTypeID().equalsIgnoreCase("TextBox")) {
 
                         if (visibility.getFieldLabel() != null && visibility.getFieldCode().equalsIgnoreCase("txtInput")) {
@@ -1499,17 +1514,17 @@ public class AddExpenseFragment extends MyBaseFragment  {
                                 @Override
                                 public void afterTextChanged(Editable s) {
                                     if (!inputValue.equalsIgnoreCase("")) {
-                                        double amountValue=0;
-                                        if( model.getPolicyID()!=null && !model.getPolicyID().equalsIgnoreCase("")) {
+                                        double amountValue = 0;
+                                        if (model.getPolicyID() != null && !model.getPolicyID().equalsIgnoreCase("")) {
                                             amountValue = Double.parseDouble(inputValue) * model.getLimitedTo().doubleValue();
-                                        }else{
+                                        } else {
                                             amountValue = Double.parseDouble(inputValue);
                                         }
                                         DecimalFormat twoDForm = new DecimalFormat("#.##");
                                         String tempStr = twoDForm.format(amountValue);
                                         amountValue = Double.parseDouble(tempStr);
                                         amountET.setText(amountValue + "");
-                                    }else{
+                                    } else {
                                         amountET.setText("");
                                     }
                                 }
@@ -1558,7 +1573,7 @@ public class AddExpenseFragment extends MyBaseFragment  {
                 String year = "", month = "";
                 year = tv_from_Year.getText().toString();
                 month = tv_from_Month.getText().toString();
-                month=month.substring(0,3);
+                month = month.substring(0, 3);
                 tv_from_Month.setText(month);
                 periodDate = month + "-" + year;
             }

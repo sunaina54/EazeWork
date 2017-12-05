@@ -522,7 +522,7 @@ public class AddExpenseClaimFragment extends BaseFragment {
                 saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems().size() > 0) {
             for (LineItemsModel itemsModel : saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems()) {
                 if (itemsModel.getCategoryID() == 4) {
-                    list.add(itemsModel.getDateTo());
+                    list.add(itemsModel.getHeadID()+"#"+itemsModel.getDateTo());
                 }
             }
 

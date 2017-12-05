@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -275,6 +276,7 @@ public class AttandanceFragment extends BaseFragment {
 				JSONObject responseMainJson=jsonObject.optJSONObject("GetEmpAttendanceCalendarStatusResult");
 				if(responseMainJson!=JSONObject.NULL && responseMainJson.optInt("ErrorCode", -1)==0){
 					AttandanceCalenderStatusResult.getInstance().updateAttandanceCalenderStatusItems(responseMainJson.optJSONArray("attendCalStatusList"));
+					Log.d("TAG","Month Data : "+responseMainJson.optJSONArray("attendCalStatusList").toString());
 				}
 				updateSelectedDateDetail(mSelectedDate);
 				caldroidFragment.notifyDataSetChanged();
