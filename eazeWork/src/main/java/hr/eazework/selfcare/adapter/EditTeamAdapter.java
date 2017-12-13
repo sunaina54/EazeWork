@@ -224,12 +224,12 @@ public class EditTeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         final MemberReqInputModel model = getItem(position);
         FileInfoModel fileInfoModel = model.getmFileInfoModel();
-        switch (vh2.getItemViewType()) {
+            switch (vh2.getItemViewType()) {
             case TYPE_TABLE:
                 vh2.imageView.setImageResource(R.drawable.camera);
                 vh2.textView.setText(model.getmFieldLabel());
-                if(!TextUtils.isEmpty(fileInfoModel.getmFilePath())) {
-                    vh2.imageView.setImageBitmap(ImageUtil.decodeImageToBitmap(fileInfoModel.getmFilePath()));
+                if(!TextUtils.isEmpty(fileInfoModel.getmFilePath()) && model.getmFieldCode()!=null && model.getmFieldCode().equalsIgnoreCase("EW05000001")) {
+                    vh2.imageView.setImageBitmap(ImageUtil.decodeBitmapToImage(model.getmFileInfoModel().getmBase64Data()));
                 }
 
                 if(!TextUtils.isEmpty(fileInfoModel.getmText())) {
@@ -249,8 +249,8 @@ public class EditTeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case TYPE_PROFILE:
 
                 vh2.textView.setText(model.getmFieldLabel());
-                if(!TextUtils.isEmpty(fileInfoModel.getmFilePath())) {
-                    vh2.imageView.setImageBitmap(ImageUtil.decodeImageToBitmap(fileInfoModel.getmFilePath()));
+                if(!TextUtils.isEmpty(fileInfoModel.getmFilePath()) && model.getmFieldCode()!=null && model.getmFieldCode().equalsIgnoreCase("999")) {
+                    vh2.imageView.setImageBitmap(ImageUtil.decodeBitmapToImage(model.getmFileInfoModel().getmBase64Data()));
                 } else {
                     vh2.imageView.setImageResource(R.drawable.photo);
                 }
@@ -273,8 +273,10 @@ public class EditTeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case TYPE_SINGLE_ATTACHMENT:
                 vh2.imageView.setImageResource(R.drawable.camera);
                 vh2.textView.setText(model.getmFieldLabel());
-                if(!TextUtils.isEmpty(fileInfoModel.getmFilePath())) {
-                    vh2.imageView.setImageBitmap(ImageUtil.decodeImageToBitmap(fileInfoModel.getmFilePath()));
+              //  if(model.getmFieldCode()!=null && model.getmFieldCode().equalsIgnoreCase("EC00000004")){
+                if(!TextUtils.isEmpty(fileInfoModel.getmFilePath()) && model.getmFieldCode()!=null && model.getmFieldCode().equalsIgnoreCase("EW08000001")) {
+                    vh2.imageView.setImageBitmap(ImageUtil.decodeBitmapToImage(model.getmFileInfoModel().getmBase64Data()));
+
                 }
 
                 if(!TextUtils.isEmpty(fileInfoModel.getmText())) {

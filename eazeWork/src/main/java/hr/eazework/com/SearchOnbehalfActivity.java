@@ -23,6 +23,8 @@ import hr.eazework.com.model.EmployItem;
 import hr.eazework.com.model.EmployResponse;
 import hr.eazework.com.model.SearchOnBehalfItem;
 import hr.eazework.com.ui.fragment.CreateNewLeaveFragment;
+import hr.eazework.com.ui.fragment.OutdoorDutyRequestFragment;
+import hr.eazework.com.ui.fragment.WorkFromHomeRequestFragment;
 import hr.eazework.com.ui.util.AppsConstant;
 import hr.eazework.com.ui.util.Preferences;
 import hr.eazework.com.ui.util.Utility;
@@ -43,7 +45,9 @@ public class SearchOnbehalfActivity extends BaseActivity {
     private TextView tv_header_text;
     private RecyclerView recyclerView;
     private EmployResponse empResponse;
-    public  static String SELECTED_EMP="seletedEmp";
+    public static String SELECTED_EMP="seletedEmp";
+    public static String SELECTED_WFH_EMP="selectedWFHEmp";
+    public static String SELECTED_OD_EMP="selectedODEmp";
     private ImageView ibRightIV,clearTextIV;
     private LinearLayout progressContainer,noRecordLayout,rl_edit_team_member;
 
@@ -77,7 +81,7 @@ public class SearchOnbehalfActivity extends BaseActivity {
         tv_header_text.setTextColor(textColor);
         rl_edit_team_member=(LinearLayout) findViewById(R.id.rl_edit_team_member);
         rl_edit_team_member.setBackgroundColor(bgColor);
-        backLayout=(RelativeLayout)findViewById(R.id.backLayout);
+
         recyclerView = (RecyclerView) findViewById(R.id.recycleView);
         searchLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +94,7 @@ public class SearchOnbehalfActivity extends BaseActivity {
                 searchOnBehalf(str);
             }
         });
+        backLayout=(RelativeLayout)findViewById(R.id.backLayout);
         backLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -204,7 +209,6 @@ public class SearchOnbehalfActivity extends BaseActivity {
 
             final EmployItem item = dataSet.get(listPosition);
             if(item.getEmpCode()!=null){
-
                 holder.empCodeTV.setText(item.getEmpCode());
 
             }
@@ -216,6 +220,10 @@ public class SearchOnbehalfActivity extends BaseActivity {
                 public void onClick(View view) {
                     Intent theIntent=new Intent();
                     theIntent.putExtra(SELECTED_EMP,item);
+                    theIntent.putExtra(SELECTED_WFH_EMP,item);
+                    theIntent.putExtra(SELECTED_OD_EMP,item);
+                    setResult(OutdoorDutyRequestFragment.OD_EMP,theIntent);
+                    setResult(WorkFromHomeRequestFragment.WFH_EMP,theIntent);
                     setResult(CreateNewLeaveFragment.LEAVE_EMP,theIntent);
                     finish();
                 }

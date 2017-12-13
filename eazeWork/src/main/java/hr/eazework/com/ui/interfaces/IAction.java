@@ -39,6 +39,8 @@ public interface IAction {
 	int EXPENSE_CLAIM_SUMMARY=35;
 	int EXPENSE_APPROVAL=36;
 	int ADVANCE_APPROVAL=37;
-	int EDIT_EXPENSE=38;
+	int WORK_FROM_HOME=38;
+	int OUTDOOR_DUTY=39;
+	int TOUR=40;
 
 }

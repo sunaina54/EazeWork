@@ -110,6 +110,7 @@ public class AddExpenseClaimFragment extends BaseFragment {
     private PeriodicExpenseResponseModel periodicExpenseResponseModel;
     private Context context;
     public static final String TAG = "AddExpenseClaimFragment";
+    private String screenName = "AddExpenseClaimFragment";
     private Preferences preferences;
     private ImageView add_expenseIV, advance_expenseIV, plus_create_newIV;
     private RecyclerView expenseDetailsRecyclerView, advance_expenseRecyclerView, expenseRecyclerView;
@@ -323,7 +324,7 @@ public class AddExpenseClaimFragment extends BaseFragment {
                                     if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext()) && PermissionUtil.checkLocationPermission(getContext())) {
                                         if (Utility.isLocationEnabled(getContext())) {
                                             if (Utility.isNetworkAvailable(getContext())) {
-                                                Utility.openCamera(getActivity(), AddExpenseClaimFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore");
+                                                Utility.openCamera(getActivity(), AddExpenseClaimFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore",screenName);
                                                 customBuilder.dismiss();
                                             } else {
                                                 Utility.showNetworkNotAvailableDialog(getContext());

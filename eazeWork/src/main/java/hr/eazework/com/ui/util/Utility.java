@@ -15,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,12 +35,15 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.DownloadManager;
 import android.app.NotificationManager;
+import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -50,18 +54,22 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Base64OutputStream;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -88,8 +96,10 @@ import hr.eazework.com.model.LoginUserModel;
 import hr.eazework.com.model.MappedEmployee;
 import hr.eazework.com.model.MenuItemModel;
 import hr.eazework.com.model.ModelManager;
+import hr.eazework.com.model.SupportDocsItemModel;
 import hr.eazework.com.model.TeamMember;
 import hr.eazework.com.model.TypeWiseListModel;
+import hr.eazework.com.ui.adapter.DocumentUploadAdapter;
 import hr.eazework.com.ui.customview.CustomBuilder;
 import hr.eazework.com.ui.fragment.CameraActivity;
 import hr.eazework.com.ui.interfaces.IAction;
@@ -99,7 +109,7 @@ import hr.eazework.mframe.communication.ResponseData;
 import hr.eazework.selfcare.adapter.ChipViewRecyclerAdapter;
 
 public class Utility {
-   static ArrayList<Long> list = new ArrayList<>();
+    static ArrayList<Long> list = new ArrayList<>();
     private static final String TAG = Utility.class.getName();
     public static int deviceHeight;
     static BroadcastReceiver onComplete=null;
@@ -585,8 +595,196 @@ public class Utility {
     }
 
 
+    public static String getFileName(Uri uri,Context context) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
 
+        return result.toLowerCase();
+    }
 
+    public static String fileToBase64Conversion(Uri file,Context context) {
+        String attachedFile;
+        InputStream inputStream = null;
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            inputStream = context.getContentResolver().openInputStream(file);
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            Base64OutputStream output64 = new Base64OutputStream(output, Base64.DEFAULT);
+            try {
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    output64.write(buffer, 0, bytesRead);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            output64.close();
+        } catch (Exception ex) {
+            System.out.print(ex.toString());
+        }
+        attachedFile = output.toString();
+        return attachedFile;
+    }
+
+    public static void showDocumentPopUp(final Context context, String screen,
+                                         final SupportDocsItemModel model,
+                                         final DocumentUploadAdapter adapter, final LinearLayout errorLinearLayout){
+           ArrayList<String> list = new ArrayList<>();
+                    if(screen.equalsIgnoreCase(AppsConstant.ADD)) {
+                        list.add("Edit");
+                        list.add("Delete");
+                    }else if(screen.equalsIgnoreCase(AppsConstant.EDIT)){
+                        list.add("Edit");
+                        list.add("Delete");
+                        if(model.getDocID()!=0) {
+                            list.add("Download");
+                        }
+                    }else if(screen.equalsIgnoreCase(AppsConstant.VIEW)){
+                        list.add("Download");
+                    }
+                    CustomBuilder customBuilder = new CustomBuilder(context, "Options", false);
+                    customBuilder.setSingleChoiceItems(list, null, new CustomBuilder.OnClickListener() {
+                        @Override
+                        public void onClick(CustomBuilder builder, Object selectedObject) {
+                            if (selectedObject.toString().equalsIgnoreCase("Edit")) {
+                                final Dialog dialog = new Dialog(context);
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.setContentView(R.layout.filename_advance_expense);
+                                Preferences preferences = new Preferences(context);
+
+                                int textColor = Utility.getTextColorCode(preferences);
+                                int bgColor = Utility.getBgColorCode(context, preferences);
+                                FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
+                                fl_actionBarContainer.setBackgroundColor(bgColor);
+                                TextView tv_header_text = (TextView) dialog.findViewById(R.id.tv_header_text);
+                                tv_header_text.setTextColor(textColor);
+                                tv_header_text.setText("Edit");
+
+                                final EditText editFilenameET = (EditText) dialog.findViewById(R.id.editFilenameET);
+                                editFilenameET.setText(model.getName());
+
+                                (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        model.setName(editFilenameET.getText().toString());
+                                        if (adapter.mDataset != null && adapter.mDataset.size() > 0) {
+                                            adapter.mDataset.set(adapter.mDataset.indexOf(model), model);
+
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                        dialog.dismiss();
+
+                                    }
+                                });
+                                (dialog).findViewById(R.id.ibWrong).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                dialog.show();
+                            } else if (selectedObject.toString().equalsIgnoreCase("Delete")) {
+                                adapter.mDataset.remove(adapter.mDataset.indexOf(model));
+                                adapter.notifyDataSetChanged();
+                                if (adapter.mDataset.size() == 0) {
+                                    errorLinearLayout.setVisibility(View.VISIBLE);
+                                }
+
+                            }
+                            builder.dismiss();
+                        }
+                    });
+                    customBuilder.show();
+
+    }
+
+    public static TimePickerDialog setTime(Context context,final TextView timeTV) {
+
+        Calendar newCalendar = Calendar.getInstance();
+        TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                //clockBTN.setChecked(true);
+                String choresTime = updateTime(hourOfDay, minute);
+                timeTV.setText(choresTime);
+              /*  choresTimeValue = choresTime;//DateTimeUtil.convertTimeIntoMillisec(choresTime)+"";
+                setTimeChecked(clockBTN);*/
+
+            }
+        }, newCalendar.get(Calendar.HOUR_OF_DAY), newCalendar.get(Calendar.MINUTE), false);
+        timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE,  context.getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == DialogInterface.BUTTON_NEGATIVE) {
+                    dialog.dismiss();
+                    Log.d("qqqqqqq", "Date Time : clixked");
+                    timeTV.setText("To Do Time");
+                  /*  choresTime = null;
+                    clockBTN.setChecked(false);*/
+
+                }
+            }
+        });
+        return timePickerDialog;
+    }
+
+    public static String updateTime(int hours, int mins) {
+        String timeSet = "";
+        if (hours > 12) {
+            hours -= 12;
+            timeSet = "PM";
+        } else if (hours == 0) {
+            hours += 12;
+            timeSet = "AM";
+        } else if (hours == 12)
+            timeSet = "PM";
+        else
+            timeSet = "AM";
+
+        String minutes = "";
+        if (mins < 10)
+            minutes = "0" + mins;
+        else
+            minutes = String.valueOf(mins);
+        // Append in a StringBuilder
+        String aTime = new StringBuilder().append(hours).append(':')
+                .append(minutes).append(" ").append(timeSet).toString();
+        return aTime;
+    }
+
+    public static String convertStringIntoDate(String dateStr){
+        DateFormat formatter = new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
+        Date date = null;
+        try {
+            date = (Date)formatter.parse(dateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        System.out.println(date);
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        String formatedDate = cal.get(Calendar.DATE) + "/" + (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.YEAR);
+        System.out.println("formatedDate : " + formatedDate);
+        return formatedDate;
+    }
 }
 
 

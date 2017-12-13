@@ -18,6 +18,29 @@
     <Button
         android:visibility="gone"
         android:layout_margin="@dimen/margin_7"
+        android:id="@+id/rejectBTN"
+        style="@style/button"
+        android:layout_width="@dimen/margin_70"
+        android:layout_height="@dimen/margin_30"
+        android:background="@drawable/rounded_corner_accent"
+        android:text="Reject"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_12" />
+    <Button
+        android:visibility="gone"
+        android:layout_margin="@dimen/margin_7"
+        android:id="@+id/returnBTN"
+        style="@style/button"
+        android:layout_width="@dimen/margin_70"
+        android:layout_height="@dimen/margin_30"
+        android:layout_marginRight="@dimen/margin_5"
+        android:background="@drawable/rounded_corner_accent"
+        android:text="Return"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_12" />
+    <Button
+        android:visibility="gone"
+        android:layout_margin="@dimen/margin_7"
         android:id="@+id/saveDraftBTN"
         android:layout_width="@dimen/margin_100"
         android:layout_height="@dimen/margin_30"
@@ -52,29 +75,8 @@
         android:textColor="@color/white"
         android:textSize="@dimen/font_12"
         android:visibility="gone" />
-    <Button
-        android:visibility="gone"
-        android:layout_margin="@dimen/margin_7"
-        android:id="@+id/rejectBTN"
-        style="@style/button"
-        android:layout_width="@dimen/margin_70"
-        android:layout_height="@dimen/margin_30"
-        android:background="@drawable/rounded_corner_accent"
-        android:text="Reject"
-        android:textColor="@color/white"
-        android:textSize="@dimen/font_12" />
-    <Button
-        android:visibility="gone"
-        android:layout_margin="@dimen/margin_7"
-        android:id="@+id/returnBTN"
-        style="@style/button"
-        android:layout_width="@dimen/margin_70"
-        android:layout_height="@dimen/margin_30"
-        android:layout_marginRight="@dimen/margin_5"
-        android:background="@drawable/rounded_corner_accent"
-        android:text="Return"
-        android:textColor="@color/white"
-        android:textSize="@dimen/font_12" />
+
+  
     <Button
         android:visibility="gone"
         android:layout_margin="@dimen/margin_7"

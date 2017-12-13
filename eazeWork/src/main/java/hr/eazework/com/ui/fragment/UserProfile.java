@@ -53,10 +53,6 @@ public class UserProfile extends BaseFragment {
 
         Utility.setCorpBackground(context, rootView);
 
-
-
-
-
         if(name!=null && !name.equalsIgnoreCase("")) {
             ((TextView) rootView.findViewById(R.id.tv_profile_name)).setText(name);
         }else {
@@ -136,8 +132,6 @@ public class UserProfile extends BaseFragment {
 
 
     private void populateViews(JSONObject array) {
-
-
         ModelManager.getInstance().setEmployeeDetailModel(array.toString());
         Log.d("TAG","Profile Response : "+array.toString());
         EmployeeDetailModel model = ModelManager.getInstance().getEmployeeDetailModel();

@@ -36,6 +36,12 @@ public class ImageUtil {
         return bitmap;
     }
 
+    public static Bitmap decodeBitmapToImage(String base64Str){
+        byte[] decodedString = Base64.decode(base64Str, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        return decodedByte;
+    }
+
     public static Bitmap decodeImageToBitmapAndResize(String path) {
         Bitmap bitmap = BitmapFactory.decodeFile(path);
         Bitmap bmp = Bitmap.createScaledBitmap(bitmap,768,1024,false);

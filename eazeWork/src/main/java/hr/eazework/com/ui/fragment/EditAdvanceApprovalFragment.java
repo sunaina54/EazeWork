@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -81,6 +82,7 @@ import static hr.eazework.com.ui.util.ImageUtil.rotateImage;
 
 public class EditAdvanceApprovalFragment extends BaseFragment {
     private Context context;
+    private String screenName = "EditAdvanceRequestFragment";
     private TextView reasonTV, currencyTV;
     private EditText remarksET, amountET;
     private ImageView plus_create_newIV;
@@ -167,7 +169,7 @@ public class EditAdvanceApprovalFragment extends BaseFragment {
                                     if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext()) && PermissionUtil.checkLocationPermission(getContext())) {
                                         if (Utility.isLocationEnabled(getContext())) {
                                             if (Utility.isNetworkAvailable(getContext())) {
-                                                Utility.openCamera(getActivity(), EditAdvanceApprovalFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore");
+                                                Utility.openCamera(getActivity(), EditAdvanceApprovalFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore",screenName);
                                                 customBuilder.dismiss();
                                             } else {
                                                 Utility.showNetworkNotAvailableDialog(getContext());

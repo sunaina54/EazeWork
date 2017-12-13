@@ -173,6 +173,46 @@
     <string name="network_error">No internet connection. Please try again later</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 
+    <string name="employee_name">Employee Name</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="employee_code">Employee Code</string>
+    <string name="remarks">Remarks</string>
+    <string name="place_to_visit">Place To Visit</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    <string name="cancel">Cancel</string>
+    <string name="travel_from">Travel From</string>
+    <string name="travel_to">Travel To</string>
+    <string name="classic_tours">Classic Tours</string>
+    <string name="adventure">Adventure</string>
+    <string name="family_package">Family Package</string>
+    <string name="students_special">Students Special</string>
+    <string name="religious_travel">Religious Travel</string>
+    <string name="photography">Photography</string>
+    <string name="tour">Tour Request</string>
+    <string name="work_from_home">Work From Home</string>
+    <string name="outdoor_duty">Outdoor Duty</string>
+    <string name="request_id_label">Request Id</string>
+
+    <string name="initiator_detail">Initiator Detail</string>
+    <string name="req_initiator">Request Initiator</string>
+    <string name="req_date">Request Date</string>
+    <string name="days">Days</string>
+    <string name="final_approver">Final Level Approver Details</string>
+    <string name="approver">Approver</string>
+    <string name="approval_date">Approval Date</string>
+    <string name="view_tour_summary">View Tour Summary</string>
+    <string name="approved_request_details">Approved Request Details of</string>
+    <string name="attendance_status">Attendance Status :</string>
+    <string name="in_time">In-Time</string>
+    <string name="out_time">Out-Time</string>
+    <string name="attendance_details_header">Attendance details of </string>
+    <string name="marked_time">Marked Time</string>
+    <string name="requested_time">Requested Time</string>
+    <string name="time">Time</string>
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

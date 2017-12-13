@@ -5,8 +5,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -139,7 +142,7 @@ private Context context;
             item.setTitle(data.getString("title"));
             item.setActionType(data.getString("actionType"));
             item.setBody(data.getString("body"));
-            Log.d(TAG,"notification data serialize "+item.serialize());
+            Log.d(TAG,"Notification data serialize "+item.serialize());
            /* //parsing json data
             String title = data.getString("title");
             String message = data.getString("message");*/
@@ -164,15 +167,21 @@ private Context context;
         Log.d("TAG","Notification Id : "+notificationId);
         String channelId = getString(R.string.default_notification_channel_id);
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+      //  int icon=R.drawable.ic_launcher;\
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
+                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher))
                         .setContentTitle("FCM Message")
                         .setContentText(messageBody.getNotification().getBody())
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
-
                         .setContentIntent(pendingIntent);
+      /*  if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+        } else {
+            notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
+        }*/
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

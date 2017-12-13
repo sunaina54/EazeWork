@@ -96,6 +96,7 @@ import static hr.eazework.com.ui.util.ImageUtil.rotateImage;
 
 public class EditExpenseApprovalFragment extends BaseFragment {
     private double totalExpenseAmt = 0;
+    private String screenName = "EditExpenseRequestFragment";
     String description = "", remarks = "",onBehalf, currency;
     private double totalAdvanceAdjustInCaseExpenseSumLesser;
     private double balanceAmt = 0;
@@ -268,7 +269,7 @@ public class EditExpenseApprovalFragment extends BaseFragment {
                                     if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext()) && PermissionUtil.checkLocationPermission(getContext())) {
                                         if (Utility.isLocationEnabled(getContext())) {
                                             if (Utility.isNetworkAvailable(getContext())) {
-                                                Utility.openCamera(getActivity(), EditExpenseApprovalFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore");
+                                                Utility.openCamera(getActivity(), EditExpenseApprovalFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore",screenName);
                                                 customBuilder.dismiss();
                                             } else {
                                                 Utility.showNetworkNotAvailableDialog(getContext());

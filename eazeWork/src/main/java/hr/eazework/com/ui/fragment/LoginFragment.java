@@ -188,7 +188,7 @@ public class LoginFragment extends BaseFragment {
 
                 try {
                     ModelManager.getInstance().setLoginUserModel(((new JSONObject(response.getResponseData())).getJSONObject("LogInUserResult")).toString());
-
+                    Log.d("TAG","Login Response :"+ ((new JSONObject(response.getResponseData())).getJSONObject("LogInUserResult")).toString());
                     TextView url = (TextView) rootView.findViewById(R.id.et_url);
                     DataCacheManager.getInstance().setDataCachingNoExpiry(CommonValues.DB_KEY_CORP_URL, url.getText().toString());
                 } catch (JSONException e) {

@@ -75,6 +75,7 @@ import hr.eazework.com.ui.fragment.LeaveBalanceDetailFragment;
 import hr.eazework.com.ui.fragment.LoginFragment;
 import hr.eazework.com.ui.fragment.MarkAttendance;
 import hr.eazework.com.ui.fragment.NavigationDrawerFragment;
+import hr.eazework.com.ui.fragment.OutdoorDutyRequestFragment;
 import hr.eazework.com.ui.fragment.PaySlipDownloadFragment;
 import hr.eazework.com.ui.fragment.PendingActivityFragment;
 import hr.eazework.com.ui.fragment.PendingEmployeeApprovalFragment;
@@ -83,9 +84,11 @@ import hr.eazework.com.ui.fragment.StoreListFragment;
 import hr.eazework.com.ui.fragment.TeamMemberHistory;
 import hr.eazework.com.ui.fragment.TeamMemberList;
 import hr.eazework.com.ui.fragment.TeamMemberProfile;
+import hr.eazework.com.ui.fragment.TourRequestFragment;
 import hr.eazework.com.ui.fragment.UserProfile;
 import hr.eazework.com.ui.fragment.ViewDataBase;
 import hr.eazework.com.ui.fragment.ViewPaySlipFragment;
+import hr.eazework.com.ui.fragment.WorkFromHomeRequestFragment;
 import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.interfaces.UserActionListner;
 import hr.eazework.com.ui.util.AppsConstant;
@@ -153,7 +156,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         // Get token
         String token = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG,"Token "+ token);
-
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         mTitle = "";// getTitle();
@@ -196,6 +198,12 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                             performUserAction(IAction.ADVANCE_REQUEST, null, null);
                         } else if (selectedObject.toString().equalsIgnoreCase("Expense")) {
                             performUserAction(IAction.ADD_EXPENSE_CLAIM, null, null);
+                        }else if (selectedObject.toString().equalsIgnoreCase("Work From Home")) {
+                            performUserAction(IAction.WORK_FROM_HOME, null, null);
+                        } else if (selectedObject.toString().equalsIgnoreCase("Outdoor Duty")) {
+                            performUserAction(IAction.OUTDOOR_DUTY, null, null);
+                        } else if (selectedObject.toString().equalsIgnoreCase("Tour")) {
+                            performUserAction(IAction.TOUR, null, null);
                         }
                         builder.dismiss();
                     }
@@ -562,7 +570,36 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                             AdvanceRequestFragment.TAG);
                 }
                 break;
-
+            case IAction.WORK_FROM_HOME:
+                if (isFragmentExistsInBackStack(WorkFromHomeRequestFragment.TAG)) {
+                    if (getTopFragment() instanceof WorkFromHomeRequestFragment)
+                        return;
+                    popBackStack(WorkFromHomeRequestFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, new WorkFromHomeRequestFragment(),
+                            WorkFromHomeRequestFragment.TAG);
+                }
+                break;
+            case IAction.OUTDOOR_DUTY:
+                if (isFragmentExistsInBackStack(OutdoorDutyRequestFragment.TAG)) {
+                    if (getTopFragment() instanceof OutdoorDutyRequestFragment)
+                        return;
+                    popBackStack(OutdoorDutyRequestFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, new OutdoorDutyRequestFragment(),
+                            OutdoorDutyRequestFragment.TAG);
+                }
+                break;
+            case IAction.TOUR:
+                if (isFragmentExistsInBackStack(TourRequestFragment.TAG)) {
+                    if (getTopFragment() instanceof TourRequestFragment)
+                        return;
+                    popBackStack(TourRequestFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, new TourRequestFragment(),
+                            TourRequestFragment.TAG);
+                }
+                break;
             case IAction.CREATE_EMPLOYEE_VIEW:
                 if (isFragmentExistsInBackStack(CreateEmployeeFragment.TAG)) {
                     if (getTopFragment() instanceof CreateEmployeeFragment)
@@ -1297,7 +1334,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             if ((fragment instanceof AddExpenseFragment)||
                     (fragment instanceof AdvanceRequestFragment) || (fragment instanceof EditAdvanceApprovalFragment) ||
                     (fragment instanceof AdvanceApprovalFragment) || (fragment instanceof EditViewExpenseClaimFragment)
-                    || (fragment instanceof EditExpenseApprovalFragment)) {
+                    || (fragment instanceof EditExpenseApprovalFragment) || (fragment instanceof OutdoorDutyRequestFragment)) {
                 fragment.onActivityResult(requestCode, resultCode, data);
             }
         }

@@ -88,6 +88,7 @@ public class AppRequestJSONString {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        Log.d("TAG","login request"+jsonObject.toString());
         return jsonObject.toString();
     }
 

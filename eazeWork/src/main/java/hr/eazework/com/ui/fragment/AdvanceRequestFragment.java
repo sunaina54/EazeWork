@@ -169,7 +169,7 @@ public class AdvanceRequestFragment extends BaseFragment {
         remarksET = (EditText) rootView.findViewById(R.id.remarksET);
         errorTV = (LinearLayout) rootView.findViewById(R.id.errorDocTV);
         errorTV.setVisibility(View.VISIBLE);
-        plus_create_newIV = (ImageView) rootView.findViewById(R.id.plus_create_newIV);
+
         reasonSpinner = (Spinner) rootView.findViewById(R.id.reasonSpinner);
         currencySpinner = (Spinner) rootView.findViewById(R.id.currencySpinner);
         expenseRecyclerView = (RecyclerView) rootView.findViewById(R.id.expenseRecyclerView);
@@ -178,6 +178,8 @@ public class AdvanceRequestFragment extends BaseFragment {
                 DividerItemDecoration(expenseRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
         itemDecoration.setDrawable(ContextCompat.getDrawable(context, R.drawable.gradient_line));
         expenseRecyclerView.addItemDecoration(itemDecoration);
+
+        plus_create_newIV = (ImageView) rootView.findViewById(R.id.plus_create_newIV);
         plus_create_newIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -546,6 +548,7 @@ public class AdvanceRequestFragment extends BaseFragment {
 
                         if (fileShow1) {
                             String encodeFileToBase64Binary = Utility.converBitmapToBase64(bitmap);
+                           // Log.d("TAG","IMAGE SIZE : "+ Utility.calcBase64SizeInKBytes(encodeFileToBase64Binary));
 
                             if (uploadFileList.size() > 0) {
                                 for (int i = 1; i <= uploadFileList.size(); i++) {
