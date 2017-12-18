@@ -94,7 +94,12 @@ public class RetakeFragment extends Fragment {
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                confirmAction();
+                if(screenName!=null && !screenName.equalsIgnoreCase("")){
+                    confirmActionCamera();
+                }else {
+                    confirmAction();
+                }
+
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -109,6 +114,23 @@ public class RetakeFragment extends Fragment {
         }
 
         return view;
+    }
+
+    public void confirmActionCamera() {
+        if (bmp != null && imagePurpose != null) {
+            String sImagePath = "";
+            sImagePath = persistImage(bmp, imagePurpose);
+            Intent i = new Intent();
+            i.putExtra("response", sImagePath);
+            i.putExtra("image_purpose", imagePurpose);
+            if (!TextUtils.isEmpty(fieldCode)) {
+                i.putExtra("FieldCode", fieldCode);
+            }
+
+            getActivity().setResult(Activity.RESULT_OK, i);
+            getActivity().finish();
+
+        }
     }
 
     public void confirmAction() {
@@ -171,13 +193,6 @@ public class RetakeFragment extends Fragment {
         Matrix m = new Matrix();
         m.postRotate(90);
         if (screenName != null && !screenName.equalsIgnoreCase("")) {
-           /* BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-            Bitmap bitmap = BitmapFactory.decodeFile(path.getAbsolutePath(),bmOptions);
-            bitmap = Bitmap.createScaledBitmap(bitmap,240,320,true);*/
-            /*Bitmap bitmap = new Compressor.Builder(getContext()).setQuality(AppsConstant.IMAGE_QUALITY)
-                    .setCompressFormat(Bitmap.CompressFormat.JPEG).setMaxWidth(240)
-                    .setMaxHeight(320).build().compressToBitmap(path);*/
-           // bmp=bitmap;
             Bitmap bitmap = BitmapFactory.decodeFile(path.getAbsolutePath());
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG,15,out);

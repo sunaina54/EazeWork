@@ -120,6 +120,7 @@ public class EditAdvanceApprovalFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.edit_advance_aproval_fragment, container, false);
         context = getContext();
+        preferences=new Preferences(getContext());
         if (advanceListModel != null && advanceListModel.getSupportDocs() != null && advanceListModel.getSupportDocs().size() > 0) {
             uploadFileList = advanceListModel.getSupportDocs();
         } else {
@@ -163,25 +164,14 @@ public class EditAdvanceApprovalFragment extends BaseFragment {
                             @Override
                             public void onClick(CustomBuilder builder, Object selectedObject) {
                                 if (selectedObject.toString().equalsIgnoreCase("Take a photo")) {
-                                    if (!PermissionUtil.checkCameraPermission(getContext()) || !PermissionUtil.checkStoragePermission(getContext()) || !PermissionUtil.checkLocationPermission(getContext())) {
-                                        PermissionUtil.askAllPermission(EditAdvanceApprovalFragment.this);
+                                    if (!PermissionUtil.checkCameraPermission(getContext()) || !PermissionUtil.checkStoragePermission(getContext())) {
+                                        PermissionUtil.askAllPermissionCamera(EditAdvanceApprovalFragment.this);
                                     }
-                                    if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext()) && PermissionUtil.checkLocationPermission(getContext())) {
-                                        if (Utility.isLocationEnabled(getContext())) {
-                                            if (Utility.isNetworkAvailable(getContext())) {
-                                                Utility.openCamera(getActivity(), EditAdvanceApprovalFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore",screenName);
-                                                customBuilder.dismiss();
-                                            } else {
-                                                Utility.showNetworkNotAvailableDialog(getContext());
-                                            }
-                                        } else {
-                                            Utility.requestToEnableGPS(getContext(), new Preferences(getContext()));
-                                        }
-                                    } else {
-                                        Utility.displayMessage(getContext(), "Please provide all permissions");
+                                    if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext())) {
+                                        Utility.openCamera(getActivity(), EditAdvanceApprovalFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore", screenName);
+                                        customBuilder.dismiss();
                                     }
                                 } else if (selectedObject.toString().equalsIgnoreCase("Gallery")) {
-
                                     galleryIntent();
                                     customBuilder.dismiss();
                                 }
@@ -770,6 +760,7 @@ public class EditAdvanceApprovalFragment extends BaseFragment {
                         filename.contains(".BMP") || filename.contains(".bmp")) {
                     try {
                        // holder.img_icon.setImageBitmap(fileObject.getBitmap());
+                        holder.img_icon.setImageDrawable((context.getResources().getDrawable(R.drawable.jpeg_icon)));
                         holder.fileNameTV.setText(filename);
                         holder.fileDescriptionTV.setText(name);
                     } catch (Exception e) {

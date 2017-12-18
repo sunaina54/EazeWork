@@ -156,6 +156,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         // Get token
         String token = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG,"Token "+ token);
+
+
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
         mTitle = "";// getTitle();

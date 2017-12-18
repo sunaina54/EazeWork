@@ -318,25 +318,14 @@ public class AddExpenseClaimFragment extends BaseFragment {
                             @Override
                             public void onClick(CustomBuilder builder, Object selectedObject) {
                                 if (selectedObject.toString().equalsIgnoreCase("Take a photo")) {
-                                    if (!PermissionUtil.checkCameraPermission(getContext()) || !PermissionUtil.checkStoragePermission(getContext()) || !PermissionUtil.checkLocationPermission(getContext())) {
-                                        PermissionUtil.askAllPermission(AddExpenseClaimFragment.this);
+                                    if (!PermissionUtil.checkCameraPermission(getContext()) || !PermissionUtil.checkStoragePermission(getContext())) {
+                                        PermissionUtil.askAllPermissionCamera(AddExpenseClaimFragment.this);
                                     }
-                                    if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext()) && PermissionUtil.checkLocationPermission(getContext())) {
-                                        if (Utility.isLocationEnabled(getContext())) {
-                                            if (Utility.isNetworkAvailable(getContext())) {
-                                                Utility.openCamera(getActivity(), AddExpenseClaimFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore",screenName);
-                                                customBuilder.dismiss();
-                                            } else {
-                                                Utility.showNetworkNotAvailableDialog(getContext());
-                                            }
-                                        } else {
-                                            Utility.requestToEnableGPS(getContext(), new Preferences(getContext()));
-                                        }
-                                    } else {
-                                        Utility.displayMessage(getContext(), "Please provide all permission");
+                                    if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext())) {
+                                        Utility.openCamera(getActivity(), AddExpenseClaimFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore", screenName);
+                                        customBuilder.dismiss();
                                     }
                                 } else if (selectedObject.toString().equalsIgnoreCase("Gallery")) {
-
                                     galleryIntent();
                                     customBuilder.dismiss();
                                 }
@@ -1697,7 +1686,6 @@ public class AddExpenseClaimFragment extends BaseFragment {
         if (uploadFileList != null && uploadFileList.size() > 0) {
             errorDocTV.setVisibility(View.GONE);
             expenseRecyclerView.setVisibility(View.VISIBLE);
-
             DocumentUploadAdapter adapter = new DocumentUploadAdapter(uploadFileList);
             expenseRecyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
@@ -1760,7 +1748,8 @@ public class AddExpenseClaimFragment extends BaseFragment {
                 }
             } else if (filename.contains(".jpg") || filename.contains(".png") || filename.contains(".jpeg") ||
                     filename.contains(".BMP") || filename.contains(".bmp")) {
-                holder.img_icon.setImageBitmap(fileObject.getBitmap());
+                /*holder.img_icon.setImageBitmap(fileObject.getBitmap());*/
+                holder.img_icon.setImageDrawable((context.getResources().getDrawable(R.drawable.jpeg_icon)));
                 holder.fileNameTV.setText(filename);
                 holder.fileDescriptionTV.setText(name);
             } else if (filename.toString().contains(".docx") || filename.toString().contains(".doc")) {

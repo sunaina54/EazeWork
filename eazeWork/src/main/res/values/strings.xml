@@ -194,6 +194,12 @@
     <string name="work_from_home">Work From Home</string>
     <string name="outdoor_duty">Outdoor Duty</string>
     <string name="request_id_label">Request Id</string>
+    <string name="accommodation_needed">Accommodation Needed</string>
+    <string name="accommodation_details">Accommodation Details</string>
+    <string name="tickets_needed">Tickets Needed</string>
+    <string name="ticket_details">Ticket Details</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <string name="initiator_detail">Initiator Detail</string>
     <string name="req_initiator">Request Initiator</string>
@@ -211,7 +217,8 @@
     <string name="marked_time">Marked Time</string>
     <string name="requested_time">Requested Time</string>
     <string name="time">Time</string>
-
+    <string name="or">OR</string>
+    <string name="continue_with_google">Continue with Google</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

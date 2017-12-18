@@ -57,6 +57,7 @@ import hr.eazework.com.model.ModelManager;
 import hr.eazework.com.model.ReasonCodeListItemModel;
 import hr.eazework.com.model.ReasonCodeListModel;
 import hr.eazework.com.model.SupportDocsItemModel;
+import hr.eazework.com.ui.adapter.DocumentUploadAdapter;
 import hr.eazework.com.ui.customview.CustomBuilder;
 import hr.eazework.com.ui.customview.CustomDialog;
 import hr.eazework.com.ui.interfaces.IAction;
@@ -192,21 +193,11 @@ public class AdvanceRequestFragment extends BaseFragment {
                             public void onClick(CustomBuilder builder, Object selectedObject) {
                                 if (selectedObject.toString().equalsIgnoreCase("Take a photo")) {
                                     if (!PermissionUtil.checkCameraPermission(getContext()) || !PermissionUtil.checkStoragePermission(getContext())) {
-                                        PermissionUtil.askAllPermission(AdvanceRequestFragment.this);
+                                        PermissionUtil.askAllPermissionCamera(AdvanceRequestFragment.this);
                                     }
                                     if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext())) {
-                                        if (Utility.isLocationEnabled(getContext())) {
-                                            if (Utility.isNetworkAvailable(getContext())) {
-                                                Utility.openCamera(getActivity(), AdvanceRequestFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore", screenName);
-                                                customBuilder.dismiss();
-                                            } else {
-                                                Utility.showNetworkNotAvailableDialog(getContext());
-                                            }
-                                        } else {
-                                            Utility.requestToEnableGPS(getContext(), new Preferences(getContext()));
-                                        }
-                                    } else {
-                                        Utility.displayMessage(getContext(), "Please provide all permissions");
+                                        Utility.openCamera(getActivity(), AdvanceRequestFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore", screenName);
+                                        customBuilder.dismiss();
                                     }
                                 } else if (selectedObject.toString().equalsIgnoreCase("Gallery")) {
                                     galleryIntent();
@@ -587,200 +578,15 @@ public class AdvanceRequestFragment extends BaseFragment {
         if (uploadFileList != null && uploadFileList.size() > 0) {
             errorTV.setVisibility(View.GONE);
             expenseRecyclerView.setVisibility(View.VISIBLE);
-
-            DocumentUploadAdapter adapter = new DocumentUploadAdapter(uploadFileList);
+            DocumentUploadAdapter adapter = new DocumentUploadAdapter(uploadFileList,context,AppsConstant.ADD,errorTV);
             expenseRecyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         } else {
             errorTV.setVisibility(View.VISIBLE);
-
             expenseRecyclerView.setVisibility(View.GONE);
         }
     }
 
-    private class DocumentUploadAdapter extends RecyclerView.Adapter<DocumentUploadAdapter.ViewHolder> {
-        private ArrayList<SupportDocsItemModel> mDataset;
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            public TextView fileNameTV, fileDescriptionTV;
-            public ImageView img_icon, img_menu_icon;
-
-            public ViewHolder(View v) {
-                super(v);
-                fileNameTV = (TextView) v.findViewById(R.id.fileNameTV);
-                fileDescriptionTV = (TextView) v.findViewById(R.id.fileDescriptionTV);
-                img_icon = (ImageView) v.findViewById(R.id.img_icon);
-                img_menu_icon = (ImageView) v.findViewById(R.id.img_menu_icon);
-
-            }
-        }
-
-        public DocumentUploadAdapter(ArrayList<SupportDocsItemModel> myDataset) {
-            mDataset = myDataset;
-
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent,
-                                             int viewType) {
-            // create a new1 view
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.expense_list_item, parent, false);
-            // set the view's size, margins, paddings and layout parameters
-            ViewHolder vh = new ViewHolder(v);
-            return vh;
-        }
-
-        // Replace the contents of a view (invoked by the layout manager)
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
-
-            final SupportDocsItemModel fileObject = mDataset.get(position);
-            String fileType = "";
-
-            final String filename = fileObject.getDocFile();
-            final String name = fileObject.getName();
-            if (filename.toString().contains(".pdf")) {
-                fileType = "application/pdf";
-                try {
-                    holder.img_icon.setImageDrawable((context.getResources().getDrawable(R.drawable.pdf_icon)));
-                    holder.fileNameTV.setText(filename);
-                    holder.fileDescriptionTV.setText(name);
-                } catch (Exception e) {
-
-                }
-            } else if (filename.contains(".jpg") ||
-                    filename.contains(".png") || filename.contains(".jpeg")
-                    || filename.contains(".bmp") || filename.contains(".BMP")) {
-                try {
-                    holder.fileNameTV.setText(filename);
-                    holder.fileDescriptionTV.setText(name);
-                } catch (Exception e) {
-
-                }
-            } else if (filename.toString().contains(".docx") || filename.toString().contains(".doc")) {
-                fileType = "application/word";
-                try {
-                    holder.img_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.doc_icon));
-                    holder.fileNameTV.setText(filename);
-                    holder.fileDescriptionTV.setText(name);
-                } catch (Exception e) {
-
-                }
-            } else if (filename.toString().contains(".xlsx") || filename.toString().contains(".xls")) {
-                fileType = "application/word";
-                try {
-                    holder.img_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.doc_icon));
-                    holder.fileNameTV.setText(filename);
-                    holder.fileDescriptionTV.setText(name);
-                } catch (Exception e) {
-
-                }
-            } else if (filename.toString().contains(".txt")) {
-                fileType = "application/txt";
-                try {
-                    holder.img_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.txt_icon));
-                    holder.fileNameTV.setText(filename);
-                    holder.fileDescriptionTV.setText(name);
-                } catch (Exception e) {
-
-                }
-            } else if (filename.contains(".gif")) {
-                try {
-                    holder.img_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.gif_icon));
-                    holder.fileNameTV.setText(filename);
-                    holder.fileDescriptionTV.setText(name);
-                } catch (Exception e) {
-
-                }
-            } else if (filename.contains(".rar")) {
-                try {
-                    holder.img_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.rar_icon));
-                    holder.fileNameTV.setText(filename);
-                    holder.fileDescriptionTV.setText(name);
-                } catch (Exception e) {
-
-                }
-            } else if (filename.contains(".zip")) {
-                try {
-                    holder.img_icon.setImageDrawable(context.getResources().getDrawable(R.drawable.zip_icon));
-                    holder.fileNameTV.setText(filename);
-                    holder.fileDescriptionTV.setText(name);
-                } catch (Exception e) {
-
-                }
-            }
-
-            holder.img_menu_icon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View v) {
-                    ArrayList<String> list = new ArrayList<>();
-                    list.add("Edit");
-                    list.add("Delete");
-                    CustomBuilder customBuilder = new CustomBuilder(getContext(), "Options", false);
-                    customBuilder.setSingleChoiceItems(list, null, new CustomBuilder.OnClickListener() {
-                        @Override
-                        public void onClick(CustomBuilder builder, Object selectedObject) {
-                            if (selectedObject.toString().equalsIgnoreCase("Edit")) {
-                                final Dialog dialog = new Dialog(context);
-                                dialog.setContentView(R.layout.filename_advance_expense);
-                                preferences = new Preferences(getContext());
-                                int textColor = Utility.getTextColorCode(preferences);
-                                int bgColor = Utility.getBgColorCode(context, preferences);
-                                FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
-                                fl_actionBarContainer.setBackgroundColor(bgColor);
-                                TextView tv_header_text = (TextView) dialog.findViewById(R.id.tv_header_text);
-                                tv_header_text.setTextColor(textColor);
-                                tv_header_text.setText("Edit");
-
-                                final EditText editFilenameET = (EditText) dialog.findViewById(R.id.editFilenameET);
-                                editFilenameET.setText(name);
-
-                                (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        fileObject.setName(editFilenameET.getText().toString());
-                                        if (uploadFileList != null && uploadFileList.size() > 0) {
-                                            uploadFileList.set(uploadFileList.indexOf(fileObject), fileObject);
-
-                                        } else {
-                                            uploadFileList = new ArrayList<SupportDocsItemModel>();
-                                            uploadFileList.add(fileObject);
-                                        }
-                                        refreshList();
-                                        dialog.dismiss();
-
-                                    }
-                                });
-                                (dialog).findViewById(R.id.ibWrong).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                dialog.show();
-                            } else if (selectedObject.toString().equalsIgnoreCase("Delete")) {
-                                mDataset.remove(position);
-                                DocumentUploadAdapter.this.notifyDataSetChanged();
-                                if (mDataset.size() == 0) {
-                                    errorTV.setVisibility(View.VISIBLE);
-                                }
-
-                            }
-                            builder.dismiss();
-                        }
-                    });
-                    customBuilder.show();
-                }
-            });
-        }
-
-        // Return the size of your dataset (invoked by the layout manager)
-        @Override
-        public int getItemCount() {
-            return mDataset.size();
-        }
-    }
 
     private void setAdvanceData() {
         String amount = amountET.getText().toString();

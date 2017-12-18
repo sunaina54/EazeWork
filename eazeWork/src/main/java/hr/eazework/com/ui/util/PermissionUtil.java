@@ -104,4 +104,14 @@ public class PermissionUtil {
             }
         }
     }
+
+    public static void askAllPermissionCamera(MyBaseFragment baseFragment) {
+        if (baseFragment != null) {
+            try {
+                baseFragment.requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, REQ_PERMISSION);
+            } catch (IllegalStateException e) {
+                Crashlytics.logException(e);
+            }
+        }
+    }
 }

@@ -54,7 +54,13 @@
                     android:visibility="gone">
                     <include layout="@layout/tour_final_approver_detail"></include>
                 </LinearLayout>
-
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_13"
+                    android:layout_marginRight="@dimen/margin_13">
+                    <include layout="@layout/remarks_layout"></include>
+                </LinearLayout>
                 <include layout="@layout/action_button_layout" android:id="@+id/buttonLinearLayout"></include>
             </LinearLayout>
 

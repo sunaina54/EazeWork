@@ -80,6 +80,7 @@ public class DocumentUploadAdapter extends RecyclerView.Adapter<DocumentUploadAd
                 filename.contains(".png") || filename.contains(".jpeg")
                 || filename.contains(".bmp") || filename.contains(".BMP")) {
             try {
+                holder.img_icon.setImageDrawable((context.getResources().getDrawable(R.drawable.jpeg_icon)));
                 holder.fileNameTV.setText(filename);
                 holder.fileDescriptionTV.setText(name);
             } catch (Exception e) {

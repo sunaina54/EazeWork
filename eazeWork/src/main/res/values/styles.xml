@@ -103,15 +103,21 @@
 
     <style name="textView">
         <item name="android:padding">2dip</item>
-        <item name="android:textSize">@dimen/margin_14</item>
+        <item name="android:textSize">@dimen/font_14</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="textViewYellow">
         <item name="android:padding">2dip</item>
-        <item name="android:textSize">@dimen/margin_14</item>
+        <item name="android:textSize">@dimen/font_14</item>
         <item name="android:layout_marginLeft">@dimen/margin_10</item>
+        <item name="android:textColor">@color/black</item>
+
+    </style>
+
+    <style name="editTextView">
+        <item name="android:textSize">@dimen/font_14</item>
         <item name="android:textColor">@color/black</item>
 
     </style>

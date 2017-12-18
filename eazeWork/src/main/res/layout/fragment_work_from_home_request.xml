@@ -5,6 +5,24 @@
     android:background="@color/fragment_bg"
     tools:context="hr.eazework.com.ui.fragment.WorkFromHomeRequestFragment">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/fragment_bg"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -61,8 +79,7 @@
                                 android:gravity="left"
                                 android:padding="@dimen/margin_10"
                                 android:text="aaa"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/margin_14" />
+                                style="@style/editTextView" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -113,8 +130,7 @@
                         android:paddingEnd="@dimen/margin_20"
                         android:paddingStart="@dimen/margin_20"
                         android:paddingTop="@dimen/margin_10"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/font_14" />
+                        style="@style/editTextView" />
 
                 </LinearLayout>
 
@@ -261,8 +277,16 @@
             </LinearLayout>
 
         </android.support.v7.widget.CardView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include layout="@layout/upload_document_layout"></include>
+        </LinearLayout>
 
         <include layout="@layout/action_button_layout" android:id="@+id/buttonLinearLayout"></include>
     </LinearLayout>
+    </ScrollView>
+    </RelativeLayout>
 
 </LinearLayout>

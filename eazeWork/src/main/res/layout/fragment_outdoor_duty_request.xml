@@ -77,9 +77,7 @@
                                     android:background="@drawable/grey_commoborder"
                                     android:gravity="left"
                                     android:padding="@dimen/margin_10"
-                                    android:text="aaa"
-                                    android:textColor="@color/black"
-                                    android:textSize="@dimen/margin_14" />
+                                    style="@style/editTextView" />
                             </LinearLayout>
 
                         </LinearLayout>
@@ -323,9 +321,8 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.7"
-                            android:paddingStart="10dp"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/font_14" />
+                            android:paddingStart="@dimen/margin_10"
+                            style="@style/editTextView" />
 
                     </LinearLayout>
 

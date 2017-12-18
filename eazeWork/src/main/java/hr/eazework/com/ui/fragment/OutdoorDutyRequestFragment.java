@@ -191,21 +191,11 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
                             public void onClick(CustomBuilder builder, Object selectedObject) {
                                 if (selectedObject.toString().equalsIgnoreCase("Take a photo")) {
                                     if (!PermissionUtil.checkCameraPermission(getContext()) || !PermissionUtil.checkStoragePermission(getContext())) {
-                                        PermissionUtil.askAllPermission(OutdoorDutyRequestFragment.this);
+                                        PermissionUtil.askAllPermissionCamera(OutdoorDutyRequestFragment.this);
                                     }
                                     if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext())) {
-                                        if (Utility.isLocationEnabled(getContext())) {
-                                            if (Utility.isNetworkAvailable(getContext())) {
-                                                Utility.openCamera(getActivity(), OutdoorDutyRequestFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore", screenName);
-                                                customBuilder.dismiss();
-                                            } else {
-                                                Utility.showNetworkNotAvailableDialog(getContext());
-                                            }
-                                        } else {
-                                            Utility.requestToEnableGPS(getContext(), new Preferences(getContext()));
-                                        }
-                                    } else {
-                                        Utility.displayMessage(getContext(), "Please provide all permissions");
+                                        Utility.openCamera(getActivity(), OutdoorDutyRequestFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore", screenName);
+                                        customBuilder.dismiss();
                                     }
                                 } else if (selectedObject.toString().equalsIgnoreCase("Gallery")) {
                                     galleryIntent();

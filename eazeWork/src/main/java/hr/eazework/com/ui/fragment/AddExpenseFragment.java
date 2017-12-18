@@ -275,25 +275,14 @@ public class AddExpenseFragment extends MyBaseFragment {
                             @Override
                             public void onClick(CustomBuilder builder, Object selectedObject) {
                                 if (selectedObject.toString().equalsIgnoreCase("Take a photo")) {
-                                    if (!PermissionUtil.checkCameraPermission(getContext()) || !PermissionUtil.checkStoragePermission(getContext()) || !PermissionUtil.checkLocationPermission(getContext())) {
-                                        PermissionUtil.askAllPermission(AddExpenseFragment.this);
+                                    if (!PermissionUtil.checkCameraPermission(getContext()) || !PermissionUtil.checkStoragePermission(getContext())) {
+                                        PermissionUtil.askAllPermissionCamera(AddExpenseFragment.this);
                                     }
-                                    if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext()) && PermissionUtil.checkLocationPermission(getContext())) {
-                                        if (Utility.isLocationEnabled(getContext())) {
-                                            if (Utility.isNetworkAvailable(getContext())) {
-                                                Utility.openCamera(getActivity(), AddExpenseFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore", TAG);
-                                                customBuilder.dismiss();
-                                            } else {
-                                                Utility.showNetworkNotAvailableDialog(getContext());
-                                            }
-                                        } else {
-                                            Utility.requestToEnableGPS(getContext(), new Preferences(getContext()));
-                                        }
-                                    } else {
-                                        Utility.displayMessage(getContext(), "Please provide all permission");
+                                    if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext())) {
+                                        Utility.openCamera(getActivity(), AddExpenseFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore", TAG);
+                                        customBuilder.dismiss();
                                     }
                                 } else if (selectedObject.toString().equalsIgnoreCase("Gallery")) {
-
                                     galleryIntent();
                                     customBuilder.dismiss();
                                 }
@@ -932,6 +921,8 @@ public class AddExpenseFragment extends MyBaseFragment {
         }
     }
 
+
+
     private void refreshList() {
         if (uploadFileList != null && uploadFileList.size() > 0) {
             errorTV.setVisibility(View.GONE);
@@ -998,6 +989,7 @@ public class AddExpenseFragment extends MyBaseFragment {
                     }
                 } else if (filename.contains(".jpg") || filename.contains(".png") || filename.contains(".jpeg") ||
                         filename.contains(".BMP") || filename.contains(".bmp")) {
+                    holder.img_icon.setImageDrawable((context.getResources().getDrawable(R.drawable.jpeg_icon)));
                     holder.fileNameTV.setText(filename);
                     holder.fileDescriptionTV.setText(name);
 

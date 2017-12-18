@@ -121,17 +121,17 @@ public class CreateEmployeeFragment extends BaseFragment {
         adapter = new EditTeamAdapter((MainActivity) getActivity(), list, new OnImageClickListner() {
             @Override
             public void capturePhoto(final int position, String purpose, String fieldCode) {
-                if (!PermissionUtil.checkCameraPermission(getContext()) || !PermissionUtil.checkStoragePermission(getContext()) || !PermissionUtil.checkLocationPermission(getContext())) {
-                    PermissionUtil.askAllPermission(CreateEmployeeFragment.this);
+                if (!PermissionUtil.checkCameraPermission(getContext()) || !PermissionUtil.checkStoragePermission(getContext())) {
+                    PermissionUtil.askAllPermissionCamera(CreateEmployeeFragment.this);
                 }
-                if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext()) && PermissionUtil.checkLocationPermission(getContext())) {
+                if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext())) {
                     if (Utility.isNetworkAvailable(getContext())) {
                         currentPosition = position;
 
                         String fieldTypeID = adapter.getItemList().get(position).getmFieldTypeID();
                         purpose="ForStore";
                         if (fieldTypeID.equalsIgnoreCase("99") || fieldTypeID.equalsIgnoreCase("66")) {
-                            Utility.openCamera(getActivity(), CreateEmployeeFragment.this, AppsConstant.BACK_CAMREA_OPEN, purpose);
+                            Utility.openCamera(getActivity(), CreateEmployeeFragment.this, AppsConstant.BACK_CAMREA_OPEN, purpose,TAG);
                             if (fieldTypeID.equalsIgnoreCase("99")) {
                                 adapter.getItemList().get(position).setmFieldValue("0");
                             }
@@ -162,7 +162,7 @@ public class CreateEmployeeFragment extends BaseFragment {
                                                             adapter.getItemList().get(currentPosition).setmFieldValue(code);
                                                             adapter.getItemList().get(currentPosition).getmFileInfoModel().setmText(value);
                                                             String purpose ="ForStore" ;//((TypeWiseListModel) selectedObject).getValue().trim();
-                                                            Utility.openCamera(getActivity(), CreateEmployeeFragment.this, AppsConstant.BACK_CAMREA_OPEN, purpose);
+                                                            Utility.openCamera(getActivity(), CreateEmployeeFragment.this, AppsConstant.BACK_CAMREA_OPEN, purpose,TAG);
                                                             builder.dismiss();
                                                         }
                                                     });
