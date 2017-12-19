@@ -424,6 +424,13 @@
                 android:textColor="@color/white"
                 android:visibility="gone"/>
         </LinearLayout>
+
+   <!--     <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include layout="@layout/upload_document_layout"></include>
+        </LinearLayout>-->
+
     </LinearLayout>
 
     <include layout="@layout/progress_root_container"/>

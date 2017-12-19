@@ -107,7 +107,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
     }
 
     private void getHomeData() {
-
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.getHomeData(),
                 CommunicationConstant.API_GET_HOME_DATA, true);
@@ -541,9 +540,9 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
             if (itemModel != null && itemModel.isAccess()) {
                 list.add("Expense");
             }
-            list.add("Work From Home");
+           /* list.add("Work From Home");
             list.add("Outdoor Duty");
-            list.add("Tour");
+            list.add("Tour");*/
             if (list.size() > 0) {
                 ((MainActivity) getActivity()).setMenuList(list);
                 ((MainActivity) getActivity()).menuPlus.setVisibility(View.VISIBLE);
