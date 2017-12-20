@@ -154,8 +154,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         mInstance = this;
 
         // Get token
-       /* String token = FirebaseInstanceId.getInstance().getToken();
-        Log.d(TAG,"Token "+ token);*/
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG,"Token "+ token);
 
 
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -200,13 +200,13 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                             performUserAction(IAction.ADVANCE_REQUEST, null, null);
                         } else if (selectedObject.toString().equalsIgnoreCase("Expense")) {
                             performUserAction(IAction.ADD_EXPENSE_CLAIM, null, null);
-                        }/*else if (selectedObject.toString().equalsIgnoreCase("Work From Home")) {
+                        }else if (selectedObject.toString().equalsIgnoreCase("Work From Home")) {
                             performUserAction(IAction.WORK_FROM_HOME, null, null);
                         } else if (selectedObject.toString().equalsIgnoreCase("Outdoor Duty")) {
                             performUserAction(IAction.OUTDOOR_DUTY, null, null);
                         } else if (selectedObject.toString().equalsIgnoreCase("Tour")) {
                             performUserAction(IAction.TOUR, null, null);
-                        }*/
+                        }
                         builder.dismiss();
                     }
                 });
@@ -572,7 +572,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                             AdvanceRequestFragment.TAG);
                 }
                 break;
-     /*       case IAction.WORK_FROM_HOME:
+            case IAction.WORK_FROM_HOME:
                 if (isFragmentExistsInBackStack(WorkFromHomeRequestFragment.TAG)) {
                     if (getTopFragment() instanceof WorkFromHomeRequestFragment)
                         return;
@@ -601,7 +601,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                     addFragment(R.id.content_frame, new TourRequestFragment(),
                             TourRequestFragment.TAG);
                 }
-                break;*/
+                break;
             case IAction.CREATE_EMPLOYEE_VIEW:
                 if (isFragmentExistsInBackStack(CreateEmployeeFragment.TAG)) {
                     if (getTopFragment() instanceof CreateEmployeeFragment)

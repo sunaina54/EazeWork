@@ -205,7 +205,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         });
 
 
-      /*  errorLinearLayout = (LinearLayout) rootView.findViewById(R.id.errorDocTV);
+        errorLinearLayout = (LinearLayout) rootView.findViewById(R.id.errorDocTV);
         errorLinearLayout.setVisibility(View.VISIBLE);
         expenseRecyclerView = (RecyclerView) rootView.findViewById(R.id.expenseRecyclerView);
         expenseRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -243,7 +243,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                 );
                 customBuilder.show();
             }
-        });*/
+        });
 
 
         employItem=new EmployItem();
@@ -1042,7 +1042,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
             }
         }
 
-       /* final SupportDocsItemModel fileObj = new SupportDocsItemModel();
+        final SupportDocsItemModel fileObj = new SupportDocsItemModel();
         if (requestCode == UPLOAD_DOC_REQUEST && resultCode == RESULT_OK) {
             boolean fileShow = true;
             final Uri uri = data.getData();
@@ -1059,11 +1059,11 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                 String extension = "." + extList[extList.length - 1];
                 encodeFileToBase64Binary = Utility.fileToBase64Conversion(data.getData(),context);
                 Log.d("TAG", "RAR Base 64 :" + encodeFileToBase64Binary);
-                *//*List<String> extensionList = Arrays.asList(advanceRequestResponseModel.getGetAdvancePageInitResult().getDocValidation().getExtensions());
+              /*  List<String> extensionList = Arrays.asList(advanceRequestResponseModel.getGetAdvancePageInitResult().getDocValidation().getExtensions());
                 if (!extensionList.contains(extension.toLowerCase())) {
                     CustomDialog.alertWithOk(context, advanceRequestResponseModel.getGetAdvancePageInitResult().getDocValidation().getMessage());
                     return;
-                }*//*
+                }*/
                 fileObj.setDocPathUri(uploadedFilePath);
 
                 if (filename.contains(".pdf")) {
@@ -1271,10 +1271,9 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
             });
             dialog.show();
         }
-*/
     }
 
-   /* private void refreshList() {
+    private void refreshList() {
         if (uploadFileList != null && uploadFileList.size() > 0) {
             errorLinearLayout.setVisibility(View.GONE);
             expenseRecyclerView.setVisibility(View.VISIBLE);
@@ -1285,5 +1284,5 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
             errorLinearLayout.setVisibility(View.VISIBLE);
             expenseRecyclerView.setVisibility(View.GONE);
         }
-    }*/
+    }
 }

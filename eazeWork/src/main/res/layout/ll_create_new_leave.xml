@@ -2,11 +2,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent">
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -425,14 +429,15 @@
                 android:visibility="gone"/>
         </LinearLayout>
 
-   <!--     <LinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_10">
             <include layout="@layout/upload_document_layout"></include>
-        </LinearLayout>-->
+        </LinearLayout>
 
     </LinearLayout>
-
-    <include layout="@layout/progress_root_container"/>
+    </ScrollView>
+    <include layout="@layout/progress_root_container" />
 
 </FrameLayout>
