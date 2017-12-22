@@ -1290,7 +1290,7 @@ if(saveExpenseRequestModel!=null) {
                             });
                             claimDialog.show();
                         } else {
-                            new AlertCustomDialog(context, "No Request Id");
+                            new AlertCustomDialog(context, context.getResources().getString(R.string.advance_adjust_error));
                             return;
                         }
                     }

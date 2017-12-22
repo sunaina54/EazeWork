@@ -141,10 +141,10 @@ public class AttandanceFragment extends BaseFragment {
 						caldroidFragment.prevMonth();
 					}
 				}
-				Intent theIntent=new Intent(getActivity(), AttendanceDetailActivity.class);
+			/*	Intent theIntent=new Intent(getActivity(), AttendanceDetailActivity.class);
 				theIntent.putExtra("Date",date.getTime());
 				startActivity(theIntent);
-
+*/
 			}
 
 			@Override
