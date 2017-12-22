@@ -475,7 +475,7 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
             private LinearLayout viewDocLl, approvedAmountLl, statusMsgLl, statusLl;
             private Button viewDocBTN, actionBTN, statusBT;
             private LinearLayout categoryLinearLayout,detailsLinearLayout,claimHeadLinearLayout,inputAmtLinearLayout,amountLinearLayout,fromDateLinearLayout,toDateLinearLayout;
-
+            private ImageView img_menu_icon;
 
             public MyViewHolder(View v) {
                 super(v);
@@ -516,6 +516,9 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
                 statusBT = (Button) v.findViewById(R.id.statusBT);
 
                 toDateLinearLayout= (LinearLayout) v.findViewById(R.id.toDateLinearLayout);
+
+                img_menu_icon= (ImageView) v.findViewById(R.id.img_menu_icon);
+                img_menu_icon.setVisibility(View.VISIBLE);
             }
         }
 
@@ -564,12 +567,12 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
             }
             holder.inputAmtLinearLayout.setVisibility(View.VISIBLE);
 
-                if (item.getCategoryID()== AppsConstant.PERIODIC_EXPENSE) {
-                    holder.inputAmtLinearLayout.setVisibility(View.GONE);
-                    holder.toDateLinearLayout.setVisibility(View.VISIBLE);
-                    holder.toDateTV.setText(item.getDateTo());
-                    holder.toDateLabel.setText("Period");
-                }
+            if (item.getCategoryID() == AppsConstant.PERIODIC_EXPENSE) {
+                holder.inputAmtLinearLayout.setVisibility(View.GONE);
+                holder.toDateLinearLayout.setVisibility(View.VISIBLE);
+                holder.toDateTV.setText(item.getDateTo());
+                holder.toDateLabel.setText("Period");
+            }
 
             holder.categoryDescTV.setText(item.getCategoryDesc());
             holder.detailsTV.setText(item.getLineItemDetail());
@@ -577,7 +580,7 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
             holder.inputTV.setText(item.getInputUnit());
             holder.amountTV.setText(item.getClaimAmt());
             holder.viewDocLl.setVisibility(View.GONE);
-            if (item.getDocListLineItem() != null && item.getDocListLineItem().size() > 0) {
+          /*  if (item.getDocListLineItem() != null && item.getDocListLineItem().size() > 0) {
                 holder.viewDocLl.setVisibility(View.VISIBLE);
                 holder.viewDocBTN.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -590,7 +593,7 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
                     }
                 });
 
-            }
+            }*/
 
             if (viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getReqStatusDesc().equalsIgnoreCase("Approved")) {
                 holder.approvedAmountLl.setVisibility(View.VISIBLE);
@@ -598,7 +601,7 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
 
             }
 
-            if (!item.getPolicyID().equalsIgnoreCase("")) {
+          /*  if (!item.getPolicyID().equalsIgnoreCase("")) {
                 holder.statusMsgLl.setVisibility(View.VISIBLE);
                 holder.statusBT.setText(Utility.policyStatus(item.getPolicyID(), item.getPolicyLimitValue(), item.getInputUnit(), item.getClaimAmt()));
                 holder.statusBT.setOnClickListener(new View.OnClickListener() {
@@ -609,7 +612,49 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
                 });
             } else {
                 holder.statusLl.setVisibility(View.VISIBLE);
+            }*/
+            if (item.getPolicyID().equalsIgnoreCase("")) {
+                holder.statusLl.setVisibility(View.VISIBLE);
             }
+
+            holder.img_menu_icon.setVisibility(View.GONE);
+            if ((item.getDocListLineItem() != null && item.getDocListLineItem().size() > 0) ||
+                    (!item.getPolicyID().equalsIgnoreCase(""))) {
+                holder.img_menu_icon.setVisibility(View.VISIBLE);
+                holder.img_menu_icon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<String> list = new ArrayList<>();
+                        if (item.getDocListLineItem() != null && item.getDocListLineItem().size() > 0) {
+                            list.add("Document " + item.getDocListLineItem().size());
+                        }
+                        if (!item.getPolicyID().equalsIgnoreCase("")) {
+                            list.add("Policy Status");
+
+                        }
+                        CustomBuilder customBuilder = new CustomBuilder(getContext(), "Options", false);
+                        customBuilder.setSingleChoiceItems(list, null, new CustomBuilder.OnClickListener() {
+                            @Override
+                            public void onClick(CustomBuilder builder, Object selectedObject) {
+                                if (selectedObject.toString().equalsIgnoreCase("Document " + item.getDocListLineItem().size())) {
+                                    Intent theIntent = new Intent(getActivity(), ViewDocumentActivity.class);
+                                    theIntent.putExtra("LineItemDocument", item);
+                                    startActivity(theIntent);
+                                } else if (selectedObject.toString().equalsIgnoreCase("Policy Status")) {
+                                    Utility.openPolicyStatusPopUp(item, context, preferences);
+                                }
+                                builder.dismiss();
+                            }
+
+
+                        });
+                        customBuilder.show();
+                    }
+
+                });
+
+            }
+
             setLineItemLable(holder,item);
 
         }

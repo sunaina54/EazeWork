@@ -66,11 +66,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:background="@color/fragment_bg"
                 android:padding="@dimen/padding_default" >
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
     <include layout="@layout/progress_root_container"/>
+
     <ImageView
         android:id="@+id/tv_apply_leave"
         android:layout_width="wrap_content"

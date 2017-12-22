@@ -982,7 +982,7 @@ public class EditExpenseApprovalFragment extends BaseFragment {
             private Button editButton, viewDocBTN, statusBT;
             private LinearLayout statusLl, statusMsgLl, approvedAmountLl;
             private LinearLayout viewDocLl,lineDocumentLl,categoryLinearLayout,detailsLinearLayout,claimHeadLinearLayout,inputAmtLinearLayout,amountLinearLayout,fromDateLinearLayout,toDateLinearLayout;
-
+            private ImageView img_menu_icon;
 
             public MyViewHolder(View v) {
                 super(v);
@@ -1028,6 +1028,9 @@ public class EditExpenseApprovalFragment extends BaseFragment {
                 detailsLinearLayout=(LinearLayout)  v.findViewById(R.id.detailsLinearLayout);
                 claimHeadLinearLayout=(LinearLayout)  v.findViewById(R.id.claimHeadLinearLayout);
                 amountLinearLayout=(LinearLayout)  v.findViewById(R.id.amountLinearLayout);
+
+                img_menu_icon= (ImageView) v.findViewById(R.id.img_menu_icon);
+                img_menu_icon.setVisibility(View.VISIBLE);
 
             }
         }
@@ -1098,7 +1101,7 @@ public class EditExpenseApprovalFragment extends BaseFragment {
                 holder.approvedAmountTV.setText(item.getAmtApproved());
 
             }
-            if (!item.getPolicyID().equalsIgnoreCase("")) {
+        /*    if (!item.getPolicyID().equalsIgnoreCase("")) {
                 holder.statusMsgLl.setVisibility(View.VISIBLE);
                 holder.statusBT.setText(Utility.policyStatus(item.getPolicyID(), item.getPolicyLimitValue(), item.getInputUnit(), item.getClaimAmt()));
                 holder.statusBT.setOnClickListener(new View.OnClickListener() {
@@ -1123,9 +1126,51 @@ public class EditExpenseApprovalFragment extends BaseFragment {
                         startActivityForResult(theIntent,AddExpenseActivity.REQUEST_CODE);
                     }
                 });
+            }*/
+
+            if (item.getPolicyID().equalsIgnoreCase("")) {
+                holder.statusLl.setVisibility(View.VISIBLE);
             }
 
-            holder.editButton.setOnClickListener(new View.OnClickListener() {
+            holder.img_menu_icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<String> list = new ArrayList<>();
+                    list.add("Edit");
+                    if (item.getDocListLineItem() != null && item.getDocListLineItem().size() > 0) {
+                        list.add("Document " + item.getDocListLineItem().size());
+                    }
+                    if (!item.getPolicyID().equalsIgnoreCase("")) {
+                        list.add("Policy Status");
+                    }
+
+                    CustomBuilder customBuilder = new CustomBuilder(getContext(), "Options", false);
+                    customBuilder.setSingleChoiceItems(list, null, new CustomBuilder.OnClickListener() {
+                        @Override
+                        public void onClick(CustomBuilder builder, Object selectedObject) {
+                            if (selectedObject.toString().equalsIgnoreCase("Edit")) {
+                                Intent theIntent=new Intent(getActivity(), AddExpenseActivity.class);
+                                AddExpenseActivity.saveExpenseRequestModel=saveExpenseRequestModel;
+                                AddExpenseActivity.lineItemsModel=item;
+                                startActivityForResult(theIntent,AddExpenseActivity.REQUEST_CODE);
+                            } else if(selectedObject.toString().equalsIgnoreCase("Document " + item.getDocListLineItem().size())){
+                                Intent theIntent=new Intent(getActivity(), AddExpenseActivity.class);
+                                AddExpenseActivity.saveExpenseRequestModel=saveExpenseRequestModel;
+                                AddExpenseActivity.lineItemsModel=item;
+                                startActivityForResult(theIntent,AddExpenseActivity.REQUEST_CODE);
+                            }else if(selectedObject.toString().equalsIgnoreCase("Policy Status")){
+                                Utility.openPolicyStatusPopUp(item, context, preferences);
+                            }
+                            builder.dismiss();
+                        }
+
+
+                    });
+                    customBuilder.show();
+                }
+            });
+
+          /*  holder.editButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                    Intent theIntent=new Intent(getActivity(), AddExpenseActivity.class);
@@ -1133,7 +1178,7 @@ public class EditExpenseApprovalFragment extends BaseFragment {
                     AddExpenseActivity.lineItemsModel=item;
                     startActivityForResult(theIntent,AddExpenseActivity.REQUEST_CODE);
                 }
-            });
+            });*/
             setLineItemLable( holder,item);
         }
 

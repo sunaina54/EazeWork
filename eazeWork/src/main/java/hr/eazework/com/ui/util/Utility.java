@@ -84,6 +84,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import hr.eazework.com.AddExpenseActivity;
 import hr.eazework.com.MainActivity;
 import hr.eazework.com.R;
 import hr.eazework.com.application.MyApplication;
@@ -96,11 +97,13 @@ import hr.eazework.com.model.LoginUserModel;
 import hr.eazework.com.model.MappedEmployee;
 import hr.eazework.com.model.MenuItemModel;
 import hr.eazework.com.model.ModelManager;
+import hr.eazework.com.model.SaveExpenseRequestModel;
 import hr.eazework.com.model.SupportDocsItemModel;
 import hr.eazework.com.model.TeamMember;
 import hr.eazework.com.model.TypeWiseListModel;
 import hr.eazework.com.ui.adapter.DocumentUploadAdapter;
 import hr.eazework.com.ui.customview.CustomBuilder;
+import hr.eazework.com.ui.fragment.AddExpenseClaimFragment;
 import hr.eazework.com.ui.fragment.CameraActivity;
 import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.interfaces.UserActionListner;
@@ -545,7 +548,8 @@ public class Utility {
             double policyAmount = Double.parseDouble(itemsModel.getPolicyLimitValue()) * Double.parseDouble(itemsModel.getInputUnit());
             policyAmountTV.setText(policyAmount+"");
         }else {
-            policyAmountTV.setText(itemsModel.getClaimAmt());
+            //policyAmountTV.setText(itemsModel.getClaimAmt());
+            policyAmountTV.setText(itemsModel.getPolicyLimitValue());
         }
 
         claimAmountTV.setText(itemsModel.getClaimAmt());
@@ -714,6 +718,7 @@ public class Utility {
                     customBuilder.show();
 
     }
+
 
     public static TimePickerDialog setTime(Context context,final TextView timeTV) {
 

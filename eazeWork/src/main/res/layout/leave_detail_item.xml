@@ -2,11 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_default"
-    android:background="@drawable/focus_style_gray"
-    android:orientation="vertical"
-    android:padding="@dimen/margin_default">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+   >
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardViewExpense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_22"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="2dp"
+        card_view:cardUseCompatPadding="true">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_default">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,7 +28,7 @@
         android:id="@+id/tv_leave_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="jfhdgkdj"
+        android:text=""
         />
 
         <ImageView
@@ -23,6 +36,7 @@
             android:id="@+id/img_icon_rounded"
             android:layout_width="30dp"
             android:layout_height="20dp"
+            android:visibility="gone"
             android:paddingRight="10dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/squares_line" />
@@ -34,7 +48,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/leave_employee_name_format"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_leave_from_to"
@@ -47,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@plurals/leave_total_days_format"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_leave_remark"
@@ -104,4 +118,6 @@
             android:textSize="@dimen/font_12"
             android:visibility="gone" />
     </RelativeLayout>
+            </LinearLayout>
+    </android.support.v7.widget.CardView>
 </LinearLayout>

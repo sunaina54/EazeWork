@@ -983,7 +983,7 @@ public class AddExpenseClaimFragment extends BaseFragment {
             private LinearLayout statusMsgLl, statusLl;
             private Button actionBTN, viewDocBTN, statusBT;
             private LinearLayout categoryLinearLayout,detailsLinearLayout,claimHeadLinearLayout,inputAmtLinearLayout,amountLinearLayout,fromDateLinearLayout,toDateLinearLayout;
-
+            private ImageView img_menu_icon;
 
             public MyViewHolder(View v) {
                 super(v);
@@ -1023,6 +1023,9 @@ public class AddExpenseClaimFragment extends BaseFragment {
                 detailsLinearLayout=(LinearLayout)  v.findViewById(R.id.detailsLinearLayout);
                 claimHeadLinearLayout=(LinearLayout)  v.findViewById(R.id.claimHeadLinearLayout);
                 amountLinearLayout=(LinearLayout)  v.findViewById(R.id.amountLinearLayout);
+
+                img_menu_icon= (ImageView) v.findViewById(R.id.img_menu_icon);
+                img_menu_icon.setVisibility(View.VISIBLE);
 
 
             }
@@ -1088,9 +1091,15 @@ public class AddExpenseClaimFragment extends BaseFragment {
                 holder.amountTV.setText(item.getClaimAmt());
                 Utility.formatAmount(holder.amountTV,Double.parseDouble(item.getClaimAmt()));
             }
-            if (!item.getPolicyID().equalsIgnoreCase("")) {
+
+            if (item.getPolicyID().equalsIgnoreCase("")) {
+                holder.statusLl.setVisibility(View.VISIBLE);
+            }
+
+        /*    if (!item.getPolicyID().equalsIgnoreCase("")) {
                 holder.statusMsgLl.setVisibility(View.VISIBLE);
-                holder.statusBT.setText(Utility.policyStatus(item.getPolicyID(), item.getPolicyLimitValue(), item.getInputUnit(), item.getClaimAmt()));
+                holder.statusBT.setText(Utility.policyStatus(item.getPolicyID(), item.getPolicyLimitValue(),
+                        item.getInputUnit(), item.getClaimAmt()));
                 holder.statusBT.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1115,10 +1124,61 @@ public class AddExpenseClaimFragment extends BaseFragment {
                         startActivityForResult(theIntent,AddExpenseActivity.REQUEST_CODE);
                     }
                 });
-            }
+            }*/
+
+            holder.img_menu_icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<String> list = new ArrayList<>();
+                    list.add("Edit");
+                    list.add("Delete");
+                    if (item.getDocListLineItem() != null && item.getDocListLineItem().size() > 0) {
+                        list.add("Document " + item.getDocListLineItem().size());
+                    }
+                    if (!item.getPolicyID().equalsIgnoreCase("")) {
+                        list.add("Policy Status");
+
+                    }
+                    CustomBuilder customBuilder = new CustomBuilder(getContext(), "Options", false);
+                    customBuilder.setSingleChoiceItems(list, null, new CustomBuilder.OnClickListener() {
+                        @Override
+                        public void onClick(CustomBuilder builder, Object selectedObject) {
+                            if (selectedObject.toString().equalsIgnoreCase("Edit")) {
+                                updateExpenseOnAddClick();
+                                Intent theIntent=new Intent(getActivity(), AddExpenseActivity.class);
+                                AddExpenseActivity.saveExpenseRequestModel=saveExpenseRequestModel;
+                                AddExpenseActivity.lineItemsModel=item;
+                                startActivityForResult(theIntent,AddExpenseActivity.REQUEST_CODE);
+                            } else if (selectedObject.toString().equalsIgnoreCase("Delete")) {
+                                dataSet.remove(listPosition);
+                                ExpenseClaimDetailsAdapter.this.notifyDataSetChanged();
+
+                                if (dataSet.size() == 0) {
+                                    errorTV.setVisibility(View.VISIBLE);
+                                }
+                                saveExpenseRequestModel.getExpense().getExpenseItem().setLineItems(dataSet);
+                                refreshLineItemList();
+
+                            }else if(selectedObject.toString().equalsIgnoreCase("Document " + item.getDocListLineItem().size())){
+                                updateExpenseOnAddClick();
+                                Intent theIntent=new Intent(getActivity(), AddExpenseActivity.class);
+                                AddExpenseActivity.saveExpenseRequestModel=saveExpenseRequestModel;
+                                AddExpenseActivity.lineItemsModel=item;
+                                startActivityForResult(theIntent,AddExpenseActivity.REQUEST_CODE);
+                            }else if(selectedObject.toString().equalsIgnoreCase("Policy Status")){
+                                Utility.openPolicyStatusPopUp(item, context, preferences);
+                            }
+                            builder.dismiss();
+                        }
 
 
-            holder.actionBTN.setOnClickListener(new View.OnClickListener() {
+                    });
+                    customBuilder.show();
+                }
+
+            });
+
+         /*   holder.actionBTN.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     ArrayList<String> list = new ArrayList<>();
@@ -1152,7 +1212,7 @@ public class AddExpenseClaimFragment extends BaseFragment {
                     });
                     customBuilder.show();
                 }
-            });
+            });*/
             setLineItemLable(holder, item);
         }
 
