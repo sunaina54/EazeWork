@@ -263,8 +263,6 @@ public class ViewAdvanceRequestSummaryFragment extends BaseFragment {
             for (AdjustmentItem item : adjustmentItems) {
                 total = total + Double.parseDouble(item.getAmount());
             }
-
-            //totalAdjustmentAmountTV.setText();
             Utility.formatAmount(totalAdjustmentAmountTV, total);
         } else {
             advanceLinearLayout.setVisibility(View.VISIBLE);
@@ -348,8 +346,6 @@ public class ViewAdvanceRequestSummaryFragment extends BaseFragment {
             for (PaymentDetailsItem item : paymentDetailsItems) {
                 total = total + Double.parseDouble(item.getAmount());
             }
-
-            //totalAmountTV.setText(total + "");
             Utility.formatAmount(totalAmountTV, total);
         } else {
             paymentLinearLayout.setVisibility(View.VISIBLE);
@@ -498,10 +494,6 @@ public class ViewAdvanceRequestSummaryFragment extends BaseFragment {
                 public void onClick(View v) {
                     String filePath = item.getDocPath().replace("~", "");
                     String path = CommunicationConstant.UrlFile + filePath + "/" + item.getDocFile();
-                    //  new DownloadFile().execute(path, item.getName());
-                   /* String filePath = fileObject.getDocPath().replace("~", "");
-                    String path = CommunicationConstant.UrlFile + filePath + "/" + fileObject.getDocFile();*/
-
                     Utility.downloadPdf(path, null, item.getDocFile(), context, getActivity());
 
 
@@ -518,58 +510,6 @@ public class ViewAdvanceRequestSummaryFragment extends BaseFragment {
                         public void onClick(CustomBuilder builder, Object selectedObject) {
 
                             if (selectedObject.toString().equalsIgnoreCase("Edit")) {
-                  /*      final Dialog dialog = new Dialog(context);
-                        dialog.setContentView(R.layout.filename_advance_expense);
-                        preferences = new Preferences(getContext());
-                        int textColor = Utility.getTextColorCode(preferences);
-                        int bgColor = Utility.getBgColorCode(context, preferences);
-                        FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
-                        fl_actionBarContainer.setBackgroundColor(bgColor);
-                        TextView tv_header_text = (TextView) dialog.findViewById(R.id.tv_header_text);
-                        tv_header_text.setTextColor(textColor);
-                        tv_header_text.setText("Edit");
-
-                        final EditText editFilenameET = (EditText) dialog.findViewById(R.id.editFilenameET);
-                        editFilenameET.setText(name);
-
-                        (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                //  SupportDocsItemModel docItem = new SupportDocsItemModel();
-                                fileObject.setName(editFilenameET.getText().toString());
-                                if (uploadFileList != null && uploadFileList.size() > 0) {
-                                    uploadFileList.set(uploadFileList.indexOf(fileObject), fileObject);
-
-                                } else {
-                                    uploadFileList = new ArrayList<SupportDocsItemModel>();
-                                    uploadFileList.add(fileObject);
-                                }
-                                refreshList(uploadFileList);
-                                dialog.dismiss();
-
-                            }
-                        });
-                        (dialog).findViewById(R.id.ibWrong).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                        dialog.show();*/
-                            } else if (selectedObject.toString().equalsIgnoreCase("Delete")) {
-                       /* SupportDocsItemModel doc = mDataset.get(position);
-                        if (doc.getDocID() != 0 && doc.getFlag().equalsIgnoreCase(AppsConstant.OLD_FLAG)) {
-                            doc.setFlag(AppsConstant.DELETE_FLAG);
-                            mDataset.set(position, doc);
-                        } else if (doc.getDocID() == 0 && doc.getFlag().equalsIgnoreCase(AppsConstant.NEW_FLAG)) {
-                            mDataset.remove(position);
-                        }
-                        EditAdvanceApprovalFragment.DocumentUploadAdapter.this.notifyDataSetChanged();
-                        if (mDataset.size() == 0) {
-                            errorTV.setVisibility(View.VISIBLE);
-                        }
-*/
                             } else if (selectedObject.toString().equalsIgnoreCase("Download")) {
 
                                 String filePath = item.getDocPath().replace("~", "");
@@ -595,80 +535,6 @@ public class ViewAdvanceRequestSummaryFragment extends BaseFragment {
         public void clearDataSource() {
             dataSet.clear();
             notifyDataSetChanged();
-        }
-    }
-
-
-    private class DownloadFile extends AsyncTask<String, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            progress = ProgressDialog.show(context, "ProgressDialog", "Downloading File");
-        }
-
-
-        @Override
-        protected Void doInBackground(String... strings) {
-            String fileUrl = strings[0];
-            String fileName = strings[1];
-            String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-            File folder = new File(extStorageDirectory, "FileEazeWork");
-            folder.mkdir();
-
-            File pdfFile = new File(folder, fileName);
-
-            try {
-                pdfFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            FileDownloader.downloadFile(fileUrl, pdfFile);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            //super.onPostExecute(aVoid);
-            progress.dismiss();
-        }
-    }
-
-    public static class FileDownloader {
-        private static final int MEGABYTE = 1024 * 1024;
-
-        public static void downloadFile(String fileUrl, File directory) {
-            try {
-
-                URL url = new URL(fileUrl);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setDoOutput(true);
-                urlConnection.connect();
-
-                //  InputStream inputStream = urlConnection.getInputStream();
-                InputStream inputStream = new URL(fileUrl).openStream();
-                FileOutputStream fileOutputStream = new FileOutputStream(directory);
-                int totalSize = urlConnection.getContentLength();
-                //Toast.makeText(context,"Starting PDF download...",Toast.LENGTH_LONG).show();
-
-                byte[] buffer = new byte[MEGABYTE];
-                int bufferLength = 0;
-                while ((bufferLength = inputStream.read(buffer)) > 0) {
-                    fileOutputStream.write(buffer, 0, bufferLength);
-                   /* downloadedSize += bufferLength;
-                    per = ((float) downloadedSize / totalSize) * 100;
-                    Toast.makeText(context,"Total PDF File size  : "
-                            + (totalsize / 1024)
-                            + " KB\n\nDownloading PDF " + (int) per
-                            + "% complete",Toast.LENGTH_LONG).show();*/
-                }
-                fileOutputStream.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 

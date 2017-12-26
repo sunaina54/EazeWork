@@ -2,9 +2,6 @@ package hr.eazework.com;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,18 +16,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.vision.text.Line;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import hr.eazework.com.model.EmployItem;
 import hr.eazework.com.model.EmployResponse;
-import hr.eazework.com.model.LineItemsModel;
 import hr.eazework.com.model.SearchOnBehalfItem;
 import hr.eazework.com.ui.fragment.CreateNewLeaveFragment;
-import hr.eazework.com.ui.fragment.ViewDocumentFragment;
-import hr.eazework.com.ui.fragment.ViewExpenseClaimSummaryFragment;
+import hr.eazework.com.ui.fragment.OutdoorDutyRequestFragment;
+import hr.eazework.com.ui.fragment.WorkFromHomeRequestFragment;
 import hr.eazework.com.ui.util.AppsConstant;
 import hr.eazework.com.ui.util.Preferences;
 import hr.eazework.com.ui.util.Utility;
@@ -39,8 +33,6 @@ import hr.eazework.mframe.communication.ResponseData;
 import hr.eazework.selfcare.communication.AppRequestJSONString;
 import hr.eazework.selfcare.communication.CommunicationConstant;
 import hr.eazework.selfcare.communication.CommunicationManager;
-import hr.eazework.selfcare.communication.IBaseResponse;
-import rx.internal.util.LinkedArrayList;
 
 public class SearchOnbehalfActivity extends BaseActivity {
     private RelativeLayout searchLayout;
@@ -53,7 +45,9 @@ public class SearchOnbehalfActivity extends BaseActivity {
     private TextView tv_header_text;
     private RecyclerView recyclerView;
     private EmployResponse empResponse;
-    public  static String SELECTED_EMP="seletedEmp";
+    public static String SELECTED_EMP="seletedEmp";
+    public static String SELECTED_WFH_EMP="selectedWFHEmp";
+    public static String SELECTED_OD_EMP="selectedODEmp";
     private ImageView ibRightIV,clearTextIV;
     private LinearLayout progressContainer,noRecordLayout,rl_edit_team_member;
 
@@ -87,8 +81,7 @@ public class SearchOnbehalfActivity extends BaseActivity {
         tv_header_text.setTextColor(textColor);
         rl_edit_team_member=(LinearLayout) findViewById(R.id.rl_edit_team_member);
         rl_edit_team_member.setBackgroundColor(bgColor);
-        backLayout=(RelativeLayout)findViewById(R.id.backLayout);
-//        mainLayout.setBackgroundColor(getResources().getColor(R.color.black));
+
         recyclerView = (RecyclerView) findViewById(R.id.recycleView);
         searchLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,6 +94,7 @@ public class SearchOnbehalfActivity extends BaseActivity {
                 searchOnBehalf(str);
             }
         });
+        backLayout=(RelativeLayout)findViewById(R.id.backLayout);
         backLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -205,7 +199,6 @@ public class SearchOnbehalfActivity extends BaseActivity {
 
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.employ_list_item, parent, false);
-            //view.setOnClickListener(MainActivity.myOnClickListener);
             MyViewHolder myViewHolder = new MyViewHolder(view);
             return myViewHolder;
         }
@@ -216,7 +209,6 @@ public class SearchOnbehalfActivity extends BaseActivity {
 
             final EmployItem item = dataSet.get(listPosition);
             if(item.getEmpCode()!=null){
-
                 holder.empCodeTV.setText(item.getEmpCode());
 
             }
@@ -228,6 +220,10 @@ public class SearchOnbehalfActivity extends BaseActivity {
                 public void onClick(View view) {
                     Intent theIntent=new Intent();
                     theIntent.putExtra(SELECTED_EMP,item);
+                    theIntent.putExtra(SELECTED_WFH_EMP,item);
+                    theIntent.putExtra(SELECTED_OD_EMP,item);
+                    setResult(OutdoorDutyRequestFragment.OD_EMP,theIntent);
+                    setResult(WorkFromHomeRequestFragment.WFH_EMP,theIntent);
                     setResult(CreateNewLeaveFragment.LEAVE_EMP,theIntent);
                     finish();
                 }

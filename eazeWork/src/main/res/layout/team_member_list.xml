@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/fragment_bg">
 
 
     <!--<android.support.v7.widget.RecyclerView
@@ -22,8 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:cacheColorHint="@android:color/transparent"
-        android:divider="@drawable/gradient_line"
-        android:dividerHeight="@dimen/tiny_gap_default"
         android:listSelector="@android:color/transparent"
         android:paddingLeft="@dimen/padding_default"
         android:paddingRight="@dimen/padding_default" >

@@ -238,11 +238,6 @@ public class LeaveBalanceDetailFragment extends BaseFragment {
                 ((TextView) lView.findViewById(R.id.tv_leave_type)).setText("No Leaves.");
                 ((TextView) lView.findViewById(R.id.tv_leave_remark)).setVisibility(View.GONE);
                 ((TextView) lView.findViewById(R.id.tv_leave_from_to)).setVisibility(View.GONE);
-                /*
-                 * if (isPendingLeaves) { ((TextView)
-				 * lView.findViewById(R.id.tv_leave_type))
-				 * .setTextColor(getResources().getColor( R.color.accent)); }
-				 */
                 layout.addView(lView);
             }
         }
@@ -253,10 +248,6 @@ public class LeaveBalanceDetailFragment extends BaseFragment {
         switch (v.getId()) {
             case R.id.tv_apply_leave:
                 mUserActionListener.performUserAction(IAction.CREATE_NEW_LEAVE, v, null);
-			/*
-			 * new AlertCustomDialog(getActivity(),
-			 * "This feature is under development");
-			 */
                 break;
             case R.id.tv_withdraw:
                 final LeaveModel acceptModel = (LeaveModel) v.getTag();
@@ -332,7 +323,6 @@ public class LeaveBalanceDetailFragment extends BaseFragment {
                 }
                 break;
             case CommunicationConstant.API_EMP_LEAVE_BALANCE:
-                // GetEmpLeaveBalanceResult
                 try {
                     JSONObject jsonLeaveBalanceResult = (new JSONObject(responseData)).getJSONObject("GetEmpLeaveBalanceResult");
                     String getEmpLeaveBalanceResult = jsonLeaveBalanceResult.toString();

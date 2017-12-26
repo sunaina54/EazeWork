@@ -76,14 +76,6 @@ public class CameraActivity extends AppCompatActivity {
             fragment.setArguments(bundle);
             fm.beginTransaction().replace(R.id.flCapture, fragment).commit();
         } else {
-
-            /*Fragment fragment = new CameraFragment();
-            FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.flCapture, fragment).commit();
-            fm.executePendingTransactions();
-            forAboveLollipop = false;
-            openDefualtCamera();
-        }*/
             openDefualtCamera();
         }
     }
@@ -91,22 +83,10 @@ public class CameraActivity extends AppCompatActivity {
     public void openDefualtCamera() {
         forBelowLollipop = true;
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-     //   takePictureIntent.setFlags(takePictureIntent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
-
-    /*@Override
-    public void onBackPressed() {
-
-        Fragment topFragment = getTopFragment();
-        if(topFragment != null && topFragment instanceof RetakeFragment) {
-            finish();
-        } else {
-            super.onBackPressed();
-        }
-    }*/
 
     public Fragment getTopFragment() {
         return getSupportFragmentManager().findFragmentById(R.id.flCapture);
@@ -136,7 +116,6 @@ public class CameraActivity extends AppCompatActivity {
                         Crashlytics.logException(e);
                     }
                 }
-              //  if (purpose.equalsIgnoreCase("ForStore")) {
                     RetakeFragment fragment = new RetakeFragment();
                     FragmentManager fragmentManager = getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -148,20 +127,6 @@ public class CameraActivity extends AppCompatActivity {
                     fragmentTransaction.replace(R.id.flCapture, fragment);
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commitAllowingStateLoss();
-/*
-                }else
-                {
-
-                    Intent i = new Intent();
-                    i.putExtra("response", imageBitmap);
-                    i.putExtra("image_purpose", purpose);
-                    *//*if (!TextUtils.isEmpty(fieldCode)) {
-                        i.putExtra("FieldCode", fieldCode);
-                    }*//*
-
-                    setResult(Activity.RESULT_OK, i);
-                    finish();
-                }*/
             }
         }
     }

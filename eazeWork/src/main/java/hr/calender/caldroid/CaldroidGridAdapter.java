@@ -390,6 +390,7 @@ public class CaldroidGridAdapter extends BaseAdapter {
 			AttandanceCalenderStatusItem attandanceCalenderStatusItem = AttandanceCalenderStatusResult
 					.getInstance().getStatusItem(
 							"" + dateTime.format("DD/MM/YYYY"));
+			Log.d("TAG","date : "+attandanceCalenderStatusItem.getMarkDate()+" Status : "+attandanceCalenderStatusItem.getStatus());
 			int state = -1;
 			try {
 				state = Integer.parseInt(attandanceCalenderStatusItem
@@ -412,6 +413,7 @@ public class CaldroidGridAdapter extends BaseAdapter {
 				showSubTitle(convertView, "L", CellView.STATE_LEAVE);
 				break;
 			case 3:
+				Log.d("TAG","Comp Off"+CellView.STATE_COMP_OFF);
 				cellView.addCustomState(CellView.STATE_COMP_OFF);
 				showSubTitle(convertView, "", CellView.STATE_COMP_OFF);
 			case 4:
@@ -497,12 +499,14 @@ public class CaldroidGridAdapter extends BaseAdapter {
 					.setBackgroundColor(
 							context.getResources().getColor(
 									R.color.primary_blue));
+
 		if (stateHalfDay == CellView.STATE_COMP_OFF)
 			convertView.findViewById(R.id.tv_date_status).setVisibility(
 					View.VISIBLE);
 		else
 			convertView.findViewById(R.id.tv_date_status).setVisibility(
 					View.VISIBLE);
+
 		((TextView) convertView.findViewById(R.id.tv_date_status))
 				.setTextColor(context.getResources().getColor(
 						android.R.color.darker_gray));

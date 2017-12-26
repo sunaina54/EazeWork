@@ -1,9 +1,20 @@
 package hr.eazework.com.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +23,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +36,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,6 +47,7 @@ import java.util.concurrent.TimeUnit;
 
 import hr.calender.caldroid.CaldroidFragment;
 import hr.calender.caldroid.CaldroidListener;
+import hr.eazework.com.FileUtils;
 import hr.eazework.com.MainActivity;
 import hr.eazework.com.R;
 import hr.eazework.com.SearchOnbehalfActivity;
@@ -39,9 +58,15 @@ import hr.eazework.com.model.LeaveTypeModel;
 import hr.eazework.com.model.LoginUserModel;
 import hr.eazework.com.model.MenuItemModel;
 import hr.eazework.com.model.ModelManager;
+import hr.eazework.com.model.SupportDocsItemModel;
 import hr.eazework.com.model.UserModel;
+import hr.eazework.com.ui.adapter.DocumentUploadAdapter;
 import hr.eazework.com.ui.customview.CustomBuilder;
+import hr.eazework.com.ui.customview.CustomDialog;
 import hr.eazework.com.ui.interfaces.IAction;
+import hr.eazework.com.ui.util.AppsConstant;
+import hr.eazework.com.ui.util.ImageUtil;
+import hr.eazework.com.ui.util.PermissionUtil;
 import hr.eazework.com.ui.util.Preferences;
 import hr.eazework.com.ui.util.Utility;
 import hr.eazework.com.ui.util.custom.AlertCustomDialog;
@@ -49,6 +74,9 @@ import hr.eazework.mframe.communication.ResponseData;
 import hr.eazework.selfcare.communication.AppRequestJSONString;
 import hr.eazework.selfcare.communication.CommunicationConstant;
 import hr.eazework.selfcare.communication.CommunicationManager;
+
+import static android.app.Activity.RESULT_OK;
+import static hr.eazework.com.ui.util.ImageUtil.rotateImage;
 
 
 public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedChangeListener {
@@ -68,7 +96,15 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
     private TextView empNameTV;
     public static int LEAVE_EMP=1;
     private EmployItem employItem;
+    private LinearLayout errorLinearLayout;
+    private RecyclerView expenseRecyclerView;
+    private Context context;
+    private ArrayList<SupportDocsItemModel> uploadFileList;
+    private Bitmap bitmap = null;
+    private String purpose = "";
+    private static int UPLOAD_DOC_REQUEST = 1;
     private String empId;
+    private ImageView plus_create_newIV;
     private String defaultFromDateLabel="From Date",defaultToDateLable="To Date",value="--/--/----",defaultLeaveLable="Select Leave";
 
 
@@ -76,25 +112,6 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
     public void onCreate(Bundle savedInstanceState) {
         this.setShowPlusMenu(false);
         this.setShowEditTeamButtons(true);
-       /* LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
-        if (loginUserModel != null && loginUserModel.getUserModel() != null) {
-            MainActivity.isAnimationLoaded = false;
-            CommunicationManager.getInstance().sendPostRequest(this,
-                    AppRequestJSONString.getEmpLeavesData(loginUserModel.getUserModel().getEmpId()), CommunicationConstant.API_EMP_LEAVES,
-                    true);
-
-            CommunicationManager.getInstance().sendPostRequest(this,
-                    AppRequestJSONString.getEmpLeaveBalancesData(loginUserModel.getUserModel().getEmpId()), CommunicationConstant.API_EMP_RH_LEAVES,
-                    false);
-
-            CommunicationManager.getInstance().sendPostRequest(
-                    this,
-                    AppRequestJSONString.getEmpLeaveBalancesData(loginUserModel.getUserModel().getEmpId()),
-                    CommunicationConstant.API_GET_EMP_LEAVE_BALANCES, false);
-
-
-        }*/
-
         super.onCreate(savedInstanceState);
     }
 
@@ -124,7 +141,8 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         this.toDate=null;
         this.leaveTypeModel=null;
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.ll_create_new_leave, container, false);
-
+        context=getContext();
+        uploadFileList=new ArrayList<>();
         preferences = new Preferences(getContext());
         int textColor = Utility.getTextColorCode(preferences);
         int bgColor = Utility.getBgColorCode(getActivity(), preferences);
@@ -185,6 +203,49 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                 }
             }
         });
+
+
+        errorLinearLayout = (LinearLayout) rootView.findViewById(R.id.errorDocTV);
+        errorLinearLayout.setVisibility(View.VISIBLE);
+        expenseRecyclerView = (RecyclerView) rootView.findViewById(R.id.expenseRecyclerView);
+        expenseRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        DividerItemDecoration itemDecoration = new
+                DividerItemDecoration(expenseRecyclerView.getContext(), DividerItemDecoration.HORIZONTAL);
+        itemDecoration.setDrawable(ContextCompat.getDrawable(context, R.drawable.gradient_line));
+        expenseRecyclerView.addItemDecoration(itemDecoration);
+
+        plus_create_newIV = (ImageView) rootView.findViewById(R.id.plus_create_newIV);
+
+        plus_create_newIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ArrayList<String> list = new ArrayList<>();
+                list.add("Take a photo");
+                list.add("Gallery");
+                final CustomBuilder customBuilder = new CustomBuilder(getContext(), "Upload From", false);
+                customBuilder.setSingleChoiceItems(list, null, new CustomBuilder.OnClickListener() {
+                            @Override
+                            public void onClick(CustomBuilder builder, Object selectedObject) {
+                                if (selectedObject.toString().equalsIgnoreCase("Take a photo")) {
+                                    if (!PermissionUtil.checkCameraPermission(getContext()) || !PermissionUtil.checkStoragePermission(getContext())) {
+                                        PermissionUtil.askAllPermissionCamera(CreateNewLeaveFragment.this);
+                                    }
+                                    if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext())) {
+                                        Utility.openCamera(getActivity(), CreateNewLeaveFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore", TAG);
+                                        customBuilder.dismiss();
+                                    }
+                                } else if (selectedObject.toString().equalsIgnoreCase("Gallery")) {
+                                    galleryIntent();
+                                    customBuilder.dismiss();
+                                }
+                            }
+                        }
+                );
+                customBuilder.show();
+            }
+        });
+
+
         employItem=new EmployItem();
         LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
 
@@ -214,40 +275,6 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         super.onDetach();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==LEAVE_EMP){
-            if(data!=null){
-                EmployItem item=(EmployItem) data.getSerializableExtra(SearchOnbehalfActivity.SELECTED_EMP);
-                if(item!=null){
-                    empNameTV.setText(item.getName());
-                    empId=String.valueOf(item.getEmpID());
-                    employItem=item;
-                }
-                leaveTypeModel=null;
-               /* EmpLeaveModel leaveModel = ModelManager.getInstance()
-                        .getEmpLeaveModel() != null ? ModelManager
-                        .getInstance().getEmpLeaveModel()
-                        .getEmpLeaveById(leaveTypeModel.getLeaveId())
-                        : null;
-               */
-               /* ModelManager.getInstance().setLeaveTypeModel(null);
-                if (ModelManager.getInstance().getLeaveTypeModel() == null) {*/
-                showHideProgressView(true);
-               /* } else {
-                    showHideProgressView(false);
-                }*/
-                setupLeave();
-
-                updateLeaveAvailablity(null);
-                updateLeaveDayType(leaveTypeModel);
-                updateLeaveSelectionType(leaveTypeModel);
-                updateFromAndToDate(leaveTypeModel);
-
-            }
-        }
-    }
 
     private void updateEmploy(){
         empNameTV.setText(employItem.getName() + " (" + employItem.getEmpCode() + ")");
@@ -320,7 +347,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
             isSubmitClicked = true;
             return;
         }
-        // if (getTotalDay(startDate, toDate) <= availableLeaves) {
+
         showHideProgressView(true);
         String startDate = String.format("%1$td/%1$tm/%1$tY", this.startDate);
         String endDate = String.format("%1$td/%1$tm/%1$tY", this.toDate);
@@ -440,11 +467,11 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
             rootView.findViewById(R.id.ll_consume_leaves).setVisibility(View.GONE);
             ((TextView) rootView.findViewById(R.id.tv_from_day))
                     .setText(defaultFromDateLabel);
-            // String formatedData = String.format("%1$td/%1$tm/%1$tY", calendar);
+
             ((TextView) rootView.findViewById(R.id.tv_from_date)).setText(value);
             ((TextView) rootView.findViewById(R.id.tv_to_day))
                     .setText(defaultToDateLable);
-            // String formatedData = String.format("%1$td/%1$tm/%1$tY", calendar);
+
             ((TextView) rootView.findViewById(R.id.tv_to_date)).setText(value);
             ((TextView) rootView.findViewById(R.id.tv_select_leave_type)).setText(defaultLeaveLable);
             rootView.findViewById(R.id.rg_leave_time_type).setVisibility(View.GONE);
@@ -602,12 +629,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         String empCode=String.valueOf(employItem.getEmpID());
                         jsonObject = (new JSONObject(response.getResponseData())).optJSONObject("GetLeaveReqTotalDaysResult");
                         double d = jsonObject.optDouble("TotalDays", 0);
-                        //      if (d > 0) {
                         showHideProgressView(true);
-                           /* LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
-                            if(loginUserModel != null && loginUserModel.getUserModel() != null) {*/
-                                /*UserModel userModel = loginUserModel.getUserModel();
-                                String empId = userModel.getEmpId();*/
 
                         String fromDateFormatted = String.format("%1$td/%1$tm/%1$tY", startDate);
                         String toDateFormatted = String.format("%1$td/%1$tm/%1$tY", toDate);
@@ -623,13 +645,6 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                                         remark),
                                 CommunicationConstant.API_SAVE_LEAVE_REQUEST,
                                 true);
-
-                        //}
-                        /*} else {
-                            isSubmitClicked=true;
-                            String messageString = jsonObject.optString("ErrorMessage", "");
-                            new AlertCustomDialog(getActivity(), messageString.equalsIgnoreCase("") ? "Please select some valid dates." : messageString);
-                        }*/
                     } catch (JSONException e) {
                         Log.e(TAG, e.getMessage(), e);
                         Crashlytics.logException(e);
@@ -665,7 +680,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                     }
 
                     break;
-/////
+
 
                 case CommunicationConstant.API_GET_CORPEMP_PARAM:
                     try {
@@ -715,7 +730,6 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
 
                 break;
             case R.id.btn_submit:
-                // if (availableLeaves > 0) {
                 String empCode=String.valueOf(employItem.getEmpID());
                 LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
                 EditText etRemark = (EditText) rootView.findViewById(R.id.et_remark);
@@ -790,13 +804,6 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                                 CommunicationConstant.API_LEAVE_REQ_TOTAL_DAY, true);
                     }
                 }
-            /*
-             * } else { Toast.makeText( getActivity(), "" + availableLeaves +
-			 * " Days leave available only.", Toast.LENGTH_LONG).show(); }
-			 *
-			 * *} else { Toast.makeText(getActivity(), "No leave available.",
-			 * Toast.LENGTH_LONG).show(); }
-			 */
 
                 break;
             case R.id.tv_select_rest_leaves:
@@ -850,8 +857,6 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
 
                 break;
             case R.id.ll_from_date:
-
-                // Setup caldroid to use as dialog
                 dialogCaldroidFragment = new CaldroidFragment();
                 dialogCaldroidFragment.setCaldroidListener(new CaldroidListener() {
                     @Override
@@ -859,7 +864,6 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         Calendar calendarCurrent = Calendar.getInstance();
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTime(date);
-                        // if (calendar.compareTo(calendarCurrent) >= 0) {
                         CreateNewLeaveFragment.this.startDate = calendar;
                         ((TextView) rootView.findViewById(R.id.tv_from_day))
                                 .setText(String.format("%1$tA", calendar));
@@ -920,11 +924,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         if(isCompensatory) {
                             updateCompasatory(isCompensatory);
                         }
-					/*
-					 * } else { Toast.makeText(getActivity(),
-					 * "Please select valid date.", Toast.LENGTH_LONG) .show();
-					 * }
-					 */
+
                     }
                 });
                 // If activity is recovered from rotation
@@ -1000,6 +1000,289 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                 default:
                     break;
             }
+        }
+    }
+
+
+
+    private void galleryIntent() {
+        // Use the GET_CONTENT intent from the utility class
+        Intent target = FileUtils.createGetContentIntent();
+        // Create the chooser Intent
+        Intent intent = Intent.createChooser(
+                target, getString(R.string.chooser_title));
+        try {
+            startActivityForResult(intent, UPLOAD_DOC_REQUEST);
+        } catch (ActivityNotFoundException e) {
+            // The reason for the existence of aFileChooser
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode==LEAVE_EMP){
+            if(data!=null){
+                EmployItem item=(EmployItem) data.getSerializableExtra(SearchOnbehalfActivity.SELECTED_EMP);
+                if(item!=null){
+                    empNameTV.setText(item.getName());
+                    empId=String.valueOf(item.getEmpID());
+                    employItem=item;
+                }
+                leaveTypeModel=null;
+                showHideProgressView(true);
+                setupLeave();
+
+                updateLeaveAvailablity(null);
+                updateLeaveDayType(leaveTypeModel);
+                updateLeaveSelectionType(leaveTypeModel);
+                updateFromAndToDate(leaveTypeModel);
+
+            }
+        }
+
+        final SupportDocsItemModel fileObj = new SupportDocsItemModel();
+        if (requestCode == UPLOAD_DOC_REQUEST && resultCode == RESULT_OK) {
+            boolean fileShow = true;
+            final Uri uri = data.getData();
+            String encodeFileToBase64Binary = null;
+            if (data != null) {
+                String path = data.getStringExtra("path");
+                System.out.print(path);
+                Uri uploadedFilePath = data.getData();
+                String filename = Utility.getFileName(uploadedFilePath,context);
+                filename = filename.toLowerCase();
+                String fileDesc = Utility.getFileName(uploadedFilePath,context);
+                String[] extList = filename.split("\\.");
+                System.out.print(extList[1].toString());
+                String extension = "." + extList[extList.length - 1];
+                encodeFileToBase64Binary = Utility.fileToBase64Conversion(data.getData(),context);
+                Log.d("TAG", "RAR Base 64 :" + encodeFileToBase64Binary);
+              /*  List<String> extensionList = Arrays.asList(advanceRequestResponseModel.getGetAdvancePageInitResult().getDocValidation().getExtensions());
+                if (!extensionList.contains(extension.toLowerCase())) {
+                    CustomDialog.alertWithOk(context, advanceRequestResponseModel.getGetAdvancePageInitResult().getDocValidation().getMessage());
+                    return;
+                }*/
+                fileObj.setDocPathUri(uploadedFilePath);
+
+                if (filename.contains(".pdf")) {
+                    try {
+                        encodeFileToBase64Binary = Utility.fileToBase64Conversion(data.getData(),context);
+                        fileObj.setDocFile(filename);
+                        fileObj.setName(fileDesc);
+
+                    } catch (Exception e) {
+                        System.out.print(e.toString());
+                    }
+                } else if (filename.contains(".jpg") || filename.contains(".png") ||
+                        filename.contains(".jpeg") || filename.contains(".bmp") || filename.contains(".BMP")) {
+
+                    bitmap = null;
+                    try {
+                        bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    File mediaFile = null;
+                    if (bitmap != null) {
+                        encodeFileToBase64Binary = Utility.converBitmapToBase64(bitmap);
+                        byte[] imageBytes = ImageUtil.bitmapToByteArray(rotateImage(bitmap, 270));
+
+                        File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_DCIM), "");
+                        mediaFile = new File(mediaStorageDir.getPath() + File.separator + purpose + ".jpg");
+                        if (mediaFile != null) {
+                            try {
+                                FileOutputStream fos = new FileOutputStream(mediaFile);
+                                fos.write(imageBytes);
+                                fileObj.setDocFile(filename);
+                                fileObj.setName(fileDesc);
+                                fos.close();
+                            } catch (FileNotFoundException e) {
+                                Crashlytics.log(1, getClass().getName(), e.getMessage());
+                                Crashlytics.logException(e);
+                            } catch (IOException e) {
+                                Crashlytics.log(1, getClass().getName(), e.getMessage());
+                                Crashlytics.logException(e);
+                            }
+                        }
+                    }
+                } else if (filename.contains(".docx") || filename.contains(".doc")) {
+                    try {
+                        encodeFileToBase64Binary = Utility.fileToBase64Conversion(data.getData(),context);
+                        fileObj.setDocFile(filename);
+                        fileObj.setName(fileDesc);
+
+
+                    } catch (Exception e) {
+
+                    }
+                } else if (filename.contains(".xlsx") || filename.contains(".xls")) {
+                    try {
+                        encodeFileToBase64Binary = Utility.fileToBase64Conversion(data.getData(),context);
+                        fileObj.setDocFile(filename);
+                        fileObj.setName(fileDesc);
+
+
+                    } catch (Exception e) {
+
+                    }
+                } else if (filename.contains(".txt")) {
+                    try {
+                        encodeFileToBase64Binary =Utility.fileToBase64Conversion(data.getData(),context);
+                        fileObj.setDocFile(filename);
+                        fileObj.setName(fileDesc);
+
+                    } catch (Exception e) {
+
+                    }
+                } else if (filename.contains(".gif")) {
+                    encodeFileToBase64Binary = Utility.fileToBase64Conversion(data.getData(),context);
+                    fileObj.setDocFile(filename);
+                    fileObj.setName(fileDesc);
+                } else if (filename.contains(".rar")) {
+                    encodeFileToBase64Binary = Utility.fileToBase64Conversion(data.getData(),context);
+                    fileObj.setDocFile(filename);
+                    fileObj.setName(fileDesc);
+                } else if (filename.contains(".zip")) {
+                    encodeFileToBase64Binary =Utility.fileToBase64Conversion(data.getData(),context);
+                    fileObj.setDocFile(filename);
+                    fileObj.setName(fileDesc);
+                }
+
+
+                if (Utility.calcBase64SizeInKBytes(encodeFileToBase64Binary) > Utility.maxLimit) {
+                    CustomDialog.alertWithOk(context, Utility.sizeMsg);
+                    return;
+                }
+                if (fileShow) {
+                    if (uploadFileList.size() > 0) {
+                        for (int i = 1; i <= uploadFileList.size(); i++) {
+                            fileObj.setBase64Data(encodeFileToBase64Binary);
+                            fileObj.setFlag("N");
+                            String seqNo = String.valueOf(i + 1);
+                            Log.d("seqNo", "seqNo");
+                            uploadFileList.add(fileObj);
+
+                            break;
+                        }
+                    } else {
+                        fileObj.setBase64Data(encodeFileToBase64Binary);
+                        fileObj.setFlag("N");
+                        uploadFileList.add(fileObj);
+                    }
+                }
+                refreshList();
+
+            }
+        }
+
+        if (requestCode == AppsConstant.REQ_CAMERA && resultCode == RESULT_OK) {
+            final Intent intent = data;
+            String path = intent.getStringExtra("response");
+            Uri uri = Uri.fromFile(new File(path));
+            if (uri == null) {
+                Log.d("uri", "null");
+            } else {
+                bitmap = null;
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                File mediaFile = null;
+                if (bitmap != null) {
+                    byte[] imageBytes = ImageUtil.bitmapToByteArray(rotateImage(bitmap, 270));
+
+                    File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_DCIM), "");
+                    mediaFile = new File(mediaStorageDir.getPath() + File.separator + purpose + ".jpg");
+                    if (mediaFile != null) {
+                        try {
+                            FileOutputStream fos = new FileOutputStream(mediaFile);
+                            fos.write(imageBytes);
+                            fos.close();
+                        } catch (FileNotFoundException e) {
+                            Crashlytics.log(1, getClass().getName(), e.getMessage());
+                            Crashlytics.logException(e);
+                        } catch (IOException e) {
+                            Crashlytics.log(1, getClass().getName(), e.getMessage());
+                            Crashlytics.logException(e);
+                        }
+                    }
+                }
+            }
+            final Dialog dialog = new Dialog(context);
+            dialog.setContentView(R.layout.image_preview_expense);
+            final TextView filenameET = (TextView) dialog.findViewById(R.id.filenameET);
+            ImageView imageView = (ImageView) dialog.findViewById(R.id.img_preview);
+            imageView.setImageBitmap(bitmap);
+
+            int textColor = Utility.getTextColorCode(preferences);
+            TextView tv_header_text = (TextView) dialog.findViewById(R.id.tv_header_text);
+            tv_header_text.setTextColor(textColor);
+            tv_header_text.setText("Supporting Documents");
+            int bgColor = Utility.getBgColorCode(context, preferences);
+            FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
+            fl_actionBarContainer.setBackgroundColor(bgColor);
+
+            (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (filenameET.getText().toString().equalsIgnoreCase("")) {
+                        new AlertCustomDialog(context, "Please enter file name");
+                    } else {
+                        fileObj.setDocFile(filenameET.getText().toString() + ".jpg");
+                        fileObj.setName(filenameET.getText().toString() + ".jpg");
+
+                        boolean fileShow1 = true;
+
+                        if (fileShow1) {
+                            String encodeFileToBase64Binary = Utility.converBitmapToBase64(bitmap);
+                            // Log.d("TAG","IMAGE SIZE : "+ Utility.calcBase64SizeInKBytes(encodeFileToBase64Binary));
+
+                            if (uploadFileList.size() > 0) {
+                                for (int i = 1; i <= uploadFileList.size(); i++) {
+                                    fileObj.setBase64Data(encodeFileToBase64Binary);
+                                    fileObj.setFlag("N");
+                                    String seqNo = String.valueOf(i + 1);
+                                    Log.d("seqNo", "seqNo");
+                                    uploadFileList.add(fileObj);
+
+                                    break;
+                                }
+                            } else {
+                                fileObj.setBase64Data(encodeFileToBase64Binary);
+                                fileObj.setFlag("N");
+
+                                uploadFileList.add(fileObj);
+                            }
+                        }
+                        refreshList();
+                        dialog.dismiss();
+                    }
+                }
+            });
+            (dialog).findViewById(R.id.ibWrong).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            dialog.show();
+        }
+    }
+
+    private void refreshList() {
+        if (uploadFileList != null && uploadFileList.size() > 0) {
+            errorLinearLayout.setVisibility(View.GONE);
+            expenseRecyclerView.setVisibility(View.VISIBLE);
+            DocumentUploadAdapter adapter = new DocumentUploadAdapter(uploadFileList,context,AppsConstant.ADD,errorLinearLayout);
+            expenseRecyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        } else {
+            errorLinearLayout.setVisibility(View.VISIBLE);
+            expenseRecyclerView.setVisibility(View.GONE);
         }
     }
 }

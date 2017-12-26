@@ -2,85 +2,122 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_marginTop="@dimen/margin_default"
-    android:background="@drawable/focus_style_gray"
-    android:padding="@dimen/margin_default" >
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+   >
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardViewExpense"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/margin_22"
+        card_view:cardBackgroundColor="@color/white"
+        card_view:cardCornerRadius="2dp"
+        card_view:cardElevation="2dp"
+        card_view:cardUseCompatPadding="true">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_default">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <TextView
         android:id="@+id/tv_leave_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:text=""
+        />
+
+        <ImageView
+            android:layout_alignParentRight="true"
+            android:id="@+id/img_icon_rounded"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
+            android:visibility="gone"
+            android:paddingRight="10dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/squares_line" />
+
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/tv_leave_employee_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="@string/leave_employee_name_format" />
+        android:text="@string/leave_employee_name_format"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/tv_leave_from_to"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/leave_from_to_format" />
+
     <TextView
         android:id="@+id/tv_leave_total_days"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="@plurals/leave_total_days_format" />
+        android:text="@plurals/leave_total_days_format"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/tv_leave_remark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/leave_remark_format" />
-<RelativeLayout
-    android:id="@+id/ll_approver_container"
-    android:layout_width="match_parent"
-    android:layout_marginTop="@dimen/margin_10"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:visibility="visible">
 
-    <TextView
-        android:id="@+id/tv_reject"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/ll_approver_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/msg_reject"
-        android:layout_alignParentStart="true"
-        android:textSize="@dimen/font_12"
-        android:textColor="@color/white"
-        android:paddingTop="@dimen/padding_mini"
-        android:paddingBottom="@dimen/padding_mini"
-        android:paddingStart="@dimen/margin_10"
-        android:paddingEnd="@dimen/margin_10"
-        android:layout_marginRight="@dimen/margin_large"
-        android:visibility="gone"
-        android:background="@drawable/rounded_corner_accent"/>
+        android:layout_marginTop="@dimen/margin_10"
+        android:orientation="horizontal"
+        android:visibility="visible">
 
-    <TextView
-        android:id="@+id/tv_accept"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/msg_accept"
-        android:textSize="@dimen/font_12"
-        android:textColor="@color/white"
-        android:layout_alignParentEnd="true"
-        android:padding="@dimen/padding_mini" 
-        android:visibility="gone"
-        android:background="@drawable/rounded_corner_light_blue"/>
+        <TextView
+            android:id="@+id/tv_reject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginRight="@dimen/margin_large"
+            android:background="@drawable/rounded_corner_accent"
+            android:paddingBottom="@dimen/padding_mini"
+            android:paddingEnd="@dimen/margin_10"
+            android:paddingStart="@dimen/margin_10"
+            android:paddingTop="@dimen/padding_mini"
+            android:text="@string/msg_reject"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_12"
+            android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/tv_withdraw"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/msg_withdrawal"
-        android:layout_alignParentStart="true"
-        android:textSize="@dimen/font_12"
-        android:textColor="@color/white"
-        android:layout_marginRight="@dimen/margin_large"
-        android:padding="@dimen/padding_mini" 
-        android:visibility="gone"
-        android:background="@drawable/rounded_corner_accent"/>
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tv_accept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/rounded_corner_light_blue"
+            android:padding="@dimen/padding_mini"
+            android:text="@string/msg_accept"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_12"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_withdraw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_marginRight="@dimen/margin_large"
+            android:background="@drawable/rounded_corner_accent"
+            android:padding="@dimen/padding_mini"
+            android:text="@string/msg_withdrawal"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_12"
+            android:visibility="gone" />
+    </RelativeLayout>
+            </LinearLayout>
+    </android.support.v7.widget.CardView>
 </LinearLayout>

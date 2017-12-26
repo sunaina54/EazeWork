@@ -77,11 +77,8 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
     private RecyclerView expenseDetailsRecyclerView, documentRV, advanceRV, remarksRV;
     private DocumentViewAdapter documentViewAdapter;
     private static ProgressDialog progress;
-    private static final int TYPE_FOOTER = 1;
-    private static final int TYPE_ITEM = 2;
     private TextView totalTV;
     private LinearLayout layout, advanceErrorLinearLayout, requestVoucherLl, totalApprovedAmountLl;
-    //  private LineDocumentViewAdapter lineDocumentViewAdapter;
     private AdjustmentDetailAdapter adjustemntDetailAdapter;
     private String fromButton, approverName = "", approverID = "", description = "", currency, remarks = "", forEmpId, projectId;
     private int claimTypeID = 0;
@@ -115,7 +112,6 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.view_expense_claim_summary_fragment, container, false);
-        Log.d("TAG"," Log H erer");
         setupScreen(view);
         return view;
     }
@@ -153,7 +149,6 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
         ((TextView) getActivity().findViewById(R.id.tv_header_text)).setTextColor(textColor);
         ((TextView) ((MainActivity) getActivity()).findViewById(R.id.tv_header_text))
                 .setText("Expense Claim Summary");
-        //  ((MainActivity) getActivity()).findViewById(R.id.ibRight).setVisibility(View.GONE);
         ((MainActivity) getActivity()).findViewById(R.id.ibWrong).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -210,8 +205,6 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
         remarksRV = (RecyclerView) view.findViewById(R.id.remarksRV);
         remarksLinearLayout = (LinearLayout) view.findViewById(R.id.remarksLinearLayout);
         remarksLinearLayout.setVisibility(View.VISIBLE);
-
-        // sendViewRequestSummaryData();
         sendExpenseInitData();
 
         rejectBTN = (Button) view.findViewById(R.id.rejectBTN);
@@ -387,9 +380,6 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
 
         totalExpenseClaimedTV.setText(item.getTotalExpenseClaimed());
         netAmountTV.setText(item.getNetAmountToBePaid());
-    /*    dateTV.setText(item.getReqDate());
-        nameTV.setText(item.getSubmittedByName());
-        remarksStatusTV.setText(item.getReqStatusDesc());*/
 
         forEmpId = item.getForEmpID() + "";
         if (item.getApproverID() != 0) {
@@ -412,30 +402,6 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
         if (item.getReqRemark() != null) {
             remarks = item.getReqRemark();
         }
-
-       /* if (item.getReqStatusDesc().equalsIgnoreCase("Submitted")) {
-            withdrawBTN.setVisibility(View.VISIBLE);
-            withdrawBTN.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    fromButton = "Withdraw";
-                    sendExpenseClaimData();
-                }
-            });
-
-        }
-
-        if (item.getReqStatusDesc().equalsIgnoreCase("Returned")) {
-            resubmitBTN.setVisibility(View.VISIBLE);
-            resubmitBTN.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    fromButton = "Resubmit";
-                    sendExpenseClaimData();
-
-                }
-            });
-        }*/
     }
 
     private void refresh(ArrayList<LineItemsModel> lineItemsModels) {
@@ -446,10 +412,6 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
             expenseDetailsRecyclerView.setAdapter(summaryAdapter);
             expenseDetailsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             summaryAdapter.notifyDataSetChanged();
-
-            //  layout.setVisibility(View.VISIBLE);
-
-            // layout.setVisibility(View.GONE);
             if (lineItemsModels.size() > 0) {
                 layout.setVisibility(View.VISIBLE);
             }
@@ -513,7 +475,7 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
             private LinearLayout viewDocLl, approvedAmountLl, statusMsgLl, statusLl;
             private Button viewDocBTN, actionBTN, statusBT;
             private LinearLayout categoryLinearLayout,detailsLinearLayout,claimHeadLinearLayout,inputAmtLinearLayout,amountLinearLayout,fromDateLinearLayout,toDateLinearLayout;
-
+            private ImageView img_menu_icon;
 
             public MyViewHolder(View v) {
                 super(v);
@@ -530,7 +492,6 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
                 claimHeadTV = (TextView) v.findViewById(R.id.claimHeadTV);
                 inputTV = (TextView) v.findViewById(R.id.inputTV);
                 amountTV = (TextView) v.findViewById(R.id.amountTV);
-                // totalAmountTV = (TextView) v.findViewById(R.id.totalAmountTV);
                 categoryLinearLayout=(LinearLayout)  v.findViewById(R.id.categoryLinearLayout);
                 detailsLinearLayout=(LinearLayout)  v.findViewById(R.id.detailsLinearLayout);
                 claimHeadLinearLayout=(LinearLayout)  v.findViewById(R.id.claimHeadLinearLayout);
@@ -556,8 +517,8 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
 
                 toDateLinearLayout= (LinearLayout) v.findViewById(R.id.toDateLinearLayout);
 
-                // lineDocumentRecyclerView = (RecyclerView) v.findViewById(R.id.lineDocumentRecyclerView);
-
+                img_menu_icon= (ImageView) v.findViewById(R.id.img_menu_icon);
+                img_menu_icon.setVisibility(View.VISIBLE);
             }
         }
 
@@ -578,7 +539,6 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
 
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.travel_expense_claim_item, parent, false);
-            //view.setOnClickListener(MainActivity.myOnClickListener);
             MyViewHolder myViewHolder = new MyViewHolder(view);
             return myViewHolder;
         }
@@ -588,17 +548,6 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
         public void onBindViewHolder(final MyViewHolder holder, final int listPosition) {
 
             final LineItemsModel item = dataSet.get(listPosition);
-          /*  if (item.getCategoryID() == 1) {
-                String[] fromDate = item.getDateFrom().split(" ");
-                String[] toDate = item.getDateTo().split(" ");
-                holder.fromDateTV.setText(fromDate[0]);
-                holder.toDateTV.setText(toDate[0]);
-                fromDateLinearLayout.setVisibility(View.VISIBLE);
-            } else {
-                String[] toDate = item.getDateFrom().split(" ");
-                holder.toDateTV.setText(toDate[0]);
-                fromDateLinearLayout.setVisibility(View.GONE);
-            }*/
 
             if (item.getCategoryID() == 1) {
                 String[] fromDate = item.getDateFrom().split(" ");
@@ -617,19 +566,13 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
                 holder.fromDateTV.setText(fromDate[0]);
             }
             holder.inputAmtLinearLayout.setVisibility(View.VISIBLE);
-          //  if (item.getInputUnit() != null && !item.getInputUnit().equalsIgnoreCase("0.00")) {
 
-                if (item.getCategoryID()== AppsConstant.PERIODIC_EXPENSE) {
-                    holder.inputAmtLinearLayout.setVisibility(View.GONE);
-                    holder.toDateLinearLayout.setVisibility(View.VISIBLE);
-                    holder.toDateTV.setText(item.getDateTo());
-                    holder.toDateLabel.setText("Period");
-                }
-
-            /*} else {
+            if (item.getCategoryID() == AppsConstant.PERIODIC_EXPENSE) {
                 holder.inputAmtLinearLayout.setVisibility(View.GONE);
-                holder.amountTV.setText(item.getClaimAmt());
-            }*/
+                holder.toDateLinearLayout.setVisibility(View.VISIBLE);
+                holder.toDateTV.setText(item.getDateTo());
+                holder.toDateLabel.setText("Period");
+            }
 
             holder.categoryDescTV.setText(item.getCategoryDesc());
             holder.detailsTV.setText(item.getLineItemDetail());
@@ -637,9 +580,8 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
             holder.inputTV.setText(item.getInputUnit());
             holder.amountTV.setText(item.getClaimAmt());
             holder.viewDocLl.setVisibility(View.GONE);
-            if (item.getDocListLineItem() != null && item.getDocListLineItem().size() > 0) {
+          /*  if (item.getDocListLineItem() != null && item.getDocListLineItem().size() > 0) {
                 holder.viewDocLl.setVisibility(View.VISIBLE);
-                // holder.viewDocBTN.setText("Download Doc");
                 holder.viewDocBTN.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -648,18 +590,10 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
                         Intent theIntent=new Intent(getActivity(), ViewDocumentActivity.class);
                         theIntent.putExtra("LineItemDocument",item);
                         startActivity(theIntent);
-
-                        /*ViewDocumentFragment viewExpenseSummary = new ViewDocumentFragment();
-                        viewExpenseSummary.setLineItemsModel(dataSet.get(listPosition));
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.add_expense, viewExpenseSummary);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();*/
                     }
                 });
 
-            }
+            }*/
 
             if (viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getReqStatusDesc().equalsIgnoreCase("Approved")) {
                 holder.approvedAmountLl.setVisibility(View.VISIBLE);
@@ -667,7 +601,7 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
 
             }
 
-            if (!item.getPolicyID().equalsIgnoreCase("")) {
+          /*  if (!item.getPolicyID().equalsIgnoreCase("")) {
                 holder.statusMsgLl.setVisibility(View.VISIBLE);
                 holder.statusBT.setText(Utility.policyStatus(item.getPolicyID(), item.getPolicyLimitValue(), item.getInputUnit(), item.getClaimAmt()));
                 holder.statusBT.setOnClickListener(new View.OnClickListener() {
@@ -678,15 +612,49 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
                 });
             } else {
                 holder.statusLl.setVisibility(View.VISIBLE);
-            }
-//            holder.approvedAmountTV.setText(item.getAmtApprovedLevel1());
-         /*   if (item.getDocListLineItem() != null && item.getDocListLineItem().size() > 0) {
-                lineDocumentLl.setVisibility(View.VISIBLE);
-                lineDocumentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                lineDocumentViewAdapter = new LineDocumentViewAdapter(item.getDocListLineItem());
-                lineDocumentRecyclerView.setAdapter(documentViewAdapter);
-                lineDocumentViewAdapter.notifyDataSetChanged();
             }*/
+            if (item.getPolicyID().equalsIgnoreCase("")) {
+                holder.statusLl.setVisibility(View.VISIBLE);
+            }
+
+            holder.img_menu_icon.setVisibility(View.GONE);
+            if ((item.getDocListLineItem() != null && item.getDocListLineItem().size() > 0) ||
+                    (!item.getPolicyID().equalsIgnoreCase(""))) {
+                holder.img_menu_icon.setVisibility(View.VISIBLE);
+                holder.img_menu_icon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<String> list = new ArrayList<>();
+                        if (item.getDocListLineItem() != null && item.getDocListLineItem().size() > 0) {
+                            list.add("Document " + item.getDocListLineItem().size());
+                        }
+                        if (!item.getPolicyID().equalsIgnoreCase("")) {
+                            list.add("Policy Status");
+
+                        }
+                        CustomBuilder customBuilder = new CustomBuilder(getContext(), "Options", false);
+                        customBuilder.setSingleChoiceItems(list, null, new CustomBuilder.OnClickListener() {
+                            @Override
+                            public void onClick(CustomBuilder builder, Object selectedObject) {
+                                if (selectedObject.toString().equalsIgnoreCase("Document " + item.getDocListLineItem().size())) {
+                                    Intent theIntent = new Intent(getActivity(), ViewDocumentActivity.class);
+                                    theIntent.putExtra("LineItemDocument", item);
+                                    startActivity(theIntent);
+                                } else if (selectedObject.toString().equalsIgnoreCase("Policy Status")) {
+                                    Utility.openPolicyStatusPopUp(item, context, preferences);
+                                }
+                                builder.dismiss();
+                            }
+
+
+                        });
+                        customBuilder.show();
+                    }
+
+                });
+
+            }
+
             setLineItemLable(holder,item);
 
         }
@@ -740,7 +708,6 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
                     }
 
                     if(column.getColumnName().equalsIgnoreCase(LineItemsModel.INPUT_UNIT_TAG)){
-                       // holder.inputAmtLinearLayout.setVisibility(View.VISIBLE);
                         ((TextView)holder.inputAmtLinearLayout.findViewById(R.id.inputLabelTV)).setText(column.getLableName());
                     }
                 }
@@ -750,74 +717,6 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
 
 
     }
-
-
-  /*  private class LineDocumentViewAdapter extends
-            RecyclerView.Adapter<LineDocumentViewAdapter.MyViewHolder> {
-        private ArrayList<SupportDocsItemModel> dataSet;
-
-        public class MyViewHolder extends RecyclerView.ViewHolder {
-
-            public TextView fileNameTV, filedescriptionTV;
-            public Button downloadBTN;
-
-            public MyViewHolder(View v) {
-                super(v);
-
-                fileNameTV = (TextView) v.findViewById(R.id.fileNameTV);
-                filedescriptionTV = (TextView) v.findViewById(R.id.filedescriptionTV);
-                downloadBTN = (Button) v.findViewById(R.id.downloadBTN);
-
-
-            }
-        }
-
-        public void addAll(List<SupportDocsItemModel> list) {
-
-            dataSet.addAll(list);
-            notifyDataSetChanged();
-        }
-
-        public LineDocumentViewAdapter(List<SupportDocsItemModel> data) {
-            this.dataSet = (ArrayList<SupportDocsItemModel>) data;
-
-        }
-
-        @Override
-        public LineDocumentViewAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.document_item, parent, false);
-            LineDocumentViewAdapter.MyViewHolder myViewHolder = new LineDocumentViewAdapter.MyViewHolder(view);
-            return myViewHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(final LineDocumentViewAdapter.MyViewHolder holder, final int listPosition) {
-
-            final SupportDocsItemModel item = dataSet.get(listPosition);
-            holder.fileNameTV.setText(item.getDocFile());
-            holder.filedescriptionTV.setText(item.getName());
-            holder.downloadBTN.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String filePath = item.getDocPath().replace("~", "");
-                    String path = CommunicationConstant.UrlFile + filePath + "/" + item.getDocFile();
-                    new DownloadFile().execute(path, item.getName());
-                }
-            });
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return dataSet.size();
-        }
-
-        public void clearDataSource() {
-            dataSet.clear();
-            notifyDataSetChanged();
-        }
-    }*/
 
     private class DocumentViewAdapter extends
             RecyclerView.Adapter<DocumentViewAdapter.MyViewHolder> {
@@ -866,14 +765,12 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
             final DocListModel item = dataSet.get(listPosition);
             holder.fileNameTV.setText(item.getDocFile());
             holder.filedescriptionTV.setText(item.getName());
-            //  holder.downloadBTN.setVisibility(View.GONE);
             holder.downloadBTN.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String filePath = item.getDocPath().replace("~", "");
                     String path = CommunicationConstant.UrlFile + filePath + "/" + item.getDocFile();
                     Utility.downloadPdf(path,null,item.getDocFile(),context,getActivity());
-                    // new DownloadFile().execute(path, item.getName());
                 }
             });
 
@@ -902,24 +799,6 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
 
                                 final EditText editFilenameET = (EditText) dialog.findViewById(R.id.editFilenameET);
                                 editFilenameET.setText(item.getName());
-
-                              /*  (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        //  SupportDocsItemModel docItem = new SupportDocsItemModel();
-                                        item.setName(editFilenameET.getText().toString());
-                                        if (dataSet != null && dataSet.size() > 0) {
-                                            dataSet.set(dataSet.indexOf(item), item);
-
-                                        } else {
-                                            dataSet = new ArrayList<DocListModel>();
-                                            dataSet.add(item);
-                                        }
-                                        refreshDocumentList();
-                                        dialog.dismiss();
-
-                                    }
-                                });*/
                                 (dialog).findViewById(R.id.ibWrong).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -931,9 +810,6 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
                             } else if (selectedObject.toString().equalsIgnoreCase("Delete")) {
                                 dataSet.remove(listPosition);
                                   notifyDataSetChanged();
-                                /*if (mDataset.size() == 0) {
-                                    errorTV.setVisibility(View.VISIBLE);
-                                }*/
 
                             }else if (selectedObject.toString().equalsIgnoreCase("Download")) {
                                 String filePath = item.getDocPath().replace("~", "");
@@ -958,39 +834,6 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
         public void clearDataSource() {
             dataSet.clear();
             notifyDataSetChanged();
-        }
-    }
-
-    private class DownloadFile extends AsyncTask<String, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            progress = ProgressDialog.show(context, "ProgressDialog", "Downloading File");
-        }
-
-
-        @Override
-        protected Void doInBackground(String... strings) {
-            String fileUrl = strings[0];
-            String fileName = strings[1];
-            String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-            File folder = new File(extStorageDirectory, "FileEazeWork");
-            folder.mkdir();
-
-            File pdfFile = new File(folder, fileName);
-
-            try {
-                pdfFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            ViewAdvanceRequestSummaryFragment.FileDownloader.downloadFile(fileUrl, pdfFile);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            //super.onPostExecute(aVoid);
-            progress.dismiss();
         }
     }
 
@@ -1181,43 +1024,4 @@ public class ViewExpenseClaimSummaryFragment extends BaseFragment {
             paymentRV.setVisibility(View.GONE);
         }
     }
-  /*  public static class FileDownloader {
-        private static final int MEGABYTE = 1024 * 1024;
-
-        public static void downloadFile(String fileUrl, File directory) {
-            try {
-
-                URL url = new URL(fileUrl);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setDoOutput(true);
-                urlConnection.connect();
-
-                //  InputStream inputStream = urlConnection.getInputStream();
-                InputStream inputStream = new URL(fileUrl).openStream();
-                FileOutputStream fileOutputStream = new FileOutputStream(directory);
-                int totalSize = urlConnection.getContentLength();
-                //Toast.makeText(context,"Starting PDF download...",Toast.LENGTH_LONG).show();
-
-                byte[] buffer = new byte[MEGABYTE];
-                int bufferLength = 0;
-                while ((bufferLength = inputStream.read(buffer)) > 0) {
-                    fileOutputStream.write(buffer, 0, bufferLength);
-                   *//* downloadedSize += bufferLength;
-                    per = ((float) downloadedSize / totalSize) * 100;
-                    Toast.makeText(context,"Total PDF File size  : "
-                            + (totalsize / 1024)
-                            + " KB\n\nDownloading PDF " + (int) per
-                            + "% complete",Toast.LENGTH_LONG).show();*//*
-                }
-                fileOutputStream.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }*/
 }

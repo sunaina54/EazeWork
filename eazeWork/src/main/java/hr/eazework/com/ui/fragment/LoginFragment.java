@@ -4,10 +4,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -16,10 +20,35 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.OptionalPendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.concurrent.Executor;
 
 import hr.eazework.com.MainActivity;
 import hr.eazework.com.R;
@@ -43,15 +72,29 @@ public class LoginFragment extends BaseFragment {
     public static final String TAG = "LoginFragment";
     private TextView et_password;
     private Preferences preferences;
+    private GoogleApiClient mGoogleApiClient;
+    private static final int RC_SIGN_IN = 234;
+    //creating a GoogleSignInClient object
+    private GoogleSignInClient mGoogleSignInClient;
+
+    //And also a Firebase Auth object
+    FirebaseAuth mAuth;
+    private SignInButton btn_gmail_sign_in;
+    private Context context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        context = getContext();
         preferences = new Preferences(getContext());
         rootView = LayoutInflater.from(getActivity()).inflate(
                 R.layout.login_fragment_container, container, false);
         rootView.findViewById(R.id.btn_sign_in).setOnClickListener(this);
         rootView.findViewById(R.id.img_reload).setOnClickListener(this);
+        btn_gmail_sign_in = (SignInButton) rootView.findViewById(R.id.btn_gmail_sign_in);
+        btn_gmail_sign_in.setOnClickListener(this);
+        TextView textView = (TextView) btn_gmail_sign_in.getChildAt(0);
+        textView.setText(R.string.continue_with_google);
         MainActivity.animateToVisible(rootView, -1);
         et_password = (TextView) rootView.findViewById(R.id.et_password);
         ((TextView) rootView.findViewById(R.id.tv_register)).setText(Html.fromHtml("<u>" + getString(R.string.dont_have_account) + "</u>"));
@@ -82,6 +125,18 @@ public class LoginFragment extends BaseFragment {
 
                 });
 
+        //first we intialized the FirebaseAuth object
+        mAuth = FirebaseAuth.getInstance();
+
+        //Then we need a GoogleSignInOptions object
+        //And we need to build it as below
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        //Then we will get the GoogleSignInClient object from GoogleSignIn class
+        mGoogleSignInClient = GoogleSignIn.getClient(getContext(), gso);
         return rootView;
     }
 
@@ -152,6 +207,9 @@ public class LoginFragment extends BaseFragment {
                 view.setId(R.id.btn_sign_in);
                 view.performClick();
                 break;
+            case R.id.btn_gmail_sign_in:
+                signIn();
+                break;
             default:
                 break;
         }
@@ -188,10 +246,9 @@ public class LoginFragment extends BaseFragment {
 
                 try {
                     ModelManager.getInstance().setLoginUserModel(((new JSONObject(response.getResponseData())).getJSONObject("LogInUserResult")).toString());
-
+                    Log.d("TAG", "Login Response :" + ((new JSONObject(response.getResponseData())).getJSONObject("LogInUserResult")).toString());
                     TextView url = (TextView) rootView.findViewById(R.id.et_url);
                     DataCacheManager.getInstance().setDataCachingNoExpiry(CommonValues.DB_KEY_CORP_URL, url.getText().toString());
-                    // SharedPreference.setCorpUrl(url.getText().toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -205,8 +262,8 @@ public class LoginFragment extends BaseFragment {
 
 
                     } else {
-                        if(loginUserModel.getErroreCode() == -9) {
-                            new AlertCustomDialog(getActivity(), loginUserModel.getErroreMessage(),"Upgrade",true,new AlertCustomDialog.AlertClickListener() {
+                        if (loginUserModel.getErroreCode() == -9) {
+                            new AlertCustomDialog(getActivity(), loginUserModel.getErroreMessage(), "Upgrade", true, new AlertCustomDialog.AlertClickListener() {
                                 @Override
                                 public void onPositiveBtnListener() {
                                     final String appPackageName = getActivity().getPackageName(); // getPackageName() from Context or Activity object
@@ -224,19 +281,19 @@ public class LoginFragment extends BaseFragment {
                                 }
                             });
                         } else {
-                            new AlertCustomDialog(getActivity(),loginUserModel.getErroreMessage());
+                            new AlertCustomDialog(getActivity(), loginUserModel.getErroreMessage());
                         }
                     }
                 }
                 break;
             case CommunicationConstant.API_USER_PROFILE_DETAILS:
-                Log.d("TAG","Response Profile"+response.getResponseData());
+                Log.d("TAG", "Response Profile" + response.getResponseData());
                 ModelManager.getInstance().setEmployeeProfileModel(response.getResponseData());
                 ((TextView) rootView.findViewById(R.id.et_password)).setText("");
                 ((TextView) rootView.findViewById(R.id.et_url)).setText("");
                 ((TextView) rootView.findViewById(R.id.et_user_name)).setText("");
                 Utility.saveEmpConfig(new Preferences(getContext()));
-                preferences.saveBoolean(AppsConstant.ISFROMLOGIN,true);
+                preferences.saveBoolean(AppsConstant.ISFROMLOGIN, true);
                 preferences.commit();
                 mUserActionListener.performUserAction(IAction.HOME_VIEW, null, null);
                 break;
@@ -259,5 +316,81 @@ public class LoginFragment extends BaseFragment {
                 break;
         }
         super.validateResponse(response);
+    }
+
+    //this method is called on click
+    private void signIn() {
+        //getting the google signin intent
+        if(mGoogleSignInClient!=null){
+            mGoogleSignInClient.signOut();
+            mGoogleSignInClient.revokeAccess();
+
+        }
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+
+        //starting the activity for result
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //if the requestCode is the Google Sign In code that we defined at starting
+        if (requestCode == RC_SIGN_IN) {
+
+            //Getting the GoogleSignIn Task
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                //Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                //authenticating with firebase
+                firebaseAuthWithGoogle(account);
+            } catch (ApiException e) {
+                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+
+        //getting the auth credential
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        Log.d(TAG,"Gmail token :"+acct.getIdToken());
+
+        //Now using firebase we are signing in the user here
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Log.d(TAG,"User name :"+ user.getDisplayName());
+                            Log.d(TAG,"email :"+ user.getEmail());
+                            Toast.makeText(getContext(), "User Signed In", Toast.LENGTH_SHORT).show();
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Toast.makeText(getContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        //if the user is already signed in
+        //we will close this activity
+        //and take the user to profile activity
+        if (mAuth.getCurrentUser() != null) {
+           // finish();
+            //startActivity(new Intent(this, ProfileActivity.class));
+        }
     }
 }

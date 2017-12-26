@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="hr.eazework.com"
-    android:versionCode="21"
-    android:versionName="1.1.0">
+    android:versionCode="23"
+    android:versionName="1.1.2">
 
     <uses-sdk
         android:minSdkVersion="17"
@@ -78,8 +78,46 @@
             android:name="io.fabric.ApiKey"
             android:value="46027071bb12057a8883cfe7ac7e9cb7e3139dec" />
 
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_launcher"/>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/primary_dark" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id"/>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel"
+            android:value="@string/default_notification_channel_id"/>
+
         <activity android:name=".AddExpenseActivity" />
         <activity android:name=".ViewDocumentActivity"></activity>
+        <activity android:name=".AttendanceDetailActivity"></activity>
+
+
+        <service
+            android:name="hr.eazework.Notification.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"
+                    />
+            </intent-filter>
+        </service>
+        <service
+            android:name="hr.eazework.Notification.MyFirebaseInstantInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+        <service
+            android:exported="false"
+            android:name="hr.eazework.Notification.MyJobService">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
+
+
     </application>
 
 </manifest>

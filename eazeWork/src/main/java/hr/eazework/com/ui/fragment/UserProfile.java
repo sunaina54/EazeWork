@@ -53,10 +53,6 @@ public class UserProfile extends BaseFragment {
 
         Utility.setCorpBackground(context, rootView);
 
-
-
-
-
         if(name!=null && !name.equalsIgnoreCase("")) {
             ((TextView) rootView.findViewById(R.id.tv_profile_name)).setText(name);
         }else {
@@ -136,8 +132,6 @@ public class UserProfile extends BaseFragment {
 
 
     private void populateViews(JSONObject array) {
-
-
         ModelManager.getInstance().setEmployeeDetailModel(array.toString());
         Log.d("TAG","Profile Response : "+array.toString());
         EmployeeDetailModel model = ModelManager.getInstance().getEmployeeDetailModel();
@@ -153,34 +147,6 @@ public class UserProfile extends BaseFragment {
             empPersonalFieldLayout.removeAllViews();
 
             Activity activity = getActivity();
-            /*Map<String, String> employeeMap = model.getEmployeeDetailMapForEdit();
-            Class empProfileModelClazz = EmployeeDetailModel.class;
-            int i = 0;
-            for (Map.Entry<String, String> empField : employeeMap.entrySet()) {
-                String methodNameForYN = "getm" + empField.getKey().replace(" ", "") + "YN";
-                Log.d(TAG, String.valueOf(i++));
-                String toBeDisplayed = "Y";
-                try {
-                    Method toBeDisplayedMethod = empProfileModelClazz.getDeclaredMethod(methodNameForYN);
-                    if(toBeDisplayedMethod != null) {
-                        toBeDisplayed = (String) toBeDisplayedMethod.invoke(model);
-                    }
-                    Log.d(TAG, methodNameForYN + "  " + toBeDisplayed + "  ");
-                } catch (NoSuchMethodException e) {
-                    //not handling some fields may not have YN check....
-                    Log.e(TAG, e.getMessage(), e);
-                } catch (InvocationTargetException e) {
-                    //not handling some fields may not have YN check....
-                    Log.e(TAG, e.getMessage(), e);
-                } catch (IllegalAccessException e) {
-                    //not handling some fields may not have YN check....
-                    Log.e(TAG, e.getMessage(), e);
-                }
-                if (toBeDisplayed.equals("Y")) {
-                    Utility.addElementToView(activity, empPersonalFieldLayout, empField.getKey(), empField.getValue());
-                }
-            }
-*/
             if(model.getmEmail()!=null && !model.getmEmail().equalsIgnoreCase(""))
             Utility.addElementToView(activity,empPersonalFieldLayout,"Email",model.getmEmail());
             if(model.getmDateOfBirth()!=null && !model.getmDateOfBirth().equalsIgnoreCase(""))
@@ -191,25 +157,6 @@ public class UserProfile extends BaseFragment {
 
             if(model.getmMaritalStatusYN().equalsIgnoreCase("Y"))
             Utility.addElementToView(activity,empPersonalFieldLayout,"Marital Status",model.getmMaritalStatusDesc());
-
-         /*   if(model.getmCompanyNameYN().equalsIgnoreCase("y")){
-                Utility.addElementToView(activity,empPersonalFieldLayout,"Company Name",model.getmCompanyName());
-            }
-           if(model.getmDeptNameYN().equalsIgnoreCase("Y")){
-                Utility.addElementToView(activity,empPersonalFieldLayout,"Department Name",model.getmDeptName());
-            }
-
-            if(model.getmDivNameYN().equalsIgnoreCase("y")) {
-                Utility.addElementToView(activity,empPersonalFieldLayout,"Division",model.getmDivName());
-            }
-
-            if(model.getmSubDepartmentYN().equalsIgnoreCase("y")) {
-                Utility.addElementToView(activity,empPersonalFieldLayout,"Sub-Department",model.getmSubDepartment());
-            }
-            if(model.getmSubDivisionNameYN().equalsIgnoreCase("y")) {
-                Utility.addElementToView(activity,empPersonalFieldLayout,"Sub-Division",model.getmSubDivisionName());
-            }*/
-
 
             if(model.getmCompanyNameYN().equalsIgnoreCase("y")){
                 Utility.addElementToView(activity,empOfficialFieldLayout,"Company Name",model.getmCompanyName());
@@ -227,19 +174,6 @@ public class UserProfile extends BaseFragment {
             if (model.getmWorkLocationYN().equalsIgnoreCase("Y")) {
                 Utility.addElementToView(activity, empOfficialFieldLayout, "Work Location", model.getmWorkLocation());
             }
-         /*   if(model.getmDepartmentYN().equalsIgnoreCase("Y")) {
-                Utility.addElementToView(activity, empOfficialFieldLayout, "Department", model.getmDeptName());
-            }
-            if(model.getmSubDepartmentYN().equalsIgnoreCase("Y")) {
-                Utility.addElementToView(activity,empOfficialFieldLayout,"Sub-Department",model.getmSubDepartment());
-            }
-            if(model.getmDivisionYN().equalsIgnoreCase("Y")) {
-                Utility.addElementToView(activity,empOfficialFieldLayout,"Division",model.getmDivName());
-            }
-            if(model.getmSubDivisionYN().equalsIgnoreCase("Y")) {
-                Utility.addElementToView(activity,empOfficialFieldLayout,"Sub-Division",model.getmSubDivisionName());
-            }*/
-
 
             if(model.getmDeptNameYN().equalsIgnoreCase("Y")){
                 Utility.addElementToView(activity,empOfficialFieldLayout,"Department",model.getmDeptName());

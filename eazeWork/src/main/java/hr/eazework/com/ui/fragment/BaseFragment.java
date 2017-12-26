@@ -104,13 +104,6 @@ public abstract class BaseFragment extends Fragment implements OnClickListener,I
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	/*@Override
-	public void onAttach(Activity activity) {
-		if (activity instanceof UserActionListner) {
-			mUserActionListener = (UserActionListner) activity;
-		}
-		super.onAttach(activity);
-	}*/
 
     public void refreshUi() {
 

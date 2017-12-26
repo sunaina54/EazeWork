@@ -88,6 +88,7 @@ public class AppRequestJSONString {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        Log.d("TAG","login request"+jsonObject.toString());
         return jsonObject.toString();
     }
 
@@ -496,20 +497,6 @@ public class AppRequestJSONString {
         AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
         loginData.setDeviceID(MyApplication.getDeviceId());
         loginData.setSessionID(SharedPreference.getSessionId());
-       /* if(lineItemsModels.size()>0){
-            for(int i=0;i<lineItemsModels.size();i++){
-                LineItemsModel model=lineItemsModels.get(i);
-                ArrayList<SupportDocsItemModel> docsItemModels=model.getDocListLineItem();
-                if(docsItemModels!=null && docsItemModels.size()>0){
-                    for(int j=0;j<docsItemModels.size();i++){
-                      SupportDocsItemModel supDoc=docsItemModels.get(j);
-                       // supDoc.set
-
-                    }
-                }
-            }
-        }*/
-
         if(supportDocsItemModels!=null && supportDocsItemModels.size()>0){
             for(int i=0; i<supportDocsItemModels.size();i++){
                 DocListModel model=supportDocsItemModels.get(i);
@@ -532,7 +519,6 @@ public class AppRequestJSONString {
         saveExpenseItem.setApproverName(approverName);
         saveExpenseItem.setProjectID(Integer.parseInt(projectId));
         saveExpenseItem.setForEmpID(Integer.parseInt(empId));
-        //saveExpenseItem.setProjectID(Integer.parseInt(projectId));
 
         SaveExpenseModel saveExpenseModel=new SaveExpenseModel();
         saveExpenseModel.setFromButton(fromButton);

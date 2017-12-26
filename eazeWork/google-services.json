@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "817486061829",
+    "firebase_url": "https://eazehr-fd691.firebaseio.com",
+    "project_id": "eazehr-fd691",
+    "storage_bucket": "eazehr-fd691.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817486061829:android:8b43a9113dc98adf",
+        "android_client_info": {
+          "package_name": "hr.eazework.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "817486061829-qklfiq3e3594h1tucf3nloj19br9h5hp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDo6EfJ0G5fH2uvZW5kEr7hpgWdNs0JBIw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

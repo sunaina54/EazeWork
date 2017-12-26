@@ -82,5 +82,6 @@ public class AppsConstant {
         offlineAttendanceStatuses.add("InLocation");
         offlineAttendanceStatuses.add("OutLocation");
     }
+    public static  String EDIT="EDIT",ADD="ADD",VIEW="VIEW";
 
 }

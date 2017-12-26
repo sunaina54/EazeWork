@@ -8,9 +8,11 @@ import java.util.Date;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,7 @@ import hr.calender.caldroid.CaldroidFragment;
 import hr.calender.caldroid.CaldroidListener;
 import hr.calender.caldroid.CalendarHelper;
 import hr.calender.hirondelle.date4j.DateTime;
+import hr.eazework.com.AttendanceDetailActivity;
 import hr.eazework.com.MainActivity;
 import hr.eazework.com.R;
 import hr.eazework.com.model.AttandanceCalenderStatusItem;
@@ -138,6 +141,10 @@ public class AttandanceFragment extends BaseFragment {
 						caldroidFragment.prevMonth();
 					}
 				}
+				Intent theIntent=new Intent(getActivity(), AttendanceDetailActivity.class);
+				theIntent.putExtra("Date",date.getTime());
+				startActivity(theIntent);
+
 			}
 
 			@Override
@@ -275,6 +282,7 @@ public class AttandanceFragment extends BaseFragment {
 				JSONObject responseMainJson=jsonObject.optJSONObject("GetEmpAttendanceCalendarStatusResult");
 				if(responseMainJson!=JSONObject.NULL && responseMainJson.optInt("ErrorCode", -1)==0){
 					AttandanceCalenderStatusResult.getInstance().updateAttandanceCalenderStatusItems(responseMainJson.optJSONArray("attendCalStatusList"));
+					Log.d("TAG","Month Data : "+responseMainJson.optJSONArray("attendCalStatusList").toString());
 				}
 				updateSelectedDateDetail(mSelectedDate);
 				caldroidFragment.notifyDataSetChanged();

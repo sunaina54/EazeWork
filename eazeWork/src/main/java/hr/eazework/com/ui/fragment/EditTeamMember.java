@@ -158,104 +158,12 @@ public class EditTeamMember extends BaseFragment {
         if (model != null) {
             manager.setText(model.getmMangerName());
             office.setText(model.getmOfficeLocation());
-           // work.setText(model.getmWorkLocation());
 
             LinearLayout empPersonalFieldLayout = (LinearLayout) rootView.findViewById(R.id.ll_empfield_container);
             LinearLayout empOfficialFieldLayout=(LinearLayout) rootView.findViewById(R.id.ll_official_container);
             empOfficialFieldLayout.removeAllViews();
             empPersonalFieldLayout.removeAllViews();
             Activity activity = getActivity();
-            /*Map<String, String> employeeMap = model.getEmployeeDetailMapForEdit();
-            Class empProfileModelClazz = EmployeeDetailModel.class;
-
-            for (Map.Entry<String, String> empField : employeeMap.entrySet()) {
-                String methodNameForYN = "getm" + empField.getKey().replace(" ", "") + "YN";
-
-                String toBeDisplayed = "Y";
-                try {
-                    Method toBeDisplayedMethod = empProfileModelClazz.getDeclaredMethod(methodNameForYN);
-                    if (toBeDisplayedMethod != null) {
-                        toBeDisplayed = (String) toBeDisplayedMethod.invoke(model);
-                    }
-                    Log.d(TAG, methodNameForYN + "  " + toBeDisplayed + "  ");
-                } catch (NoSuchMethodException e) {
-                    //not handling some fields may not have YN check....
-                    Log.d(TAG, e.getMessage(), e);
-                } catch (InvocationTargetException e) {
-                    //not handling some fields may not have YN check....
-                    Log.e(TAG, e.getMessage(), e);
-                } catch (IllegalAccessException e) {
-                    //not handling some fields may not have YN check....
-                    Log.e(TAG, e.getMessage(), e);
-                }
-                if (toBeDisplayed.equals("Y")) {
-                    Utility.addElementToView(activity, empFieldLayout, empField.getKey(), empField.getValue());
-                }
-            }*/
-
-          /*  Utility.addElementToView(activity,empFieldLayout,"Email",model.getmEmail());
-            Utility.addElementToView(activity,empFieldLayout,"Date Of Birth",model.getmDateOfBirth());
-            Utility.addElementToView(activity,empFieldLayout,"Date Of Joining",model.getmDateOfJoining());
-            Utility.addElementToView(activity,empFieldLayout,"Marital Status",model.getmMaritalStatusDesc());
-
-            if(model.getmEmail()!=null && !model.getmEmail().equalsIgnoreCase(""))
-                Utility.addElementToView(activity,empFieldLayout,"Email",model.getmEmail());
-            if(model.getmDateOfBirth()!=null && !model.getmDateOfBirth().equalsIgnoreCase(""))
-                Utility.addElementToView(activity,empFieldLayout,"Date Of Birth",model.getmDateOfBirth());
-
-            if(model.getmDateOfJoining()!=null && !model.getmDateOfJoining().equalsIgnoreCase(""))
-                Utility.addElementToView(activity,empFieldLayout,"Date Of Joining",model.getmDateOfJoining());
-
-            if(model.getmMaritalStatusYN().equalsIgnoreCase("Y"))
-                Utility.addElementToView(activity,empFieldLayout,"Marital Status",model.getmMaritalStatusDesc());
-
-            *//*if(model.getmCompanyNameYN().equalsIgnoreCase("y")){
-                Utility.addElementToView(activity,empFieldLayout,"Company Name",model.getmCompanyName());
-            }
-
-            if(model.getmDivNameYN().equalsIgnoreCase("y")) {
-                Utility.addElementToView(activity,empFieldLayout,"Division",model.getmDivName());
-            }
-
-            if(model.getmSubDepartmentYN().equalsIgnoreCase("y")) {
-                Utility.addElementToView(activity,empFieldLayout,"Sub-Department",model.getmSubDepartment());
-            }
-
-            if(model.getmSubDivisionNameYN().equalsIgnoreCase("y")) {
-                Utility.addElementToView(activity,empFieldLayout,"Sub-Division",model.getmSubDivisionName());
-            }
-*//*
-
-            if(model.getmCompanyNameYN().equalsIgnoreCase("y")){
-                Utility.addElementToView(activity,empFieldLayout,"Company Name",model.getmCompanyName());
-            }
-
-            if(model.getmMangerName()!=null && !model.getmMangerName().equalsIgnoreCase("")){
-                Utility.addElementToView(activity, empFieldLayout, "Manager", model.getmMangerName());
-            }
-            if(model.getmFnMangerNameYN().equalsIgnoreCase("Y")){
-                Utility.addElementToView(activity, empFieldLayout, "Functional Manager", model.getmFunctionalManager());
-            }
-            if(model.getmOfficeLocation()!=null && !model.getmOfficeLocation().equalsIgnoreCase("")) {
-                Utility.addElementToView(activity, empFieldLayout, "Office Location", model.getmOfficeLocation());
-            }
-            if (model.getmWorkLocationYN().equalsIgnoreCase("Y")) {
-                Utility.addElementToView(activity, empFieldLayout, "Work Location", model.getmWorkLocation());
-            }
-            if(model.getmDeptNameYN().equalsIgnoreCase("Y")){
-                Utility.addElementToView(activity,empFieldLayout,"Department Name",model.getmDeptName());
-            }
-            if(model.getmSubDepartmentYN().equalsIgnoreCase("y")) {
-                Utility.addElementToView(activity,empFieldLayout,"Sub-Department",model.getmSubDepartment());
-            }
-            if(model.getmDivNameYN().equalsIgnoreCase("y")) {
-                Utility.addElementToView(activity,empFieldLayout,"Division",model.getmDivName());
-            }
-            if(model.getmSubDivisionNameYN().equalsIgnoreCase("y")) {
-                Utility.addElementToView(activity,empFieldLayout,"Sub-Division",model.getmSubDivisionName());
-            }
-            Utility.addElementToView(activity, empFieldLayout, "Status", model.getmEmploymentStatusDesc());*/
-
             if(model.getmEmail()!=null && !model.getmEmail().equalsIgnoreCase(""))
                 Utility.addElementToView(activity,empPersonalFieldLayout,"Email",model.getmEmail());
             if(model.getmDateOfBirth()!=null && !model.getmDateOfBirth().equalsIgnoreCase(""))
@@ -272,7 +180,6 @@ public class EditTeamMember extends BaseFragment {
             }
 
             if(model.getmMangerName()!=null && !model.getmMangerName().equalsIgnoreCase("")){
-               // LinearLayout layout=Utility.addElementToView(activity, empOfficialFieldLayout, "Manager", model.getmMangerName(),null);
                 View emailView = LayoutInflater.from(activity).inflate(R.layout.profile_item_view1, null, false);
                 ((TextView) emailView.findViewById(R.id.tv_item_title)).setText("Manager");
                 ((TextView) emailView.findViewById(R.id.tv_item_value1)).setText( model.getmMangerName());
@@ -316,9 +223,6 @@ public class EditTeamMember extends BaseFragment {
                                                             builder.setSingleChoiceItems(teamMemebers, managerTV.getTag(), new CustomBuilder.OnClickListener() {
                                                                 @Override
                                                                 public void onClick(CustomBuilder builder, Object selectedObject) {
-                                                                    /*manager.setTag(selectedObject);
-                                                                    manager.setText(((TeamMember) selectedObject).getmName());
-                                                                    managerID = ((TeamMember) selectedObject).getmEmpId();*/
                                                                     managerTV.setTag(selectedObject);
                                                                     managerTV.setText(((TeamMember) selectedObject).getmName());
                                                                     managerID = ((TeamMember) selectedObject).getmEmpId();
@@ -354,19 +258,9 @@ public class EditTeamMember extends BaseFragment {
                 Utility.addElementToView(activity, empOfficialFieldLayout, "Office Location", model.getmOfficeLocation());
             }
             if (model.getmWorkLocationYN().equalsIgnoreCase("Y")) {
-               //LinearLayout layout= Utility.addElementToView(activity, empOfficialFieldLayout, "Work Location", model.getmWorkLocation(),null);
-
                 View emailView = LayoutInflater.from(activity).inflate(R.layout.profile_item_view2, null, false);
                 ((TextView) emailView.findViewById(R.id.tv_item_title)).setText("Work Location");
                 ((TextView) emailView.findViewById(R.id.tv_item_value2)).setText( model.getmWorkLocation());
-
-
-
-
-
-
-
-
 
                  empOfficialFieldLayout.addView(emailView);
                 workLocationTV=(TextView)emailView.findViewById(R.id.tv_item_value2);
@@ -415,29 +309,7 @@ public class EditTeamMember extends BaseFragment {
 
 
 
-           /* if(model.getmCompanyNameYN().equalsIgnoreCase("y")){
-                Utility.addElementToView(activity,empPersonalFieldLayout,"Company Name",model.getmCompanyName());
-            }
 
-            if(model.getmDivNameYN().equalsIgnoreCase("y")) {
-                Utility.addElementToView(activity,empPersonalFieldLayout,"Division",model.getmDivName());
-            }
-
-            if(model.getmSubDepartmentYN().equalsIgnoreCase("y")) {
-                Utility.addElementToView(activity,empPersonalFieldLayout,"Sub-Department",model.getmSubDepartment());
-            }
-
-            if(model.getmSubDivisionNameYN().equalsIgnoreCase("y")) {
-                Utility.addElementToView(activity,empPersonalFieldLayout,"Sub-Division",model.getmSubDivisionName());
-            }
-
-
-            Utility.addElementToView(activity, empOfficialFieldLayout, "Manager", model.getmMangerName());
-            Utility.addElementToView(activity, empOfficialFieldLayout, "Office Location", model.getmOfficeLocation());
-            if (model.getmWorkLocationYN().equalsIgnoreCase("y")) {
-                Utility.addElementToView(activity, empOfficialFieldLayout, "Work Location", model.getmWorkLocation());
-            }
-            Utility.addElementToView(activity, empOfficialFieldLayout, "Status", model.getmEmploymentStatusDesc());*/
 
             if(model.getmDeptNameYN().equalsIgnoreCase("Y")){
                 Utility.addElementToView(activity,empOfficialFieldLayout,"Department",model.getmDeptName());
@@ -452,12 +324,6 @@ public class EditTeamMember extends BaseFragment {
                 Utility.addElementToView(activity,empOfficialFieldLayout,"Sub-Division",model.getmSubDivisionName());
             }
             Utility.addElementToView(activity, empOfficialFieldLayout, "Status", model.getmEmploymentStatusDesc());
-
-       /*     if (model.getmWorkLocationYN().equalsIgnoreCase("Y")) {
-                work.setVisibility(View.VISIBLE);
-            } else {
-                work.setVisibility(View.GONE);
-            }*/
         }
     }
 

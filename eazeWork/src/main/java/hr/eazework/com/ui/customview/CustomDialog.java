@@ -131,18 +131,6 @@ public class CustomDialog extends Dialog
 	}
 
 	public static void alertOkWithFinishFragment(final Context mContext, String msg, final UserActionListner mUserActionListener, final int action,boolean isMaterial) {
-	/*	AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-		builder.setTitle("Alert");
-		builder.setMessage(msg)
-				.setCancelable(false)
-				.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						mUserActionListener.performUserAction(action, null, null);
-
-					}
-				});
-		AlertDialog alert = builder.create();
-		alert.show();*/
 		ContextThemeWrapper ctw = new ContextThemeWrapper(mContext,
 				isMaterial ? R.style.MyDialogTheme
 						: R.style.MyDialogThemeTransparent);

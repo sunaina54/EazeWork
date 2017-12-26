@@ -55,8 +55,6 @@ public class ApproveScreen extends BaseFragment implements AdapterView.OnItemCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.user_profile_root_container, container, false);
-
-        //  MainActivity.updataProfileData(getActivity(), rootView);
         populateHomeData();
         android.widget.FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 0, 0, 0);

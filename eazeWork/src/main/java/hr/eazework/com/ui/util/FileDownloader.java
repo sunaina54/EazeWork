@@ -57,38 +57,6 @@ public class FileDownloader extends AsyncTask<String, Integer, Boolean> {
 		}
 	}
 
-	/*private boolean downLoadFileFromNetwork(String downloadUrl, String fileName) {
-		boolean bm = false;
-		if (!createFileOnDirectroy(fileName)) {
-			return false;
-		}
-		try {
-			URL url = new URL(downloadUrl);
-			URLConnection ucon = url.openConnection();
-			InputStream is = ucon.getInputStream();
-			BufferedInputStream bis = new BufferedInputStream(is);
-			ByteArrayBuffer baf = new ByteArrayBuffer(5000);
-			int current = 0;
-			while ((current = bis.read()) != -1) {
-				baf.append((byte) current);
-			}
-			FileOutputStream fos = new FileOutputStream(vodafile);
-			fos.write(baf.toByteArray());
-			fos.flush();
-			fos.close();
-			bm = true;
-		} catch (MalformedURLException e) {
-			bm = false;
-		} catch (OutOfMemoryError e) {
-			bm = false;
-		} catch (IOException e) {
-			bm = false;
-		} catch (Exception e) {
-			bm = false;
-		}
-		return bm;
-	}*/
-
 	private boolean downLoadFileFromNetwork(String downloadUrl, String fileName) {
 		boolean bm = false;
 		if (!createFileOnDirectroy(fileName)) {
@@ -153,11 +121,6 @@ public class FileDownloader extends AsyncTask<String, Integer, Boolean> {
 
 		if (isDir && directory != null) {
 			vodafile = new File(directory, fileName);
-//			if (vodafile.exists()) {
-//				return true;
-//			} else {
-//				return false;
-//			}
 			if(vodafile!=null)
 				return true;
 			else

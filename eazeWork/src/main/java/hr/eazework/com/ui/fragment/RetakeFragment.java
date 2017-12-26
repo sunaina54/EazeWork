@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -33,6 +35,7 @@ import hr.eazework.com.ui.util.Utility;
 import hr.eazework.com.ui.util.custom.AlertCustomDialog;
 import id.zelory.compressor.Compressor;
 
+import static android.icu.util.MeasureUnit.BYTE;
 import static hr.eazework.com.ui.util.PermissionUtil.REQ_LOCATION_PERMISSION;
 
 /**
@@ -85,15 +88,18 @@ public class RetakeFragment extends Fragment {
                 waitingForActivity = true;
             }
         } else if (path == null || (path != null && !path.exists())) {
-
-            //    goBackAction();
             waitingForActivity = true;
         }
 
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                confirmAction();
+                if(screenName!=null && !screenName.equalsIgnoreCase("")){
+                    confirmActionCamera();
+                }else {
+                    confirmAction();
+                }
+
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +114,23 @@ public class RetakeFragment extends Fragment {
         }
 
         return view;
+    }
+
+    public void confirmActionCamera() {
+        if (bmp != null && imagePurpose != null) {
+            String sImagePath = "";
+            sImagePath = persistImage(bmp, imagePurpose);
+            Intent i = new Intent();
+            i.putExtra("response", sImagePath);
+            i.putExtra("image_purpose", imagePurpose);
+            if (!TextUtils.isEmpty(fieldCode)) {
+                i.putExtra("FieldCode", fieldCode);
+            }
+
+            getActivity().setResult(Activity.RESULT_OK, i);
+            getActivity().finish();
+
+        }
     }
 
     public void confirmAction() {
@@ -170,10 +193,12 @@ public class RetakeFragment extends Fragment {
         Matrix m = new Matrix();
         m.postRotate(90);
         if (screenName != null && !screenName.equalsIgnoreCase("")) {
-            Bitmap bitmap = new Compressor.Builder(getContext()).setQuality(AppsConstant.IMAGE_QUALITY)
-                    .setCompressFormat(Bitmap.CompressFormat.JPEG).setMaxWidth(240)
-                    .setMaxHeight(320).build().compressToBitmap(path);
-            bmp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
+            Bitmap bitmap = BitmapFactory.decodeFile(path.getAbsolutePath());
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,15,out);
+            byte[] byteArray = out.toByteArray();
+            Bitmap compressedBitmap = BitmapFactory.decodeByteArray(byteArray,0,byteArray.length);
+            bmp = Bitmap.createBitmap(compressedBitmap, 0, 0, compressedBitmap.getWidth(), compressedBitmap.getHeight(), m, true);
         } else {
             Bitmap bitmap = new Compressor.Builder(getContext()).setQuality(50)
                     .setCompressFormat(Bitmap.CompressFormat.JPEG).setMaxWidth(240)

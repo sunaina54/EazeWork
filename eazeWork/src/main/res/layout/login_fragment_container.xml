@@ -112,7 +112,15 @@
             android:text="Login"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/btn_gmail_sign_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_marginBottom="@dimen/margin_20"/>
 
         <TextView
             android:id="@+id/tv_register"
