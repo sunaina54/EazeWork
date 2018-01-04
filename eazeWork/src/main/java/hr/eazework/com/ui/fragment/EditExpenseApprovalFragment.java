@@ -1821,7 +1821,7 @@ public class EditExpenseApprovalFragment extends BaseFragment {
                                     }
                                     DocumentUploadAdapter.this.notifyDataSetChanged();
                                     if (mDataset.size() == 0) {
-                                        errorTV.setVisibility(View.VISIBLE);
+                                        errorLinearLayout.setVisibility(View.VISIBLE);
                                     }
 
                                 } else if (selectedObject.toString().equalsIgnoreCase("Download")) {
