@@ -35,7 +35,6 @@ import hr.eazework.com.ui.util.Utility;
 import hr.eazework.com.ui.util.custom.AlertCustomDialog;
 import id.zelory.compressor.Compressor;
 
-import static android.icu.util.MeasureUnit.BYTE;
 import static hr.eazework.com.ui.util.PermissionUtil.REQ_LOCATION_PERMISSION;
 
 /**
@@ -231,7 +230,7 @@ public class RetakeFragment extends Fragment {
     public Bitmap rotateBmpFront(File path) {
         Matrix matrix = new Matrix();
         matrix.postRotate(270);
-        if (screenName != null) {
+        if (screenName != null && !screenName.equalsIgnoreCase("")) {
             Bitmap bitmap = new Compressor.Builder(getContext()).setQuality(AppsConstant.IMAGE_QUALITY)
                     .setCompressFormat(Bitmap.CompressFormat.JPEG).setMaxWidth(480)
                     .setMaxHeight(640).build().compressToBitmap(path);
@@ -240,7 +239,7 @@ public class RetakeFragment extends Fragment {
             Bitmap bitmap = new Compressor.Builder(getContext()).setQuality(60)
                     .setCompressFormat(Bitmap.CompressFormat.JPEG).setMaxWidth(480)
                     .setMaxHeight(640).build().compressToBitmap(path);
-            bmp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bmp = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(),matrix, true);
         }
         return bmp;
     }

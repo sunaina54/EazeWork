@@ -750,6 +750,7 @@ public class AppRequestJSONString {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.d("Leave :",jsonObject.toString());
         return jsonObject.toString();
     }
 
