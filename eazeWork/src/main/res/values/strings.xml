@@ -219,6 +219,7 @@
     <string name="time">Time</string>
     <string name="or">OR</string>
     <string name="continue_with_google">Continue with Google</string>
+    <string name="error_no_advance">No more pending advances to adjust</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

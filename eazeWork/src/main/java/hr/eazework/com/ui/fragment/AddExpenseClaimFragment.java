@@ -2067,7 +2067,7 @@ public class AddExpenseClaimFragment extends BaseFragment {
                             });
                             claimDialog.show();
                         } else {
-                            new AlertCustomDialog(context, "No Request Id");
+                            new AlertCustomDialog(context, getResources().getString(R.string.error_no_advance));
                             return;
                         }
                     }
