@@ -24,6 +24,7 @@ import hr.eazework.com.model.EmployResponse;
 import hr.eazework.com.model.SearchOnBehalfItem;
 import hr.eazework.com.ui.fragment.CreateNewLeaveFragment;
 import hr.eazework.com.ui.fragment.OutdoorDutyRequestFragment;
+import hr.eazework.com.ui.fragment.TourRequestFragment;
 import hr.eazework.com.ui.fragment.WorkFromHomeRequestFragment;
 import hr.eazework.com.ui.util.AppsConstant;
 import hr.eazework.com.ui.util.Preferences;
@@ -48,8 +49,11 @@ public class SearchOnbehalfActivity extends BaseActivity {
     public static String SELECTED_EMP="seletedEmp";
     public static String SELECTED_WFH_EMP="selectedWFHEmp";
     public static String SELECTED_OD_EMP="selectedODEmp";
+    public static String SELECTED_TOUR_EMP="selectedTourEmp";
     private ImageView ibRightIV,clearTextIV;
     private LinearLayout progressContainer,noRecordLayout,rl_edit_team_member;
+    private String screenName="";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,9 +139,26 @@ public class SearchOnbehalfActivity extends BaseActivity {
                         empResponse.getGetLeaveEmpListResult().getErrorCode()
                                 .equalsIgnoreCase(AppsConstant.SUCCESS)){
                     noRecordLayout.setVisibility(View.GONE);
-
-
                         refreshRecycle(empResponse.getGetLeaveEmpListResult().getLeaveEmps());
+
+                }else {
+
+                }
+                break;
+            case CommunicationConstant.API_GET_WFH_EMP_LIST:
+                Log.d("TAG WFH",response.getResponseData());
+                empResponse=EmployResponse.create(response.getResponseData()) ;
+                if(empResponse!=null && empResponse.getGetWFHEmpListResult()!=null &&
+                        !empResponse.getGetWFHEmpListResult().getErrorCode()
+                                .equalsIgnoreCase(AppsConstant.SUCCESS) ){
+                    new AlertCustomDialog(context,empResponse.getGetWFHEmpListResult().getErrorMessage());
+                    return;
+                }
+                if(empResponse!=null && empResponse.getGetWFHEmpListResult()!=null &&
+                        empResponse.getGetWFHEmpListResult().getErrorCode()
+                                .equalsIgnoreCase(AppsConstant.SUCCESS)){
+                    noRecordLayout.setVisibility(View.GONE);
+                    refreshRecycle(empResponse.getGetWFHEmpListResult().getEmployees());
 
                 }else {
 
@@ -156,9 +177,23 @@ public class SearchOnbehalfActivity extends BaseActivity {
         request.setFromCount("1");
         request.setToCount("-1");
         request.setMatchStr(str);
-        CommunicationManager.getInstance().sendPostRequest(this,
-                AppRequestJSONString.searchOnBehalfRequest(request),
-                CommunicationConstant.API_SEARCH_ONBEHALF, true);
+        if(CreateNewLeaveFragment.LEAVE_EMP == 1) { //leave employee
+            CommunicationManager.getInstance().sendPostRequest(this,
+                    AppRequestJSONString.searchOnBehalfRequest(request),
+                    CommunicationConstant.API_SEARCH_ONBEHALF, true);
+        }else if(WorkFromHomeRequestFragment.WFH_EMP == 1) {
+            CommunicationManager.getInstance().sendPostRequest(this,
+                    AppRequestJSONString.searchOnBehalfRequest(request),
+                    CommunicationConstant.API_GET_WFH_EMP_LIST, true);
+        }else if(OutdoorDutyRequestFragment.OD_EMP == 1) {
+            CommunicationManager.getInstance().sendPostRequest(this,
+                    AppRequestJSONString.searchOnBehalfRequest(request),
+                    CommunicationConstant.API_GET_OD_EMP_LIST, true);
+        }else if(TourRequestFragment.TOUR_EMP == 1) {
+            CommunicationManager.getInstance().sendPostRequest(this,
+                    AppRequestJSONString.searchOnBehalfRequest(request),
+                    CommunicationConstant.API_GET_TOUR_EMP_LIST, true);
+        }
     }
 
     private class CustomAdapter extends
@@ -222,9 +257,11 @@ public class SearchOnbehalfActivity extends BaseActivity {
                     theIntent.putExtra(SELECTED_EMP,item);
                     theIntent.putExtra(SELECTED_WFH_EMP,item);
                     theIntent.putExtra(SELECTED_OD_EMP,item);
+                    theIntent.putExtra(SELECTED_TOUR_EMP,item);
                     setResult(OutdoorDutyRequestFragment.OD_EMP,theIntent);
                     setResult(WorkFromHomeRequestFragment.WFH_EMP,theIntent);
                     setResult(CreateNewLeaveFragment.LEAVE_EMP,theIntent);
+                    setResult(TourRequestFragment.TOUR_EMP,theIntent);
                     finish();
                 }
             });

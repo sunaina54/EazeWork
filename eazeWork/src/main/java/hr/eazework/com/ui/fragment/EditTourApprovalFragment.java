@@ -56,23 +56,21 @@ public class EditTourApprovalFragment extends BaseFragment {
         //First
         requestIdTV= (TextView) rootView.findViewById(R.id.requestIdTV);
         empNameTV= (TextView) rootView.findViewById(R.id.empNameTV);
-        empCodeTV= (TextView) rootView.findViewById(R.id.empCodeTV);
         statusTV= (TextView) rootView.findViewById(R.id.statusTV);
         // Second
-        reqInitiatorTV= (TextView) rootView.findViewById(R.id.reqInitiatorTV);
-        reqDateTV= (TextView) rootView.findViewById(R.id.reqDateTV);
+
         startDateTV= (TextView) rootView.findViewById(R.id.startDateTV);
         endDateTV= (TextView) rootView.findViewById(R.id.endDateTV);
         daysTV= (TextView) rootView.findViewById(R.id.daysTV);
         travelFromTV= (TextView) rootView.findViewById(R.id.travelFromTV);
         travelToTV= (TextView) rootView.findViewById(R.id.travelToTV);
         descriptionTV= (TextView) rootView.findViewById(R.id.descriptionTV);
-        classicToursTV= (TextView) rootView.findViewById(R.id.classicToursTV);
+   /*     classicToursTV= (TextView) rootView.findViewById(R.id.classicToursTV);
         adventureTV= (TextView) rootView.findViewById(R.id.adventureTV);
         familyPackageTV= (TextView) rootView.findViewById(R.id.familyPackageTV);
         studentSpecialTV= (TextView) rootView.findViewById(R.id.studentSpecialTV);
-        religiousTravelTV= (TextView) rootView.findViewById(R.id.religiousTravelTV);
-        photographyTV= (TextView) rootView.findViewById(R.id.photographyTV);
+        religiousTravelTV= (TextView) rootView.findViewById(R.id.religiousTravelTV);*/
+      //  photographyTV= (TextView) rootView.findViewById(R.id.photographyTV);
         remarksTV= (TextView) rootView.findViewById(R.id.remarksTV);
         //third
         reasonTV= (TextView) rootView.findViewById(R.id.reasonTV);

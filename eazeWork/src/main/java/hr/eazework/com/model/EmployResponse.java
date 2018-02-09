@@ -11,6 +11,15 @@ import java.io.Serializable;
 public class EmployResponse implements Serializable {
 
     private GetLeaveEmpListResult GetLeaveEmpListResult;
+    private GetWFHEmpListResult GetWFHEmpListResult;
+
+    public hr.eazework.com.model.GetWFHEmpListResult getGetWFHEmpListResult() {
+        return GetWFHEmpListResult;
+    }
+
+    public void setGetWFHEmpListResult(hr.eazework.com.model.GetWFHEmpListResult getWFHEmpListResult) {
+        GetWFHEmpListResult = getWFHEmpListResult;
+    }
 
     public hr.eazework.com.model.GetLeaveEmpListResult getGetLeaveEmpListResult() {
         return GetLeaveEmpListResult;

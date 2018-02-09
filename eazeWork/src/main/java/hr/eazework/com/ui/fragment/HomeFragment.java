@@ -514,8 +514,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                         itemList.add(item);
                     }
                 }
-
-
             }
 
             ArrayList<String> list = new ArrayList<>();
@@ -540,9 +538,19 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
             if (itemModel != null && itemModel.isAccess()) {
                 list.add("Expense");
             }
-           /* list.add("Work From Home");
-            list.add("Outdoor Duty");
-            list.add("Tour");*/
+            itemModel = menuItemModel.getItemModel(MenuItemModel.WORK_FROM_HOME);
+            if (itemModel != null && itemModel.isAccess()) {
+                list.add("Work From Home");
+            }
+            itemModel = menuItemModel.getItemModel(MenuItemModel.OD_REQUEST);
+            if (itemModel != null && itemModel.isAccess()) {
+                list.add("Outdoor Duty");
+            }
+            itemModel = menuItemModel.getItemModel(MenuItemModel.TOUR_REQUEST);
+            if (itemModel != null && itemModel.isAccess()) {
+                list.add("Tour");
+            }
+
             if (list.size() > 0) {
                 ((MainActivity) getActivity()).setMenuList(list);
                 ((MainActivity) getActivity()).menuPlus.setVisibility(View.VISIBLE);

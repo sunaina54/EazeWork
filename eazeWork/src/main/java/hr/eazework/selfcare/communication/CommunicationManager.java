@@ -462,6 +462,102 @@ public class CommunicationManager extends CommunicationManagerBase {
             case CommunicationConstant.API_GET_CORPEMP_PARAM:
                 key = CommunicationConstant.API_KEY_GET_CORPEMP_PARAM;
                 break;
+            case CommunicationConstant.API_GET_WFH_EMP_LIST:
+                key = CommunicationConstant.API_KEY_GET_WFH_EMP_LIST;
+                break;
+            case CommunicationConstant.API_GET_TOUR_EMP_LIST:
+                key = CommunicationConstant.API_KEY_GET_TOUR_EMP_LIST;
+                break;
+            case CommunicationConstant.API_GET_OD_EMP_LIST:
+                key = CommunicationConstant.API_KEY_GET_OD_EMP_LIST;
+                break;
+            case CommunicationConstant.API_GET_DETAILS_ON_INPUT_CHANGE:
+                key = CommunicationConstant.API_KEY_GET_DETAILS_ON_INPUT_CHANGE;
+                break;
+            case CommunicationConstant.API_SAVE_OD_REQUEST:
+                key = CommunicationConstant.API_KEY_SAVE_OD_REQUEST;
+                break;
+            case CommunicationConstant.API_SAVE_WFH_REQUEST:
+                key = CommunicationConstant.API_KEY_SAVE_WFH_REQUEST;
+                break;
+            case CommunicationConstant.API_GET_DETAILS_ON_EMP_CHANGE:
+                key = CommunicationConstant.API_KEY_GET_DETAILS_ON_EMP_CHANGE;
+                break;
+            case CommunicationConstant.API_GET_WFH_REQUEST_DETAIL:
+                key = CommunicationConstant.API_KEY_GET_WFH_REQUEST_DETAIL;
+                break;
+            case CommunicationConstant.API_GET_TOUR_CUSTOM_FIELD_LIST:
+                key = CommunicationConstant.API_KEY_GET_TOUR_CUSTOM_FIELD_LIST;
+                break;
+            case CommunicationConstant.API_GET_EMP_ATTENDANCE_REQUEST:
+                key = CommunicationConstant.API_KEY_GET_EMP_ATTENDANCE_REQUEST;
+                break;
+            case CommunicationConstant.API_GET_OD_REQUEST_DETAIL:
+                key = CommunicationConstant.API_KEY_GET_OD_REQUEST_DETAIL;
+                break;
+            case CommunicationConstant.API_WITHDRAW_WFH_REQUEST:
+                key = CommunicationConstant.API_KEY_WITHDRAW_WFH_REQUEST;
+                break;
+            case CommunicationConstant.API_WITHDRAW_OD_REQUEST:
+                key = CommunicationConstant.API_KEY_WITHDRAW_OD_REQUEST;
+                break;
+            case CommunicationConstant.API_GET_TOUR_REQUEST_DETAIL:
+                key = CommunicationConstant.API_KEY_GET_TOUR_REQUEST_DETAIL;
+                break;
+            case CommunicationConstant.API_WITHDRAW_TOUR_REQUEST:
+                key = CommunicationConstant.API_KEY_WITHDRAW_TOUR_REQUEST;
+                break;
+            case CommunicationConstant.API_SAVE_TOUR_REQUEST:
+                key = CommunicationConstant.API_KEY_SAVE_TOUR_REQUEST;
+                break;
+            case CommunicationConstant.API_REJECT_TOUR_REQUEST:
+                key = CommunicationConstant.API_KEY_REJECT_TOUR_REQUEST;
+                break;
+            case CommunicationConstant.API_REJECT_OD_REQUEST:
+                key = CommunicationConstant.API_KEY_REJECT_OD_REQUEST;
+                break;
+            case CommunicationConstant.API_REJECT_WFH_REQUEST:
+                key = CommunicationConstant.API_KEY_REJECT_WFH_REQUEST;
+                break;
+            case CommunicationConstant.API_APPROVE_WFH_REQUEST:
+                key = CommunicationConstant.API_KEY_APPROVE_WFH_REQUEST;
+                break;
+            case CommunicationConstant.API_APPROVE_TOUR_REQUEST:
+                key = CommunicationConstant.API_KEY_APPROVE_TOUR_REQUEST;
+                break;
+            case CommunicationConstant.API_APPROVE_OD_REQUEST:
+                key = CommunicationConstant.API_KEY_APPROVE_OD_REQUEST;
+                break;
+            case CommunicationConstant.API_TIME_MODIFICATION_REQUEST:
+                key = CommunicationConstant.API_KEY_TIME_MODIFICATION_REQUEST;
+                break;
+            case CommunicationConstant.API_APPROVE_LEAVE_REQUEST:
+                key = CommunicationConstant.API_KEY_APPROVE_LEAVE_REQUEST;
+                break;
+            case CommunicationConstant.API_REJECT_LEAVE_REQUEST:
+                key = CommunicationConstant.API_KEY_REJECT_LEAVE_REQUEST;
+                break;
+            case CommunicationConstant.API_GET_LEAVE_REQUEST_DETAIL:
+                key = CommunicationConstant.API_KEY_GET_LEAVE_REQUEST_DETAIL;
+                break;
+            case CommunicationConstant.API_WITHDRAW_LEAVE_REQUEST:
+                key = CommunicationConstant.API_KEY_WITHDRAW_LEAVE_REQUEST;
+                break;
+            case CommunicationConstant.API_BACKDATED_ATTENDANCE_REQUEST:
+                key = CommunicationConstant.API_KEY_BACKDATED_ATTENDANCE_REQUEST;
+                break;
+            case CommunicationConstant.API_FORGOT_CREDENTIALS_REQUEST:
+                key = CommunicationConstant.API_KEY_FORGOT_CREDENTIALS_REQUEST;
+                break;
+            case CommunicationConstant.API_GET_ATTENDANCE_DETAIL:
+                key = CommunicationConstant.API_KEY_GET_ATTENDANCE_DETAIL;
+                break;
+            case CommunicationConstant.API_REJECT_ATTENDANCE_REQUEST:
+                key = CommunicationConstant.API_KEY_REJECT_ATTENDANCE_REQUEST;
+                break;
+            case CommunicationConstant.API_APPROVE_ATTENDANCE_REQUEST:
+                key = CommunicationConstant.API_KEY_APPROVE_ATTENDANCE_REQUEST;
+                break;
         }
         return CommunicationConstant.getMobileCareURl() + "/WCFService/" + key;
     }

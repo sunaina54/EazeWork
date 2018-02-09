@@ -65,7 +65,7 @@ public class EditWFHApprovalFragment extends BaseFragment {
         travelFromTV.setVisibility(View.GONE);
         descriptionTV= (TextView) rootView.findViewById(R.id.descriptionTV);
         descriptionTV.setVisibility(View.GONE);
-        classicToursTV= (TextView) rootView.findViewById(R.id.classicToursTV);
+     /*   classicToursTV= (TextView) rootView.findViewById(R.id.classicToursTV);
         classicToursTV.setVisibility(View.GONE);
         adventureTV= (TextView) rootView.findViewById(R.id.adventureTV);
         adventureTV.setVisibility(View.GONE);
@@ -76,7 +76,7 @@ public class EditWFHApprovalFragment extends BaseFragment {
         religiousTravelTV= (TextView) rootView.findViewById(R.id.religiousTravelTV);
         religiousTravelTV.setVisibility(View.GONE);
         photographyTV= (TextView) rootView.findViewById(R.id.photographyTV);
-        photographyTV.setVisibility(View.GONE);
+        photographyTV.setVisibility(View.GONE);*/
         remarksTV= (TextView) rootView.findViewById(R.id.remarksTV);
         //third
         reasonTV= (TextView) rootView.findViewById(R.id.reasonTV);

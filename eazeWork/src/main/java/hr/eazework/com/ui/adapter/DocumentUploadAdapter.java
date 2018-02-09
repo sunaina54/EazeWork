@@ -1,5 +1,6 @@
 package hr.eazework.com.ui.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,12 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import hr.eazework.com.R;
 import hr.eazework.com.model.SupportDocsItemModel;
+import hr.eazework.com.ui.util.AppsConstant;
 import hr.eazework.com.ui.util.Utility;
 
 /**
@@ -24,10 +27,12 @@ public class DocumentUploadAdapter extends RecyclerView.Adapter<DocumentUploadAd
     private Context context;
     private String screen;
     private LinearLayout errorLinearLayout;
+    private Activity activity;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView fileNameTV, fileDescriptionTV;
         public ImageView img_icon, img_menu_icon;
+        private RelativeLayout documentParentLayout;
 
         public ViewHolder(View v) {
             super(v);
@@ -35,17 +40,17 @@ public class DocumentUploadAdapter extends RecyclerView.Adapter<DocumentUploadAd
             fileDescriptionTV = (TextView) v.findViewById(R.id.fileDescriptionTV);
             img_icon = (ImageView) v.findViewById(R.id.img_icon);
             img_menu_icon = (ImageView) v.findViewById(R.id.img_menu_icon);
+            documentParentLayout=(RelativeLayout)v.findViewById(R.id.documentParentLayout);
 
         }
     }
 
-    public DocumentUploadAdapter(ArrayList<SupportDocsItemModel> myDataset, Context context, String screen, LinearLayout errorLinearLayout) {
+    public DocumentUploadAdapter(ArrayList<SupportDocsItemModel> myDataset, Context context, String screen, LinearLayout errorLinearLayout, Activity activity) {
         mDataset = myDataset;
         this.context=context;
         this.screen=screen;
         this.errorLinearLayout=errorLinearLayout;
-
-
+        this.activity=activity;
     }
 
     @Override
@@ -64,7 +69,10 @@ public class DocumentUploadAdapter extends RecyclerView.Adapter<DocumentUploadAd
 
         final SupportDocsItemModel fileObject = mDataset.get(position);
         String fileType = "";
-
+        holder.documentParentLayout.setVisibility(View.VISIBLE);
+        if(fileObject.getDocID()!=0 && fileObject.getFlag().equalsIgnoreCase(AppsConstant.DELETE_FLAG)){
+            holder.documentParentLayout.setVisibility(View.GONE);
+        }
         final String filename = fileObject.getDocFile();
         final String name = fileObject.getName();
         if (filename.toString().contains(".pdf")) {
@@ -142,7 +150,7 @@ public class DocumentUploadAdapter extends RecyclerView.Adapter<DocumentUploadAd
         holder.img_menu_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                Utility.showDocumentPopUp(context,screen,fileObject,DocumentUploadAdapter.this,errorLinearLayout);
+                Utility.showDocumentPopUp(context,screen,fileObject,DocumentUploadAdapter.this,errorLinearLayout,activity);
                    /* ArrayList<String> list = new ArrayList<>();
                     list.add("Edit");
                     list.add("Delete");

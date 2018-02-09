@@ -18,4 +18,6 @@ public class BaseActivity extends AppCompatActivity implements IBaseResponse {
     public void validateResponse(ResponseData response) {
 
     }
+
+
 }

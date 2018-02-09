@@ -999,7 +999,7 @@ public class EditExpenseApprovalFragment extends BaseFragment {
                 fromDateLinearLayout.setVisibility(View.GONE);
                 editButton = (Button) v.findViewById(R.id.actionBTN);
                 editButton.setText("Edit");
-                editButton.setVisibility(View.VISIBLE);
+                editButton.setVisibility(View.GONE);
 
                 lineDocumentLl = (LinearLayout) v.findViewById(R.id.lineDocumentLl);
                 lineDocumentLl.setVisibility(View.GONE);

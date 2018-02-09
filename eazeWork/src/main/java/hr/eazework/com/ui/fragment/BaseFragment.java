@@ -174,5 +174,8 @@ public abstract class BaseFragment extends Fragment implements OnClickListener,I
 		return isValid;
 	}
 
+	public void showLog(Class T,String message){
+		Log.d(T.getName(),message);
+	}
 
 }

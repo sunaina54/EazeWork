@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -20,7 +21,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,13 +50,18 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.concurrent.Executor;
 
 import hr.eazework.com.MainActivity;
 import hr.eazework.com.R;
+import hr.eazework.com.model.ForgotCredentialsRequestModel;
+import hr.eazework.com.model.ForgotCredentialsResponseModel;
 import hr.eazework.com.model.LoginUserModel;
 import hr.eazework.com.model.ModelManager;
+import hr.eazework.com.model.TimeModificationResponseModel;
+import hr.eazework.com.ui.customview.CustomDialog;
 import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.util.AppsConstant;
 import hr.eazework.com.ui.util.CommonValues;
@@ -74,6 +82,7 @@ public class LoginFragment extends BaseFragment {
     private Preferences preferences;
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 234;
+    private String email="";
     //creating a GoogleSignInClient object
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -81,16 +90,21 @@ public class LoginFragment extends BaseFragment {
     FirebaseAuth mAuth;
     private SignInButton btn_gmail_sign_in;
     private Context context;
-
+    private String fcmToken;
+    private TextView forgotCredentialTV;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         context = getContext();
+
         preferences = new Preferences(getContext());
+        fcmToken=findToken();
         rootView = LayoutInflater.from(getActivity()).inflate(
                 R.layout.login_fragment_container, container, false);
         rootView.findViewById(R.id.btn_sign_in).setOnClickListener(this);
         rootView.findViewById(R.id.img_reload).setOnClickListener(this);
+        forgotCredentialTV = (TextView) rootView.findViewById(R.id.forgotCredentialTV);
+        forgotCredentialTV.setOnClickListener(this);
         btn_gmail_sign_in = (SignInButton) rootView.findViewById(R.id.btn_gmail_sign_in);
         btn_gmail_sign_in.setOnClickListener(this);
         TextView textView = (TextView) btn_gmail_sign_in.getChildAt(0);
@@ -140,6 +154,18 @@ public class LoginFragment extends BaseFragment {
         return rootView;
     }
 
+    private String findToken(){
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Log.d(TAG,"Token "+ token);
+       // token="value";
+        String prefrenceToken=preferences.getString(AppsConstant.FCM_TOKEN,null);
+        if(prefrenceToken==null){
+            preferences.saveString(AppsConstant.FCM_TOKEN, token);
+        }else if(prefrenceToken!=null  && !prefrenceToken.equalsIgnoreCase(token)){
+            preferences.saveString(AppsConstant.FCM_TOKEN, token);
+        }
+        return preferences.getString(AppsConstant.FCM_TOKEN, token);
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -152,6 +178,46 @@ public class LoginFragment extends BaseFragment {
                     e.printStackTrace();
                     Crashlytics.logException(e);
                 }
+                break;
+            case R.id.forgotCredentialTV:
+                TextView url1 = (TextView) rootView.findViewById(R.id.et_url);
+                String strUrl1 = url1.getText().toString();
+                String sUrl1 = "";
+                int urlLength1 = strUrl1.length();
+                if (urlLength1 >= 2 && strUrl1.charAt(1) == '*') {
+                    if (strUrl1.charAt(0) == 't' || strUrl1.charAt(0) == 'T') {
+                        preferences.saveBoolean(Preferences.ISPRODUCTION, false);
+                        preferences.saveBoolean(Preferences.ISTESTSERVER, true);
+                        preferences.commit();
+                        CommunicationConstant.setIsProduction(false);
+                        CommunicationConstant.setIsTestServer(true);
+                        int endlength = strUrl1.length();
+                        sUrl1 = strUrl1.substring(2, endlength);
+                        CommunicationConstant.setServerLocation(CommunicationConstant.isTestServer(), CommunicationConstant.isProduction());
+                    } else if (strUrl1.charAt(0) == 's' || strUrl1.charAt(0) == 'S') {
+                        preferences.saveBoolean(Preferences.ISTESTSERVER, false);
+                        preferences.saveBoolean(Preferences.ISPRODUCTION, false);
+                        preferences.commit();
+                        CommunicationConstant.setIsProduction(false);
+                        CommunicationConstant.setIsTestServer(false);
+                        int endlength = strUrl1.length();
+                        sUrl1 = strUrl1.substring(2, endlength);
+                        CommunicationConstant.setServerLocation(CommunicationConstant.isTestServer(), CommunicationConstant.isProduction());
+                    }
+                } else {
+                    preferences.saveBoolean(Preferences.ISPRODUCTION, true);
+                    preferences.saveBoolean(Preferences.ISTESTSERVER, false);
+                    preferences.commit();
+                    CommunicationConstant.setIsTestServer(false);
+                    CommunicationConstant.setIsProduction(true);
+                    sUrl1 = strUrl1;
+                    CommunicationConstant.setServerLocation(CommunicationConstant.isTestServer(), CommunicationConstant.isProduction());
+                }
+                if (sUrl1.equalsIgnoreCase("")) {
+                    new AlertCustomDialog(getContext(), getResources().getString(R.string.enter_url));
+                    return;
+                }
+                forgotCredentialsPopup();
                 break;
             case R.id.btn_sign_in:
 
@@ -194,7 +260,7 @@ public class LoginFragment extends BaseFragment {
                         showHideProgressView(true);
                         CommunicationManager.getInstance().sendPostRequest(
                                 this,
-                                AppRequestJSONString.getLoginData(sUrl, uName.getText().toString(), et_password.getText().toString()),
+                                AppRequestJSONString.getLoginData(sUrl, uName.getText().toString(), et_password.getText().toString(),fcmToken),
                                 CommunicationConstant.API_LOGIN_USER, true);
                     } else {
                         showHideNetworkErrorView(true);
@@ -215,6 +281,50 @@ public class LoginFragment extends BaseFragment {
         }
         super.onClick(v);
     }
+
+    private void forgotCredentialsPopup() {
+        final Dialog dialog = new Dialog(getContext());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.reject_layout);
+
+        final EditText messageTV = (EditText) dialog.findViewById(R.id.messageTV);
+
+        final TextView cancelTV, okTV,tv_title;
+        messageTV.setLines(1);
+        tv_title= (TextView) dialog.findViewById(R.id.tv_title);
+        tv_title.setText(context.getResources().getString(R.string.mail_label));
+        okTV = (TextView) dialog.findViewById(R.id.okTV);
+        cancelTV = (TextView) dialog.findViewById(R.id.cancelTV);
+        cancelTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        okTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                email = messageTV.getText().toString();
+                if (email.equalsIgnoreCase("")) {
+                    new AlertCustomDialog(getContext(), getResources().getString(R.string.enter_mail));
+                    return;
+                }
+                sendForgotCredentialsData(email);
+                dialog.dismiss();
+            }
+
+        });
+        dialog.show();
+    }
+
+    private void sendForgotCredentialsData(String email){
+        ForgotCredentialsRequestModel item=new ForgotCredentialsRequestModel();
+        item.setEmail(email);
+        CommunicationManager.getInstance().sendPostRequest(this,
+                AppRequestJSONString.forgotCredentialsRequest(item),
+                CommunicationConstant.API_FORGOT_CREDENTIALS_REQUEST, true);
+    }
+
 
     private boolean validate() {
         boolean validate = true;
@@ -309,8 +419,19 @@ public class LoginFragment extends BaseFragment {
                 } catch (JSONException e) {
                     Crashlytics.logException(e);
                 }
+                break;
 
-
+            case CommunicationConstant.API_FORGOT_CREDENTIALS_REQUEST:
+                String resp = response.getResponseData();
+                Log.d("TAG", "Forgot credentials response : " + resp);
+                ForgotCredentialsResponseModel forgotCredentialsResponseModel = ForgotCredentialsResponseModel.create(resp);
+                if (forgotCredentialsResponseModel != null && forgotCredentialsResponseModel.getForgetCredentialsResult() != null
+                        && forgotCredentialsResponseModel.getForgetCredentialsResult().getErrorCode().equalsIgnoreCase("-5")) {
+                    new AlertCustomDialog(context, forgotCredentialsResponseModel.getForgetCredentialsResult().getErrorMessage());
+                   // CustomDialog.alertOkWithFinishFragment(context, forgotCredentialsResponseModel.getForgetCredentialsResult().getErrorMessage(), null, IAction.LOGIN_VIEW, true);
+                } else {
+                    new AlertCustomDialog(context, forgotCredentialsResponseModel.getForgetCredentialsResult().getErrorMessage());
+                }
                 break;
             default:
                 break;

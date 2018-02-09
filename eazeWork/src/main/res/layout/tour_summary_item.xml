@@ -102,7 +102,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.3"
                         android:text="@string/start_date"
-                        android:textSize="@dimen/font_12" />
+                        android:textSize="@dimen/font_12"
+                        android:id="@+id/startDateLabelTV"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -126,7 +127,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:weightSum="1"
+                    android:id="@+id/endDateLl">
 
                     <TextView
                         style="@style/textView"

@@ -6,6 +6,15 @@
     android:orientation="vertical">
 
     <include layout="@layout/header_layout"></include>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,9 +22,34 @@
         android:layout_marginLeft="@dimen/margin_13"
         android:layout_marginRight="@dimen/margin_13"
         android:layout_marginBottom="@dimen/margin_13"
+        android:layout_marginTop="@dimen/margin_13"
         android:background="@color/white"
         android:orientation="vertical"
         >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_5"
+            android:id="@+id/dateLinearLayout"
+            android:visibility="visible"
+            >
+
+            <TextView
+                style="@style/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date_attendance" />
+
+            <TextView
+                android:id="@+id/dateTV"
+                style="@style/textViewYellow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -30,17 +64,77 @@
                 style="@style/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/attendance_status" />
+                android:text="@string/day_status" />
 
             <TextView
                 android:id="@+id/statusTV"
-                style="@style/textView"
+                style="@style/textViewYellow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Present" />
+               />
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0.8">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_5"
+                        android:layout_marginLeft="@dimen/margin_5"
+                        android:text="@string/employee_name"
+                        android:visibility="gone"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/empNameTV"
+                        style="@style/editTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_default"
+                        android:background="@drawable/grey_commoborder"
+                        android:gravity="left"
+                        android:padding="@dimen/margin_10"
+                         />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/searchLayout"
+                android:layout_width="0dp"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_weight=".2"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="@dimen/margin_25"
+                    android:layout_height="@dimen/margin_25"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:background="@drawable/search" />
+            </RelativeLayout>
+
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,14 +145,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_10">
-            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/cardViewExpense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
-                card_view:cardCornerRadius="2dp"
-                card_view:cardElevation="2dp"
-                card_view:cardUseCompatPadding="true">
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -79,44 +166,6 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/margin_5"
-                        android:weightSum="1">
-
-                        <TextView
-                            android:id="@+id/textView5"
-                            style="@style/textView"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.3"
-                            android:text="@string/marked_time" />
-
-                        <TextView
-                            android:id="@+id/markedInDateTV"
-                            style="@style/textViewYellow"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.3"
-                            android:text="07-10-2017" />
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            android:layout_weight="0.05"
-                            android:background="@android:color/transparent" />
-
-                        <TextView
-                            android:id="@+id/markedInTimeTV"
-                            style="@style/textViewYellow"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.3"
-                            android:text="09:45 PM" />
-
-
-                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="fill_parent"
@@ -126,19 +175,12 @@
                         android:weightSum="1"
                         android:id="@+id/requestedInTimeLl">
 
-                        <TextView
-                            style="@style/textView"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal|center_vertical"
-                            android:layout_weight="0.3"
-                            android:text="@string/requested_time" />
 
                         <LinearLayout
-                            android:id="@+id/ll_from_date"
+                            android:id="@+id/inDateLl"
                             android:layout_width="0dp"
                             android:layout_height="@dimen/margin_40"
-                            android:layout_weight="0.3"
+                            android:layout_weight="0.45"
                             android:background="@drawable/rounded_corne_background_blue_dark"
                             android:orientation="horizontal"
                             android:paddingLeft="@dimen/padding_mini"
@@ -180,14 +222,14 @@
                         <View
                             android:layout_width="0dp"
                             android:layout_height="1dp"
-                            android:layout_weight="0.05"
+                            android:layout_weight="0.1"
                             android:background="@android:color/transparent" />
 
                         <LinearLayout
-                            android:id="@+id/ll_start_time"
+                            android:id="@+id/inTimeLl"
                             android:layout_width="0dp"
                             android:layout_height="@dimen/margin_40"
-                            android:layout_weight="0.3"
+                            android:layout_weight="0.4"
                             android:background="@drawable/rounded_corne_background_blue_dark"
                             android:orientation="horizontal"
                             android:paddingLeft="@dimen/padding_mini"
@@ -227,20 +269,13 @@
 
                     </LinearLayout>
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_10">
-                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/margin_10"
-                    card_view:cardCornerRadius="2dp"
-                    card_view:cardElevation="2dp"
-                    card_view:cardUseCompatPadding="true">
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -266,60 +301,14 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:padding="@dimen/margin_5"
-                            android:weightSum="1">
-
-                            <TextView
-                                style="@style/textView"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.3"
-                                android:text="@string/marked_time" />
-
-                            <TextView
-                                android:id="@+id/markedOutDateTV"
-                                style="@style/textViewYellow"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.3"
-                                android:text="07-10-2017" />
-                            <View
-                                android:layout_width="0dp"
-                                android:layout_height="1dp"
-                                android:layout_weight="0.05"
-                                android:background="@android:color/transparent" />
-
-                            <TextView
-                                android:id="@+id/markedOutTimeTV"
-                                style="@style/textViewYellow"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="0.3"
-                                android:text="09:45 PM" />
-
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="fill_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:padding="@dimen/margin_5"
                             android:weightSum="1"
                             android:id="@+id/requestedOutTimeLl">
 
-                            <TextView
-                                style="@style/textView"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal|center_vertical"
-                                android:layout_weight="0.3"
-                                android:text="@string/requested_time" />
-
                             <LinearLayout
-                                android:id="@+id/ll_out_date"
+                                android:id="@+id/outDateLl"
                                 android:layout_width="0dp"
                                 android:layout_height="@dimen/margin_40"
-                                android:layout_weight="0.3"
+                                android:layout_weight="0.45"
                                 android:background="@drawable/rounded_corne_background_blue_dark"
                                 android:orientation="horizontal"
                                 android:paddingLeft="@dimen/padding_mini"
@@ -360,14 +349,14 @@
                             <View
                                 android:layout_width="0dp"
                                 android:layout_height="1dp"
-                                android:layout_weight="0.05"
+                                android:layout_weight="0.1"
                                 android:background="@android:color/transparent" />
 
                             <LinearLayout
-                                android:id="@+id/ll_out_time"
+                                android:id="@+id/outTimeLl"
                                 android:layout_width="0dp"
                                 android:layout_height="@dimen/margin_40"
-                                android:layout_weight="0.3"
+                                android:layout_weight="0.4"
                                 android:background="@drawable/rounded_corne_background_blue_dark"
                                 android:orientation="horizontal"
                                 android:paddingLeft="@dimen/padding_mini"
@@ -407,23 +396,37 @@
 
                         </LinearLayout>
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
+
             </LinearLayout>
 
         </LinearLayout>
         <include
-            android:id="@+id/remarksLinearLayout"
+            android:id="@+id/remarksLinearLayout1"
             layout="@layout/remarks_edittext_layout"></include>
 
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:layout_marginLeft="@dimen/margin_13"
-        android:layout_marginRight="@dimen/margin_13">
+        android:layout_marginRight="@dimen/margin_13"
+        android:id="@+id/remarksLl">
         <include layout="@layout/remarks_layout"></include>
     </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_13"
+                android:layout_marginRight="@dimen/margin_13"
+                android:visibility="gone">
+
+                <include layout="@layout/upload_document_layout"></include>
+            </LinearLayout>
+
     <include layout="@layout/action_button_layout" android:id="@+id/buttonLinearLayout"></include>
 
+</LinearLayout>
+</ScrollView>
 </LinearLayout>

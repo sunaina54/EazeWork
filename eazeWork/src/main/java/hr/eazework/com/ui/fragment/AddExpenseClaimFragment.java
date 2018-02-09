@@ -1004,7 +1004,7 @@ public class AddExpenseClaimFragment extends BaseFragment {
                 toDateLinearLayout = (LinearLayout) v.findViewById(R.id.toDateLinearLayout);
 
                 actionBTN = (Button) v.findViewById(R.id.actionBTN);
-                actionBTN.setVisibility(View.VISIBLE);
+                actionBTN.setVisibility(View.GONE);
 
                 viewDocLl = (LinearLayout) v.findViewById(R.id.viewDocLl);
                 viewDocBTN = (Button) v.findViewById(R.id.viewDocBTN);

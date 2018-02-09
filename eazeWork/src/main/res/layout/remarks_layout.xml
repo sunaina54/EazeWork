@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             style="@style/blueBorderEditText"
             android:layout_margin="@dimen/margin_7"
+            android:visibility="gone"
             android:id="@+id/remarksLinearLayout"
 
             >

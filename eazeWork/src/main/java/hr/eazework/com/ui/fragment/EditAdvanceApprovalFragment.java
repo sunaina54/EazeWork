@@ -264,6 +264,7 @@ public class EditAdvanceApprovalFragment extends BaseFragment {
                             CommunicationConstant.API_GET_SAVE_ADVANCE, true);
                 } else {
                     progressBar.setVisibility(View.GONE);
+                    getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     new AlertCustomDialog(context, "Please Enter Remarks");
                 }
             } else {

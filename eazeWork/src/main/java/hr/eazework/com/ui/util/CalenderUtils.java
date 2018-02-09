@@ -300,6 +300,7 @@ public class CalenderUtils {
 
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH),
                 newCalendar.get(Calendar.DAY_OF_MONTH));
+
         return datePickerDialog;
     }
     public static DatePickerDialog pickYearMonthFromCalender(Context mContext, final TextView dobTextView,final TextView dayTV, String dateFormat) {

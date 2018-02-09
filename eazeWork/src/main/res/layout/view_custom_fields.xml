@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+<!--
+    <LinearLayout
+        android:id="@+id/edittextLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <TextView
+            style="@style/textView"
+            android:id="@+id/editTextLabelTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:padding="@dimen/margin_7"
+            android:text="@string/classic_tours" />
+
+
+        <EditText
+            android:id="@+id/editTextValueEt"
+            style="@style/editTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:paddingStart="@dimen/margin_10" />
+
+    </LinearLayout>-->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        android:id="@+id/edittextLayout"
+        >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.45"
+            android:id="@+id/editTextLabelTV"
+            android:padding="@dimen/margin_5"
+            android:text="@string/duration"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_14"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/padding_default"
+            android:paddingRight="@dimen/padding_default"
+            android:text=":"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/editTextValueEt"
+            style="@style/textViewYellow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.55"
+            android:gravity="left"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_14"></TextView>
+    </LinearLayout>
+
+
+</LinearLayout>
+

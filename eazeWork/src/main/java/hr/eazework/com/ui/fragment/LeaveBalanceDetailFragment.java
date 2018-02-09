@@ -6,6 +6,7 @@ import java.util.Calendar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -21,12 +22,15 @@ import com.crashlytics.android.Crashlytics;
 import hr.eazework.com.MainActivity;
 import hr.eazework.com.R;
 import hr.eazework.com.model.EmpLeaveModel;
+import hr.eazework.com.model.GetWFHRequestDetail;
 import hr.eazework.com.model.LeaveBalanceModel;
 import hr.eazework.com.model.LeaveModel;
 import hr.eazework.com.model.LoginUserModel;
 import hr.eazework.com.model.MenuItemModel;
 import hr.eazework.com.model.ModelManager;
 import hr.eazework.com.model.UserModel;
+import hr.eazework.com.model.WithdrawWFHResponse;
+import hr.eazework.com.ui.customview.CustomDialog;
 import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.util.AppConfig;
 import hr.eazework.com.ui.util.AppsConstant;
@@ -45,6 +49,7 @@ public class LeaveBalanceDetailFragment extends BaseFragment {
     public static final String TAG = "LeaveBalanceDetailFragment";
     public static final long daysForFilter = 15552000000L;
     private Preferences preferences;
+    private Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,10 +67,10 @@ public class LeaveBalanceDetailFragment extends BaseFragment {
         String beginYearDate = String.format("%1$td/%1$tm/%1$tY", beginYear);
         String calendarDate = String.format("%1$td/%1$tm/%1$tY", calendar);
         CommunicationManager.getInstance().sendPostRequest(
-                        this,
-                        AppRequestJSONString.getEmpLeaveRequestsData(beginYearDate, calendarDate, true, false),
-                        CommunicationConstant.API_GET_EMP_LEAVE_REQUESTS_PENDING,
-                        false);
+                this,
+                AppRequestJSONString.getEmpLeaveRequestsData(beginYearDate, calendarDate, true, false),
+                CommunicationConstant.API_GET_EMP_LEAVE_REQUESTS_PENDING,
+                false);
         CommunicationManager.getInstance().sendPostRequest(
                 this,
                 AppRequestJSONString.getEmpLeaveRequestsData(
@@ -107,7 +112,7 @@ public class LeaveBalanceDetailFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         preferences = new Preferences(getContext());
-
+        context = getContext();
         rootView = LayoutInflater.from(getActivity()).inflate(
                 R.layout.leave_balance_detail_root_container, container, false);
         MainActivity.updataProfileData(getActivity(), rootView);
@@ -260,11 +265,12 @@ public class LeaveBalanceDetailFragment extends BaseFragment {
                             public void onPositiveBtnListener() {
                                 MainActivity.isAnimationLoaded = false;
                                 showHideProgressView(true);
-                                CommunicationManager.getInstance().sendPostRequest(
+                             /*   CommunicationManager.getInstance().sendPostRequest(
                                         LeaveBalanceDetailFragment.this,
                                         AppRequestJSONString.getUpdatePendingStatusData("W", acceptModel.getmRequestId(), acceptModel.getmStatus(), -1),
                                         CommunicationConstant.API_GET_UPDATE_PENDING_APPROVAL_STATUS,
-                                        false);
+                                        false);*/
+                                sendWithdrawRequestData(acceptModel);
 
                             }
 
@@ -290,7 +296,7 @@ public class LeaveBalanceDetailFragment extends BaseFragment {
         }
         int reqApiId = response.getRequestData().getReqApiId();
         switch (reqApiId) {
-            case CommunicationConstant.API_GET_UPDATE_PENDING_APPROVAL_STATUS:
+          /*  case CommunicationConstant.API_GET_UPDATE_PENDING_APPROVAL_STATUS:
                 JSONObject json;
                 try {
                     json = new JSONObject(responseData);
@@ -309,13 +315,13 @@ public class LeaveBalanceDetailFragment extends BaseFragment {
                     Crashlytics.logException(e);
                     Log.e("Leave", e.getMessage(), e);
                 }
-                break;
+                break;*/
             case CommunicationConstant.API_GET_EMP_LEAVE_REQUESTS_PENDING:
 
                 try {
                     if (responseData != null) {
                         ModelManager.getInstance().setPendingLeaveModel((new JSONObject(responseData)).optJSONObject("GetEmpLeaveRequestsResult").toString());
-                        populateLeaves(rootView.findViewById(R.id.ll_pending_leave_container),true, getPendingLeave());
+                        populateLeaves(rootView.findViewById(R.id.ll_pending_leave_container), true, getPendingLeave());
                     }
                 } catch (JSONException e) {
                     Crashlytics.logException(e);
@@ -329,7 +335,7 @@ public class LeaveBalanceDetailFragment extends BaseFragment {
                     ModelManager.getInstance().setLeaveBalanceModel(getEmpLeaveBalanceResult);
                 } catch (JSONException e) {
                     Crashlytics.logException(e);
-                    Log.e("Leave",e.getMessage(),e);
+                    Log.e("Leave", e.getMessage(), e);
                 }
                 View viewById = rootView.findViewById(R.id.tv_leave_count);
                 LeaveBalanceModel leaveBalanceModel = ModelManager.getInstance().getLeaveBalanceModel();
@@ -344,7 +350,7 @@ public class LeaveBalanceDetailFragment extends BaseFragment {
                     }
                 } catch (JSONException e) {
                     Crashlytics.logException(e);
-                    Log.e("Leave",e.getMessage(),e);
+                    Log.e("Leave", e.getMessage(), e);
                 }
                 break;
 
@@ -359,7 +365,7 @@ public class LeaveBalanceDetailFragment extends BaseFragment {
                     }
                 } catch (JSONException e) {
                     Crashlytics.logException(e);
-                    Log.e("Leave",e.getMessage(),e);
+                    Log.e("Leave", e.getMessage(), e);
                 }
                 break;
 
@@ -379,14 +385,32 @@ public class LeaveBalanceDetailFragment extends BaseFragment {
                     }
                 } catch (JSONException e) {
                     Crashlytics.logException(e);
-                    Log.e("Leave",e.getMessage(),e);
+                    Log.e("Leave", e.getMessage(), e);
                 }
 
                 break;
-
+            case CommunicationConstant.API_WITHDRAW_LEAVE_REQUEST:
+                String strResponse = response.getResponseData();
+                Log.d("TAG", "Leave Withdraw Response : " + strResponse);
+                WithdrawWFHResponse withdrawWFHResponse = WithdrawWFHResponse.create(strResponse);
+                if (withdrawWFHResponse != null && withdrawWFHResponse.getWithdrawLeaveRequestResult() != null
+                        && withdrawWFHResponse.getWithdrawLeaveRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
+                    CustomDialog.alertOkWithFinishFragment(context, withdrawWFHResponse.getWithdrawLeaveRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                } else {
+                    new AlertCustomDialog(getActivity(), withdrawWFHResponse.getWithdrawLeaveRequestResult().getErrorMessage());
+                }
+                break;
             default:
                 break;
         }
         super.validateResponse(response);
+    }
+
+    private void sendWithdrawRequestData(LeaveModel item) {
+        GetWFHRequestDetail requestDetail = new GetWFHRequestDetail();
+        requestDetail.setReqID(item.getmRequestId());
+        CommunicationManager.getInstance().sendPostRequest(this,
+                AppRequestJSONString.WFHSummaryDetails(requestDetail),
+                CommunicationConstant.API_WITHDRAW_LEAVE_REQUEST, true);
     }
 }

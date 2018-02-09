@@ -42,5 +42,9 @@ public interface IAction {
 	int WORK_FROM_HOME=38;
 	int OUTDOOR_DUTY=39;
 	int TOUR=40;
+	int WORK_FROM_HOME_SUMMARY=41;
+	int OUTDOOR_DUTY_SUMMARY=42;
+	int TOUR_SUMMARY=43;
+
 
 }

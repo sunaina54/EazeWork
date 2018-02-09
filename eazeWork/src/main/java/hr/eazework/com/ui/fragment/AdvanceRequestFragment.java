@@ -578,7 +578,7 @@ public class AdvanceRequestFragment extends BaseFragment {
         if (uploadFileList != null && uploadFileList.size() > 0) {
             errorTV.setVisibility(View.GONE);
             expenseRecyclerView.setVisibility(View.VISIBLE);
-            DocumentUploadAdapter adapter = new DocumentUploadAdapter(uploadFileList,context,AppsConstant.ADD,errorTV);
+            DocumentUploadAdapter adapter = new DocumentUploadAdapter(uploadFileList,context,AppsConstant.ADD,errorTV,getActivity());
             expenseRecyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         } else {

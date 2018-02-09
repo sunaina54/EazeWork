@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import hr.eazework.com.R;
 
 public class TourSummaryFragment extends Fragment {
-
+    public static final String TAG = "TourSummaryFragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

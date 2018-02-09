@@ -36,30 +36,50 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/firstSummaryLl">
-                <include layout="@layout/summary_layout_first"></include>
+                    android:id="@+id/wfhSummaryLl"
+                    android:visibility="gone">
+                <include layout="@layout/wfh_summary_layout"></include>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/tourInitiatorDetailLl">
+                    android:visibility="gone"
+                    android:id="@+id/tourSummaryLl">
                     <include layout="@layout/tour_initiator_detail_layout"></include>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/tourFinalApproverLl"
+                    android:id="@+id/odSummaryLl"
                     android:visibility="gone">
-                    <include layout="@layout/tour_final_approver_detail"></include>
+                    <include layout="@layout/od_summary_layout"></include>
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/timeModificationSummaryLl"
+                    android:visibility="gone">
+                    <include layout="@layout/view_time_modification_summary"></include>
+                </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_13"
                     android:layout_marginRight="@dimen/margin_13">
                     <include layout="@layout/remarks_layout"></include>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_13"
+                    android:id="@+id/docLl"
+                    android:layout_marginRight="@dimen/margin_13">
+                    <include layout="@layout/upload_document_layout"></include>
                 </LinearLayout>
                 <include layout="@layout/action_button_layout" android:id="@+id/buttonLinearLayout"></include>
             </LinearLayout>

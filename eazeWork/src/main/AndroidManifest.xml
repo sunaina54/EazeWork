@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="hr.eazework.com"
     android:versionCode="23"
-    android:versionName="1.1.2">
+    android:versionName="1.1.2.3">
 
     <uses-sdk
         android:minSdkVersion="17"
@@ -80,40 +80,37 @@
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_launcher"/>
+            android:resource="@drawable/ic_launcher" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/primary_dark" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id"/>
+            android:value="@string/default_notification_channel_id" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel"
-            android:value="@string/default_notification_channel_id"/>
+            android:value="@string/default_notification_channel_id" />
 
         <activity android:name=".AddExpenseActivity" />
         <activity android:name=".ViewDocumentActivity"></activity>
-        <activity android:name=".AttendanceDetailActivity"></activity>
+        <activity android:name=".TimeModificationActivity"></activity>
+        <activity android:name=".BackdatedAttendanceActivity"></activity>
 
-
-        <service
-            android:name="hr.eazework.Notification.MyFirebaseMessagingService">
+        <service android:name="hr.eazework.Notification.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"
-                    />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name="hr.eazework.Notification.MyFirebaseInstantInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name="hr.eazework.Notification.MyFirebaseInstantInstanceIdService">
+            android:name="hr.eazework.Notification.MyJobService"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
-        <service
-            android:exported="false"
-            android:name="hr.eazework.Notification.MyJobService">
-            <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
 

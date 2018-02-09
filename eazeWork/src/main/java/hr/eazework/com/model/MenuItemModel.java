@@ -23,6 +23,9 @@ public class MenuItemModel implements Serializable {
     public static final String LEAVE_REQUEST_KEY = "M0004";
     public static final String APPROVAL_KEY = "M0005";
     public static final String ATTENDANCE_MARKING = "M0006";
+    public static final String TOUR_REQUEST = "M0007";
+    public static final String WORK_FROM_HOME = "M0008";
+    public static final String OD_REQUEST = "M0009";
     public static final String TEAM_KEY = "M0015";
     public static final String LOCATION_KEY = "M0012";
     public static final String EMPLOYEE_APPROVAL_KEY = "M0011";

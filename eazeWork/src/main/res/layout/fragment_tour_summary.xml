@@ -16,9 +16,29 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <include layout="@layout/search_layout">
+
+            <include layout="@layout/search_layout" android:visibility="gone">
             </include>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_10"
+             >
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/margin_30"
+                    style="@style/button"
+                    android:id="@+id/attendanceHistoryBTN"
+                    android:textSize="@dimen/font_12"
+                    android:background="@drawable/rounded_corner_light_blue"
+                    android:text="@string/attendance_history"
+                    android:padding="@dimen/margin_5"
+                    android:textColor="@color/white"
+                    />
+
+            </LinearLayout>
             <LinearLayout
                 android:id="@+id/errorLinearLayout"
                 style="@style/blueBorderEditText"
@@ -35,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="@string/advance_summary_error_msg"
+                    android:text="@string/leave_summary_error_msg"
                     android:textColor="@color/black"
                     android:textSize="@dimen/font_14"
                     android:visibility="visible" />

@@ -68,6 +68,41 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
                     android:padding="@dimen/margin_5"
+                    android:text="@string/status"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_14"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:text=":"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/statusTV"
+                    style="@style/textViewYellow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:gravity="left"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_14"></TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:padding="@dimen/margin_5"
                     android:text="@string/employee_name"
                     android:textColor="@color/black"
                     android:textSize="@dimen/font_14"
@@ -103,7 +138,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
                     android:padding="@dimen/margin_5"
-                    android:text="@string/employee_code"
+                    android:text="@string/submitted_by"
                     android:textColor="@color/black"
                     android:textSize="@dimen/font_14"
                     android:textStyle="bold" />
@@ -117,7 +152,7 @@
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/empCodeTV"
+                    android:id="@+id/submittedByTV"
                     style="@style/textViewYellow"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -138,7 +173,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
                     android:padding="@dimen/margin_5"
-                    android:text="@string/status"
+                    android:text="@string/pendingWith"
                     android:textColor="@color/black"
                     android:textSize="@dimen/font_14"
                     android:textStyle="bold" />
@@ -152,7 +187,7 @@
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/statusTV"
+                    android:id="@+id/pendingWithTV"
                     style="@style/textViewYellow"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -161,6 +196,111 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/font_14"></TextView>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/start_date"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_14"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:text=":"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/startDateTV"
+                    style="@style/textViewYellow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:gravity="left"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_14"></TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/end_date"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_14"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:text=":"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/endDateTV"
+                    style="@style/textViewYellow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:gravity="left"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_14"></TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:padding="@dimen/margin_5"
+                    android:text="@string/duration"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_14"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="@dimen/padding_default"
+                    android:paddingRight="@dimen/padding_default"
+                    android:text=":"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/daysTV"
+                    style="@style/textViewYellow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:gravity="left"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_14"></TextView>
+            </LinearLayout>
+
         </LinearLayout>
     </android.support.v7.widget.CardView>
 

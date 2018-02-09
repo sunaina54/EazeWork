@@ -1361,7 +1361,7 @@ if(saveExpenseRequestModel!=null) {
                 fromDateLinearLayout = (LinearLayout) v.findViewById(R.id.fromDateLinearLayout);
                 fromDateLinearLayout.setVisibility(View.GONE);
                 editButton = (Button) v.findViewById(R.id.actionBTN);
-                editButton.setVisibility(View.VISIBLE);
+                editButton.setVisibility(View.GONE);
 
                 lineDocumentLl = (LinearLayout) v.findViewById(R.id.lineDocumentLl);
                 lineDocumentLl.setVisibility(View.GONE);

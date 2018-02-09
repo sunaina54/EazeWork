@@ -89,6 +89,7 @@ import hr.eazework.com.ui.fragment.UserProfile;
 import hr.eazework.com.ui.fragment.ViewDataBase;
 import hr.eazework.com.ui.fragment.ViewPaySlipFragment;
 import hr.eazework.com.ui.fragment.WorkFromHomeRequestFragment;
+import hr.eazework.com.ui.fragment.TimeAndAttendanceSummaryFragment;
 import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.interfaces.UserActionListner;
 import hr.eazework.com.ui.util.AppsConstant;
@@ -156,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         // Get token
         String token = FirebaseInstanceId.getInstance().getToken();
         Log.d(TAG,"Token "+ token);
-
 
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
@@ -311,7 +311,13 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                     performUserAction(IAction.EXPENSE_CLAIM_SUMMARY, null, null);
                 } else if (MenuItemModel.CREATE_ADVANCE_KEY.equalsIgnoreCase(itemModel.getmObjectId())) {
                     performUserAction(IAction.ADVANCE_EXPENSE_SUMMARY, null, null);
-                }
+                }/*else if (MenuItemModel.WORK_FROM_HOME.equalsIgnoreCase(itemModel.getmObjectId())) {
+                    performUserAction(IAction.WORK_FROM_HOME_SUMMARY, null, null);
+                }else if (MenuItemModel.OD_REQUEST.equalsIgnoreCase(itemModel.getmObjectId())) {
+                    performUserAction(IAction.OUTDOOR_DUTY_SUMMARY, null, null);
+                }else if (MenuItemModel.TOUR_REQUEST.equalsIgnoreCase(itemModel.getmObjectId())) {
+                    performUserAction(IAction.TOUR_SUMMARY, null, null);
+                }*/
             }
         }
     }
@@ -497,13 +503,22 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 }
                 break;
 
-            case IAction.ATTANDANCE_HISTORY:
+           /* case IAction.ATTANDANCE_HISTORY:
                 if (isFragmentExistsInBackStack(AttendanceHistory.TAG)) {
                     if (getTopFragment() instanceof AttendanceHistory)
                         return;
                     popBackStack(AttendanceHistory.TAG, 0);
                 } else {
                     addFragment(R.id.content_frame, new AttendanceHistory(), AttendanceHistory.TAG);
+                }
+                break;*/
+            case IAction.ATTANDANCE_HISTORY:
+                if (isFragmentExistsInBackStack(TimeAndAttendanceSummaryFragment.TAG)) {
+                    if (getTopFragment() instanceof TimeAndAttendanceSummaryFragment)
+                        return;
+                    popBackStack(TimeAndAttendanceSummaryFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, new TimeAndAttendanceSummaryFragment(), TimeAndAttendanceSummaryFragment.TAG);
                 }
                 break;
 
@@ -531,6 +546,37 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                             CreateNewLeaveFragment.TAG);
                 }
                 break;
+           /* case IAction.WORK_FROM_HOME_SUMMARY:
+                if (isFragmentExistsInBackStack(TimeAndAttendanceSummaryFragment.TAG)) {
+                    if (getTopFragment() instanceof TimeAndAttendanceSummaryFragment)
+                        return;
+                    popBackStack(TimeAndAttendanceSummaryFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, new TimeAndAttendanceSummaryFragment(),
+                            TimeAndAttendanceSummaryFragment.TAG);
+                }
+                break;*/
+           /* case IAction.OUTDOOR_DUTY_SUMMARY:
+                if (isFragmentExistsInBackStack(ODSummaryFragment.TAG)) {
+                    if (getTopFragment() instanceof ODSummaryFragment)
+                        return;
+                    popBackStack(ODSummaryFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, new ODSummaryFragment(),
+                            ODSummaryFragment.TAG);
+                }
+                break;
+            case IAction.TOUR_SUMMARY:
+                if (isFragmentExistsInBackStack(TourSummaryFragment.TAG)) {
+                    if (getTopFragment() instanceof TourSummaryFragment)
+                        return;
+                    popBackStack(TourSummaryFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, new TourSummaryFragment(),
+                            TourSummaryFragment.TAG);
+                }
+                break;
+                */
 
             case IAction.EXPENSE_CLAIM_SUMMARY:
                 if (isFragmentExistsInBackStack(ExpenseClaimSummaryFragment.TAG)) {
@@ -1162,7 +1208,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         } else if (fragment instanceof ChangePasswordFragment) {
             return getString(R.string.msg_change_password);
         } else if (fragment instanceof PendingActivityFragment) {
-            return "Pending Leaves";
+            return "Pending Approvals";
         } else if (fragment instanceof PendingEmployeeApprovalFragment) {
             return "Pending Employees";
         } else if (fragment instanceof ExpenseClaimSummaryFragment) {
@@ -1173,7 +1219,9 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             return "Expense Approval";
         } else if (fragment instanceof AdvanceApprovalFragment) {
             return "Advance Approval";
-        } else {
+        } else if (fragment instanceof TimeAndAttendanceSummaryFragment) {
+            return "Time & Attendance";
+        }else {
             return "";
         }
     }

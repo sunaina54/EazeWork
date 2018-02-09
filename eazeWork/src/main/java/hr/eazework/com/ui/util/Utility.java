@@ -105,11 +105,13 @@ import hr.eazework.com.ui.adapter.DocumentUploadAdapter;
 import hr.eazework.com.ui.customview.CustomBuilder;
 import hr.eazework.com.ui.fragment.AddExpenseClaimFragment;
 import hr.eazework.com.ui.fragment.CameraActivity;
+import hr.eazework.com.ui.fragment.EditAdvanceApprovalFragment;
 import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.interfaces.UserActionListner;
 import hr.eazework.com.ui.util.custom.AlertCustomDialog;
 import hr.eazework.mframe.communication.ResponseData;
 import hr.eazework.selfcare.adapter.ChipViewRecyclerAdapter;
+import hr.eazework.selfcare.communication.CommunicationConstant;
 
 public class Utility {
     static ArrayList<Long> list = new ArrayList<>();
@@ -245,6 +247,13 @@ public class Utility {
         fragment.startActivityForResult(i, AppsConstant.REQ_CAMERA);
     }
 
+    public static void openCamera(Activity activity, int cameraMode, String purpose,String screenName) {
+        Intent i = new Intent(activity, CameraActivity.class);
+        i.putExtra("camera_key", cameraMode);
+        i.putExtra("purpose", purpose);
+        i.putExtra("screen",screenName);
+        activity.startActivityForResult(i, AppsConstant.REQ_CAMERA);
+    }
     public static String LogUserDetails() {
         EmployeeProfileModel profileModel = ModelManager.getInstance().getEmployeeProfileModel();
         LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
@@ -648,7 +657,7 @@ public class Utility {
 
     public static void showDocumentPopUp(final Context context, String screen,
                                          final SupportDocsItemModel model,
-                                         final DocumentUploadAdapter adapter, final LinearLayout errorLinearLayout){
+                                         final DocumentUploadAdapter adapter, final LinearLayout errorLinearLayout,final Activity activity){
            ArrayList<String> list = new ArrayList<>();
                     if(screen.equalsIgnoreCase(AppsConstant.ADD)) {
                         list.add("Edit");
@@ -705,12 +714,23 @@ public class Utility {
 
                                 dialog.show();
                             } else if (selectedObject.toString().equalsIgnoreCase("Delete")) {
-                                adapter.mDataset.remove(adapter.mDataset.indexOf(model));
+                                if (model.getDocID() != 0 && model.getFlag().equalsIgnoreCase(AppsConstant.OLD_FLAG)) {
+                                    model.setFlag(AppsConstant.DELETE_FLAG);
+                                    adapter.mDataset.set(adapter.mDataset.indexOf(model), model);
+                                } else if (model.getDocID() == 0 && model.getFlag().equalsIgnoreCase(AppsConstant.NEW_FLAG)) {
+                                    adapter.mDataset.remove(adapter.mDataset.indexOf(model));
+                                }
                                 adapter.notifyDataSetChanged();
                                 if (adapter.mDataset.size() == 0) {
                                     errorLinearLayout.setVisibility(View.VISIBLE);
                                 }
 
+                            }else if(selectedObject.toString().equalsIgnoreCase("Download")){
+
+                                String filePath = model.getDocPath().replace("~", "");
+                                String path = CommunicationConstant.UrlFile + filePath + "/" + model.getDocFile();
+
+                                Utility.downloadPdf(path, null, model.getDocFile(), context, activity);
                             }
                             builder.dismiss();
                         }

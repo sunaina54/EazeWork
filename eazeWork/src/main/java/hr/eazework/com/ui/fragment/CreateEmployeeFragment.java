@@ -191,6 +191,7 @@ public class CreateEmployeeFragment extends BaseFragment {
         recyclerView.setAdapter(adapter);
         requestAPI();
         ((TextView) ((MainActivity) getActivity()).findViewById(R.id.tv_header_text)).setText("Create Employee");
+        ((MainActivity) getActivity()).findViewById(R.id.ibRight).setVisibility(View.VISIBLE);
         ((MainActivity) getActivity()).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

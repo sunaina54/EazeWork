@@ -11,6 +11,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
@@ -157,7 +158,11 @@ private Context context;
      * @param messageBody FCM message body received.
      */
     private void sendNotification(RemoteMessage messageBody) {
+
         context=this;
+      /*  int color = 0xff123456;
+        int color = getResources().getColor(R.color.my_notif_color);*/
+        int color = ContextCompat.getColor(context, R.color.red);
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, (int) Math.random()*10, intent,
@@ -172,7 +177,8 @@ private Context context;
                 new NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.ic_launcher)
                         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher))
-                        .setContentTitle("FCM Message")
+                        .setContentTitle("EazeWork")
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody.getNotification().getBody()))
                         .setContentText(messageBody.getNotification().getBody())
                         .setAutoCancel(true)
                         .setSound(defaultSoundUri)
