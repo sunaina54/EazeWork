@@ -122,16 +122,6 @@
             android:visibility="visible"
             android:layout_marginBottom="@dimen/margin_20"/>
 
-        <TextView
-            android:id="@+id/tv_register"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/dont_have_account"
-            android:textColor="@color/accent"
-            android:textSize="@dimen/text_16"
-            android:visibility="visible"/>
 
         <TextView
             android:id="@+id/forgotCredentialTV"
@@ -143,6 +133,18 @@
             android:textColor="@color/accent"
             android:textSize="@dimen/text_16"
             android:visibility="visible"/>
+
+        <TextView
+            android:id="@+id/tv_register"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/dont_have_account"
+            android:textColor="@color/accent"
+            android:textSize="@dimen/text_16"
+            android:visibility="visible"/>
+
 
     </LinearLayout>
 
