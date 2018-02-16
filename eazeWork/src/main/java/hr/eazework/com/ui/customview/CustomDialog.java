@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.ContextThemeWrapper;
 import android.view.View;
@@ -169,5 +170,33 @@ public class CustomDialog extends Dialog
 				});
 		AlertDialog alert = builder.create();
 		alert.show();
+	}
+
+	public static void alertOkWithFinishActivity(final Context mContext, String msg, final Activity activity, boolean isMaterial) {
+		ContextThemeWrapper ctw = new ContextThemeWrapper(mContext,
+				isMaterial ? R.style.MyDialogTheme
+						: R.style.MyDialogThemeTransparent);
+
+		final Dialog openDialog = new Dialog(ctw);
+		openDialog.setCancelable(false);
+		openDialog.setContentView(R.layout.material_dialog_layout);
+		TextView tv_message = (TextView)openDialog.findViewById(R.id.tv_message);
+		TextView tv_title = (TextView) openDialog.findViewById(R.id.tv_title);
+		tv_title.setText("Confirmation");
+		tv_message.setText(msg);
+		TextView tv_cancel = (TextView) openDialog.findViewById(R.id.tv_cancel);
+		tv_cancel.setVisibility(View.GONE);
+		TextView tv_ok = (TextView) openDialog.findViewById(R.id.tv_ok);
+		tv_ok.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+			//	mUserActionListener.performUserAction(action, null, null);
+				Intent intent = new Intent();
+				activity.setResult(1,intent);
+				activity.finish();
+				openDialog.dismiss();
+			}
+		});
+		openDialog.show();
 	}
 }

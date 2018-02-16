@@ -15,6 +15,15 @@ public class TimeModificationItem implements Serializable {
     private String Remark;
     private String ApprovalLevel;
     private String Status;
+    private String ReqID;
+
+    public String getReqId() {
+        return ReqID;
+    }
+
+    public void setReqId(String reqId) {
+        ReqID = reqId;
+    }
 
     public String getApprovalLevel() {
         return ApprovalLevel;

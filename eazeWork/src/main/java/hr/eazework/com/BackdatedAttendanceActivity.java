@@ -40,6 +40,7 @@ import hr.eazework.com.R;
 import hr.eazework.com.TimeModificationActivity;
 import hr.eazework.com.model.AdvanceRequestResponseModel;
 import hr.eazework.com.model.AttandanceCalenderStatusItem;
+import hr.eazework.com.model.AttendanceItem;
 import hr.eazework.com.model.AttendanceRejectItem;
 import hr.eazework.com.model.AttendanceRejectRequestModel;
 import hr.eazework.com.model.AttendanceRejectResponseModel;
@@ -80,6 +81,7 @@ import static hr.eazework.com.ui.util.ImageUtil.rotateImage;
 
 public class BackdatedAttendanceActivity extends BaseActivity {
     private String screenName = "TimeModificationActivity";
+    public static int TIMEMODIFICATIONREQUESTCODE=11;
     private Context context;
     private Preferences preferences;
     private TextView empNameTV, tv_header_text, dateTV, statusTV, tv_in_day, tv_in_date, tv_in_time, tv_out_day, tv_out_date, tv_out_time, remarksET;
@@ -92,7 +94,7 @@ public class BackdatedAttendanceActivity extends BaseActivity {
     private TimePickerDialog timePickerDialog1, timePickerDialog2;
     private TimeModificationResponseModel timeModificationResponseModel;
     public static AttandanceCalenderStatusItem attandanceCalenderStatusItem;
-    public static EmployeeLeaveModel employeeLeaveModel;
+    public static AttendanceItem employeeLeaveModel;
     private RecyclerView remarksRV;
     private AttendanceReqDetail reqDetail;
     private Button rejectBTN, approvalBTN;
@@ -188,9 +190,10 @@ public class BackdatedAttendanceActivity extends BaseActivity {
             updateUI();
         }
 
-        if (employeeLeaveModel != null && employeeLeaveModel.getmReqID() != null
-                && !employeeLeaveModel.getmReqID().equalsIgnoreCase("0")) {
+        if (employeeLeaveModel != null && employeeLeaveModel.getReqID() != null
+                && !employeeLeaveModel.getReqID().equalsIgnoreCase("0")) {
             sendViewRequestSummaryData();
+            rightRL.setVisibility(View.GONE);
         }
 
         rejectBTN = (Button) findViewById(R.id.rejectBTN);
@@ -215,7 +218,8 @@ public class BackdatedAttendanceActivity extends BaseActivity {
 
     private void sendViewRequestSummaryData() {
         GetTimeModificationRequestDetail getTimeModificationRequestDetail = new GetTimeModificationRequestDetail();
-        getTimeModificationRequestDetail.setReqID(employeeLeaveModel.getmReqID());
+        getTimeModificationRequestDetail.setReqID(employeeLeaveModel.getReqID());
+        getTimeModificationRequestDetail.setAction(AppsConstant.EDIT_ACTION);
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.timeModificationSummaryDetails(getTimeModificationRequestDetail),
                 CommunicationConstant.API_GET_ATTENDANCE_DETAIL, true);
@@ -268,6 +272,7 @@ public class BackdatedAttendanceActivity extends BaseActivity {
                 timeModificationItem.setAttendID(attendId);
                 timeModificationItem.setReqTime(reqInTime);
                 timeModificationItem.setReqOutTime(reqOutTime);
+                timeModificationItem.setReqId(employeeLeaveModel.getReqID());
                 timeModificationItem.setApprovalLevel(reqDetail.getApprovalLevel());
                 timeModificationItem.setStatus(reqDetail.getStatus());
                 timeModificationItem.setRemark(remarksET.getText().toString());
@@ -292,7 +297,8 @@ public class BackdatedAttendanceActivity extends BaseActivity {
                 timeModificationResponseModel = TimeModificationResponseModel.create(responseData);
                 if (timeModificationResponseModel != null && timeModificationResponseModel.getBackDateAttendanceResult() != null
                         && timeModificationResponseModel.getBackDateAttendanceResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinish(context, timeModificationResponseModel.getBackDateAttendanceResult().getErrorMessage());
+                    CustomDialog.alertOkWithFinishActivity(context, timeModificationResponseModel.getBackDateAttendanceResult().getErrorMessage(),BackdatedAttendanceActivity.this,true);
+
                     //CustomDialog.alertOkWithFinishFragment(context, timeModificationResponseModel.getTimeModificationResult().getErrorMessage(), null, IAction.HOME_VIEW, true);
                 } else {
                     new AlertCustomDialog(context, timeModificationResponseModel.getBackDateAttendanceResult().getErrorMessage());
@@ -365,6 +371,8 @@ public class BackdatedAttendanceActivity extends BaseActivity {
             tv_out_time.setText(attandanceCalenderStatusItem.getTimeOut());
             outTime = tv_out_time.getText().toString();
         }
+        datePickerDialog1 = CalenderUtils.pickDateFromCalender(context, tv_in_date, tv_in_day, AppsConstant.DATE_FORMATE);
+        datePickerDialog2 = CalenderUtils.pickDateFromCalender(context, tv_out_date, tv_out_day, AppsConstant.DATE_FORMATE);
         dateTV.setText(attandanceCalenderStatusItem.getMarkDate());
         statusTV.setText(attandanceCalenderStatusItem.getStatusDesc());
 
@@ -373,17 +381,23 @@ public class BackdatedAttendanceActivity extends BaseActivity {
 
     private void updateUIForApproval(AttendanceReqDetail item) {
         attendId = item.getAttendID();
+        empId=item.getEmpID()+"";
+        dateTV.setText(item.getMarkDate());
+        statusTV.setText(item.getStatusDesc());
+        empNameTV.setText(item.getName());
         String[] dateTime = item.getReqTime().split(" ");
         inDate = dateTime[0];
-        inTime = dateTime[1];
+        inTime=dateTime[1]+ " " + dateTime[2];
         tv_in_date.setText(inDate);
         tv_in_time.setText(inTime);
 
         String[] outTimeDate = item.getReqOutTime().split(" ");
         outDate = outTimeDate[0];
-        outTime = outTimeDate[1];
+        outTime=outTimeDate[1]+ " " + outTimeDate[2];
         tv_out_date.setText(outDate);
         tv_out_time.setText(outTime);
+        datePickerDialog1 = CalenderUtils.pickDateFromCalender(context, tv_in_date, tv_in_day, AppsConstant.DATE_FORMATE);
+        datePickerDialog2 = CalenderUtils.pickDateFromCalender(context, tv_out_date, tv_out_day, AppsConstant.DATE_FORMATE);
 
         remarksET.setText(item.getRemark());
         setupButtons(item);

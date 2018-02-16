@@ -10,6 +10,15 @@ import java.io.Serializable;
 
 public class LeaveResponseModel implements Serializable {
     private ApproveLeaveRequestResult ApproveLeaveRequestResult;
+    private ApproveLeaveRequestResult SaveLeaveReqResult;
+
+    public hr.eazework.com.model.ApproveLeaveRequestResult getSaveLeaveReqResult() {
+        return SaveLeaveReqResult;
+    }
+
+    public void setSaveLeaveReqResult(hr.eazework.com.model.ApproveLeaveRequestResult saveLeaveReqResult) {
+        SaveLeaveReqResult = saveLeaveReqResult;
+    }
 
     public hr.eazework.com.model.ApproveLeaveRequestResult getApproveLeaveRequestResult() {
         return ApproveLeaveRequestResult;

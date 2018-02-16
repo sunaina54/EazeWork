@@ -67,6 +67,7 @@ import hr.eazework.com.model.GetWFHRequestDetail;
 import hr.eazework.com.model.LeaveDetailResponseModel;
 import hr.eazework.com.model.LeaveRejectResponseModel;
 import hr.eazework.com.model.LeaveReqDetailModel;
+import hr.eazework.com.model.LeaveReqsItem;
 import hr.eazework.com.model.LeaveRequestDetailsModel;
 import hr.eazework.com.model.LeaveRequestModel;
 import hr.eazework.com.model.LeaveResponseModel;
@@ -85,6 +86,7 @@ import hr.eazework.com.ui.customview.CustomBuilder;
 import hr.eazework.com.ui.customview.CustomDialog;
 import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.util.AppsConstant;
+import hr.eazework.com.ui.util.DateTimeUtil;
 import hr.eazework.com.ui.util.ImageUtil;
 import hr.eazework.com.ui.util.PermissionUtil;
 import hr.eazework.com.ui.util.Preferences;
@@ -112,7 +114,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
     private float availableLeaves;
     private List<String> extensionList;
     private ArrayList<String> mRhList;
-    protected String selectedRs="";
+    protected String selectedRs = "";
     private boolean isRhSelected = false;
     private boolean isSubmitClicked = true;
     private Preferences preferences;
@@ -128,7 +130,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
     private String purpose = "";
     private static int UPLOAD_DOC_REQUEST = 2;
     private String empId, reqId;
-    private Button rejectBTN, saveDraftBTN, approvalBTN;
+    private Button rejectBTN, saveDraftBTN, approvalBTN, deleteBTN, submitBTN;
     private ImageView plus_create_newIV;
     private String fromButton = "";
     private int approvalLevel, status;
@@ -138,7 +140,17 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
     private AdvanceRequestResponseModel advanceRequestResponseModel;
     private LinearLayout remarksDataLl, remarksLinearLayout;
     private boolean isDaysCount = false;
+
+    private LeaveReqsItem leaveReqsItem;
     private String defaultFromDateLabel = "From Date", defaultToDateLable = "To Date", value = "--/--/----", defaultLeaveLable = "Select Leave";
+
+    public LeaveReqsItem getLeaveReqsItem() {
+        return leaveReqsItem;
+    }
+
+    public void setLeaveReqsItem(LeaveReqsItem leaveReqsItem) {
+        this.leaveReqsItem = leaveReqsItem;
+    }
 
     public String getScreenName() {
         return screenName;
@@ -190,6 +202,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         this.startDate = null;
         this.toDate = null;
         this.leaveTypeModel = null;
+        reqId = "0";
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.ll_create_new_leave, container, false);
         context = getContext();
         preferences = new Preferences(getContext());
@@ -204,6 +217,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         remarksRV = (RecyclerView) rootView.findViewById(R.id.remarksRV);
 
         etRemark = (EditText) rootView.findViewById(R.id.et_remark);
+        // etRemark.setText("");
         daysTV = (TextView) rootView.findViewById(R.id.daysTV);
         rootView.findViewById(R.id.tv_select_leave_type).setOnClickListener(this);
         rootView.findViewById(R.id.tv_select_rest_leaves).setOnClickListener(this);
@@ -234,6 +248,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                 if (leaveTypeModel != null) {
                     if (isSubmitClicked) {
                         isSubmitClicked = false;
+                        fromButton="Submit";
                         doSubmitOperation();
                     }
                 } else {
@@ -256,6 +271,29 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                 }
             }
         });
+
+        deleteBTN = (Button) rootView.findViewById(R.id.deleteBTN);
+        deleteBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fromButton = "Delete";
+                doSubmitOperationForSaveAsDraft();
+            }
+        });
+
+        submitBTN = (Button) rootView.findViewById(R.id.submitBTN);
+
+        submitBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isSubmitClicked) {
+                    isSubmitClicked = false;
+                    fromButton="Submit";
+                    doSubmitOperation();
+                }
+            }
+        });
+
 
         rejectBTN = (Button) rootView.findViewById(R.id.rejectBTN);
         rejectBTN.setOnClickListener(new View.OnClickListener() {
@@ -340,7 +378,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         employItem.setName(loginUserModel.getUserModel().getUserName());
         employItem.setEmpCode(loginUserModel.getUserModel().getEmpCode());
 
-        saveDraftBTN.setVisibility(View.VISIBLE);
+
         if (!getScreenName().equalsIgnoreCase(AppsConstant.PENDING_APPROVAL)) {
             uploadFileList = new ArrayList<SupportDocsItemModel>();
             saveDraftBTN.setVisibility(View.VISIBLE);
@@ -348,7 +386,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
 
         setupLeave();
         updateEmploy();
-        //  etRemark.setText("");
+        //etRemark.setText("");
         sendAdvanceRequestData();
 
         return rootView;
@@ -393,14 +431,14 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
     }
 
     private void doSubmitOperationForSaveAsDraft() {
-        String leaveId="0";
-        String startDate1="",endDate1="";
+        String leaveId = "0";
+
         LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
         String empCode = String.valueOf(employItem.getEmpID());
 
         String remark = etRemark.getText().toString();
-        if(leaveTypeModel!=null && leaveTypeModel.getLeaveId()!=null) {
-            leaveId=leaveTypeModel.getLeaveId();
+        if (leaveTypeModel != null && leaveTypeModel.getLeaveId() != null) {
+            leaveId = leaveTypeModel.getLeaveId();
         }
         if (isRhSelected) {
             /*if (selectedRs == null || selectedRs.equalsIgnoreCase("")) {
@@ -426,19 +464,19 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);*/
 
 
-                    CommunicationManager.getInstance().sendPostRequest(this,
-                            AppRequestJSONString.getSaveAsDraftLeaveRequestData(
-                                    empCode,
-                                    leaveId, selectedRs,
-                                    selectedRs, "1", remark, uploadFileList, fromButton),
-                            CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
+                CommunicationManager.getInstance().sendPostRequest(this,
+                        AppRequestJSONString.getSaveAsDraftLeaveRequestData(
+                                empCode,
+                                leaveId, selectedRs,
+                                selectedRs, "1", remark, uploadFileList, fromButton, reqId),
+                        CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
 
 
             }
             return;
         }
 
-        if(leaveTypeModel!=null && leaveTypeModel.getLeaveId()!=null) {
+        if (leaveTypeModel != null && leaveTypeModel.getLeaveId() != null) {
             isCompensatory = leaveTypeModel.getLeaveId().equalsIgnoreCase("E008001000") && leaveTypeModel.getProcessStep().equalsIgnoreCase("1");
         }
         if (isCompensatory) {
@@ -455,8 +493,8 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
             showHideProgressView(true);
             setActiveInActive(false);
             if (loginUserModel != null && loginUserModel.getUserModel() != null) {
-                 startDate1 = String.format("%1$td/%1$tm/%1$tY", this.startDate);
-                 endDate1 = String.format("%1$td/%1$tm/%1$tY", toDate);
+                startDate1 = String.format("%1$td/%1$tm/%1$tY", this.startDate);
+                endDate1 = String.format("%1$td/%1$tm/%1$tY", toDate);
                 MainActivity.isAnimationLoaded = false;
                 if (uploadFileList != null && uploadFileList.size() > 0) {
                     for (int i = 0; i < uploadFileList.size(); i++) {
@@ -474,13 +512,13 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);*/
 
 
-                    CommunicationManager.getInstance().sendPostRequest(
-                            this,
-                            AppRequestJSONString.getSaveAsDraftLeaveRequestData(
-                                    empCode,
-                                    leaveId, startDate1, endDate1,
-                                    "" + getOneDayData(), remark, uploadFileList, fromButton),
-                            CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
+                CommunicationManager.getInstance().sendPostRequest(
+                        this,
+                        AppRequestJSONString.getSaveAsDraftLeaveRequestData(
+                                empCode,
+                                leaveId, startDate1, endDate1,
+                                "" + getOneDayData(), remark, uploadFileList, fromButton, reqId),
+                        CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
 
 
             }
@@ -489,8 +527,8 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
 
         showHideProgressView(true);
 
-         startDate1 = String.format("%1$td/%1$tm/%1$tY", this.startDate);
-         endDate1 = String.format("%1$td/%1$tm/%1$tY", this.toDate);
+        startDate1 = String.format("%1$td/%1$tm/%1$tY", this.startDate);
+        endDate1 = String.format("%1$td/%1$tm/%1$tY", this.toDate);
         if (getTotalDay(this.startDate, toDate) == 1) {
             setActiveInActive(false);
             if (getOneDayData() != 1) {
@@ -512,17 +550,17 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                             CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);*/
 
 
-                        CommunicationManager.getInstance().sendPostRequest(
-                                this,
-                                AppRequestJSONString.getSaveAsDraftLeaveRequestData(
-                                        empCode,
-                                        leaveId, startDate1, endDate1,
-                                        "" + getOneDayData(), remark, uploadFileList, fromButton),
-                                CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
+                    CommunicationManager.getInstance().sendPostRequest(
+                            this,
+                            AppRequestJSONString.getSaveAsDraftLeaveRequestData(
+                                    empCode,
+                                    leaveId, startDate1, endDate1,
+                                    "" + getOneDayData(), remark, uploadFileList, fromButton, reqId),
+                            CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
 
                 }
             } else {
-                if(leaveTypeModel!=null && leaveTypeModel.getLeaveId()!=null) {
+                if (leaveTypeModel != null && leaveTypeModel.getLeaveId() != null) {
                     if (loginUserModel != null && loginUserModel.getUserModel() != null) {
                         MainActivity.isAnimationLoaded = false;
                         CommunicationManager.getInstance().sendPostRequest(
@@ -533,20 +571,20 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                                         endDate1),
                                 CommunicationConstant.API_LEAVE_REQ_TOTAL_DAY,
                                 true);
-                    }else {
+                    } else {
                         MainActivity.isAnimationLoaded = false;
                         CommunicationManager.getInstance().sendPostRequest(
                                 this,
                                 AppRequestJSONString.getSaveAsDraftLeaveRequestData(
                                         empCode,
                                         leaveId, startDate1, endDate1,
-                                        "", remark, uploadFileList, fromButton),
+                                        "", remark, uploadFileList, fromButton, reqId),
                                 CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
                     }
                 }
             }
         } else {
-            if(leaveTypeModel!=null && leaveTypeModel.getLeaveId()!=null) {
+            if (leaveTypeModel != null && leaveTypeModel.getLeaveId() != null) {
                 if (loginUserModel != null && loginUserModel.getUserModel() != null) {
                     MainActivity.isAnimationLoaded = false;
                     CommunicationManager.getInstance().sendPostRequest(
@@ -557,21 +595,31 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                                     endDate1),
                             CommunicationConstant.API_LEAVE_REQ_TOTAL_DAY, true);
                 }
-            }else {
+            } else {
                 MainActivity.isAnimationLoaded = false;
                 CommunicationManager.getInstance().sendPostRequest(
                         this,
                         AppRequestJSONString.getSaveAsDraftLeaveRequestData(
                                 empCode,
                                 leaveId, startDate1, endDate1,
-                                "", remark, uploadFileList, fromButton),
+                                "", remark, uploadFileList, fromButton, reqId),
                         CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
             }
         }
 
     }
 
+
     private void doSubmitOperation() {
+        if (startDate1 != null && !startDate1.equalsIgnoreCase("")) {
+            startDate = DateTimeUtil.convertStringDateToCalendar(startDate1);
+        }
+
+        if (endDate1 != null && !endDate1.equalsIgnoreCase("")) {
+            toDate = DateTimeUtil.convertStringDateToCalendar(endDate1);
+        }
+
+
         LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
         String empCode = String.valueOf(employItem.getEmpID());
 
@@ -597,7 +645,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         AppRequestJSONString.getSaveLeaveRequestData(
                                 empCode,
                                 leaveTypeModel.getLeaveId(), selectedRs,
-                                selectedRs, "1", remark, uploadFileList),
+                                selectedRs, "1", remark, uploadFileList, reqId),
                         CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
 
            /*     if (fromButton.equalsIgnoreCase(AppsConstant.SAVE_AS_DRAFT)) {
@@ -642,7 +690,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         AppRequestJSONString.getSaveLeaveRequestData(
                                 empCode,
                                 leaveTypeModel.getLeaveId(), startDate, endDate,
-                                "" + getOneDayData(), remark, uploadFileList),
+                                "" + getOneDayData(), remark, uploadFileList, reqId),
                         CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
              /*   if (fromButton.equalsIgnoreCase(AppsConstant.SAVE_AS_DRAFT)) {
                     CommunicationManager.getInstance().sendPostRequest(
@@ -693,7 +741,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                             AppRequestJSONString.getSaveLeaveRequestData(
                                     empCode,
                                     leaveTypeModel.getLeaveId(), startDate, endDate,
-                                    "" + getOneDayData(), remark, uploadFileList),
+                                    "" + getOneDayData(), remark, uploadFileList, reqId),
                             CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
 /*
                     if (fromButton.equalsIgnoreCase(AppsConstant.SAVE_AS_DRAFT)) {
@@ -937,7 +985,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         } catch (Exception e) {
             e.printStackTrace();
         }
-        showLog(CreateNewLeaveFragment.class, "Days Total " + (Date2.getTime() - Date1.getTime()) / (24 * 60 * 60 * 1000) + 1);
+        //  showLog(CreateNewLeaveFragment.class, "Days Total " + (Date2.getTime() - Date1.getTime()) / (24 * 60 * 60 * 1000) + 1);
         return (Date2.getTime() - Date1.getTime()) / (24 * 60 * 60 * 1000) + 1;
 
     }
@@ -981,7 +1029,23 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                     break;
                 case CommunicationConstant.API_SAVE_LEAVE_REQUEST:
                     setActiveInActive(true);
-                    try {
+                    String leaveResp1 = response.getResponseData();
+                    Log.d("TAG", "Leave Response : " + leaveResp1);
+
+                    LeaveResponseModel leaveResult = LeaveResponseModel.create(leaveResp1);
+                    if (leaveResult != null && leaveResult.getSaveLeaveReqResult() != null
+                            && leaveResult.getSaveLeaveReqResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
+                        isSubmitClicked = true;
+                        etRemark.setText("");
+                        CustomDialog.alertOkWithFinishFragment(context, leaveResult.getSaveLeaveReqResult().getErrorMessage(),
+                                mUserActionListener, IAction.HOME_VIEW, true);
+                    } else {
+                        isSubmitClicked = true;
+                        new AlertCustomDialog(getActivity(), leaveResult.getSaveLeaveReqResult().getErrorMessage());
+
+                    }
+                    break;
+                   /* try {
                         JSONObject object = new JSONObject(response.getResponseData());
                         jsonObject = object.optJSONObject("SaveLeaveReqResult");
                         if (jsonObject.optInt("ErrorCode", -1) != 0) {
@@ -991,17 +1055,19 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
 
                         } else {
 
-                            Utility.displayMessage(getContext(), "Leave submitted");
+                           // Utility.displayMessage(getContext(), "Leave submitted");
+                            Utility.displayMessage(getContext(), jsonObject.optString("ErrorMessage", ""));
+
                             isSubmitClicked = true;
                             etRemark.setText("");
                             MenuItemModel itemModel = ModelManager.getInstance().getMenuItemModel();
                             if (itemModel != null) {
                                 MenuItemModel model = itemModel.getItemModel(MenuItemModel.LEAVE_KEY);
-                                if (model != null && model.isAccess()) {
+                              *//*  if (model != null && model.isAccess()) {
                                     mUserActionListener.performUserAction(IAction.LEAVE_BALANCE_DETAIL, null, null);
-                                } else {
-                                    mUserActionListener.performUserAction(IAction.HOME_VIEW, null, null);
-                                }
+                                } else {*//*
+                                mUserActionListener.performUserAction(IAction.HOME_VIEW, null, null);
+                                // }
                             }
 
 
@@ -1009,8 +1075,8 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                     } catch (JSONException e) {
                         Log.e(TAG, e.getMessage(), e);
                         Crashlytics.logException(e);
-                    }
-                    break;
+                    }*/
+
                 case CommunicationConstant.API_LEAVE_REQ_TOTAL_DAY:
                     try {
                         String empCode = String.valueOf(employItem.getEmpID());
@@ -1037,13 +1103,26 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                                 uploadFileList.set(i, model);
                             }
                         }
-                        CommunicationManager.getInstance().sendPostRequest(this,
-                                AppRequestJSONString.getSaveLeaveRequestData(
-                                        empCode,
-                                        leaveId, fromDateFormatted, toDateFormatted, "" + d,
-                                        remark, uploadFileList),
-                                CommunicationConstant.API_SAVE_LEAVE_REQUEST,
-                                true);
+                        if (fromButton.equalsIgnoreCase("Submit")) {
+                            CommunicationManager.getInstance().sendPostRequest(this,
+                                    AppRequestJSONString.getSaveLeaveRequestData(
+                                            empCode,
+                                            leaveId, fromDateFormatted, toDateFormatted, "" + d,
+                                            remark, uploadFileList, reqId),
+                                    CommunicationConstant.API_SAVE_LEAVE_REQUEST,
+                                    true);
+                        }
+
+                        if (fromButton.equalsIgnoreCase(AppsConstant.SAVE_AS_DRAFT)) {
+
+                            CommunicationManager.getInstance().sendPostRequest(
+                                    this,
+                                    AppRequestJSONString.getSaveAsDraftLeaveRequestData(
+                                            empCode,
+                                            leaveId, startDate1, endDate1,
+                                            "", remark, uploadFileList, fromButton, reqId),
+                                    CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
+                        }
                     } catch (JSONException e) {
                         Log.e(TAG, e.getMessage(), e);
                         Crashlytics.logException(e);
@@ -1069,6 +1148,12 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                                 sendViewLeaveRequestSummaryData();
                                 disabledFieldDataForView();
                             }
+                        }
+
+                        if (leaveReqsItem != null && leaveReqsItem.getReqID() != null && !leaveReqsItem.getReqID().equalsIgnoreCase("0")) {
+                            reqId = leaveReqsItem.getReqID();
+                            remarksDataLl.setVisibility(View.VISIBLE);
+                            sendViewLeaveRequestSummaryData();
                         }
 
                         if (!getScreenName().equalsIgnoreCase(AppsConstant.PENDING_APPROVAL)) {
@@ -1218,6 +1303,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                 break;
             case R.id.searchLayout:
                 Intent theIntent = new Intent(getActivity(), SearchOnbehalfActivity.class);
+                theIntent.putExtra("SearchType",LEAVE_EMP);
                 startActivityForResult(theIntent, LEAVE_EMP);
 
                 break;
@@ -1243,7 +1329,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                                 this,
                                 AppRequestJSONString.getSaveLeaveRequestData(empCode,
                                         leaveTypeModel.getLeaveId(), selectedRs,
-                                        selectedRs, "1", remark, uploadFileList),
+                                        selectedRs, "1", remark, uploadFileList, reqId),
                                 CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
                     }
                     return;
@@ -1280,7 +1366,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                                     AppRequestJSONString.getSaveLeaveRequestData(
                                             empCode, leaveTypeModel
                                                     .getLeaveId(), startDate, endDate,
-                                            "" + getOneDayData(), remark, uploadFileList),
+                                            "" + getOneDayData(), remark, uploadFileList, reqId),
                                     CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
                         }
                     } else {
@@ -1827,7 +1913,8 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
 
     private void sendViewLeaveRequestSummaryData() {
         GetWFHRequestDetail requestDetail = new GetWFHRequestDetail();
-        requestDetail.setReqID(employeeLeaveModel.getmReqID());
+        requestDetail.setReqID(reqId);
+        requestDetail.setAction(AppsConstant.EDIT_ACTION);
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.WFHSummaryDetails(requestDetail),
                 CommunicationConstant.API_GET_LEAVE_REQUEST_DETAIL, true);
@@ -1925,7 +2012,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
     private void setupButtons(LeaveRequestDetailsModel item) {
         if (item.getButtons() != null) {
             for (String button : item.getButtons()) {
-                if (button.equalsIgnoreCase(AppsConstant.SAVE_DRAFT)) {
+                if (button.equalsIgnoreCase(AppsConstant.DRAFT)) {
                     saveDraftBTN.setVisibility(View.VISIBLE);
                 }
                 if (button.equalsIgnoreCase(AppsConstant.REJECT)) {
@@ -1933,6 +2020,12 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                 }
                 if (button.equalsIgnoreCase(AppsConstant.APPROVE)) {
                     approvalBTN.setVisibility(View.VISIBLE);
+                }
+                if (button.equalsIgnoreCase(AppsConstant.DELETE)) {
+                    deleteBTN.setVisibility(View.VISIBLE);
+                }
+                if (button.equalsIgnoreCase(AppsConstant.SUBMIT)) {
+                    submitBTN.setVisibility(View.VISIBLE);
                 }
             }
         }

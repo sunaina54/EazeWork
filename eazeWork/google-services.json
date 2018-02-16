@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "817486061829-85v6633fq1oinmatb5gs389fj1otjbj5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hr.eazework.com",
+            "certificate_hash": "e9f1e4e1b40caccd3703e6e4818098db1d602df0"
+          }
+        },
+        {
           "client_id": "817486061829-qklfiq3e3594h1tucf3nloj19br9h5hp.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "817486061829-qklfiq3e3594h1tucf3nloj19br9h5hp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

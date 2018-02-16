@@ -537,7 +537,7 @@ public class AppRequestJSONString {
         loginData.setSessionID(SharedPreference.getSessionId());
         item.setLoginData(loginData);
         String request=item.serialize();
-        Log.d("TAG","Time Modifiaction Request : "+request);
+        Log.d("TAG","Time Modification Request : "+request);
         return request;
     }
 
@@ -866,6 +866,22 @@ public class AppRequestJSONString {
         return jsonObject.toString();
     }
 
+    public static String getEmpLeaveRequestsData(String dateFrom, String dateTo, String flag) {
+        JSONObject jsonObject = new JSONObject();
+        JSONObject subJson = new JSONObject();
+        try {
+            subJson.put("DeviceID", MyApplication.getDeviceId());
+            subJson.put("SessionID", SharedPreference.getSessionId());
+            jsonObject.put("loginData", subJson);
+            jsonObject.put("dateFrom", dateTo);
+            jsonObject.put("dateTo", dateFrom);
+            jsonObject.put("flag", flag);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
+    }
+
     public static String getEmpLeaveRequestsData(String dateFrom, String dateTo, boolean isPendingOrApprooved, boolean isConsumed) {
         JSONObject jsonObject = new JSONObject();
         JSONObject subJson = new JSONObject();
@@ -882,7 +898,7 @@ public class AppRequestJSONString {
         return jsonObject.toString();
     }
 
-    public static String getSaveLeaveRequestData(String empId, String leaveId, String startDate, String endDate, String totalDays, String remark,ArrayList<SupportDocsItemModel> attachments) {
+    public static String getSaveLeaveRequestData(String empId, String leaveId, String startDate, String endDate, String totalDays, String remark,ArrayList<SupportDocsItemModel> attachments,String reqId) {
         LeaveRequestModel leaveRequestModel=new LeaveRequestModel();
         AdvanceLoginDataRequestModel loginData=new AdvanceLoginDataRequestModel();
         loginData.setSessionID(SharedPreference.getSessionId());
@@ -894,6 +910,7 @@ public class AppRequestJSONString {
         item.setLeaveID(leaveId);
         item.setEndDate(endDate);
         item.setStartDate(startDate);
+        item.setReqID(reqId);
         item.setAttachments(attachments);
         leaveRequestModel.setLeaveReqDetail(item);
         leaveRequestModel.setLoginData(loginData);
@@ -932,7 +949,7 @@ public class AppRequestJSONString {
 
     }*/
 
-    public static String getSaveAsDraftLeaveRequestData(String empId, String leaveId, String startDate, String endDate, String totalDays, String remark,ArrayList<SupportDocsItemModel> attachments,String button) {
+    public static String getSaveAsDraftLeaveRequestData(String empId, String leaveId, String startDate, String endDate, String totalDays, String remark,ArrayList<SupportDocsItemModel> attachments,String button, String reqId) {
         LeaveRequestModel leaveRequestModel=new LeaveRequestModel();
         AdvanceLoginDataRequestModel loginData=new AdvanceLoginDataRequestModel();
         loginData.setSessionID(SharedPreference.getSessionId());
@@ -940,6 +957,7 @@ public class AppRequestJSONString {
         LeaveReqDetailModel item=new LeaveReqDetailModel();
         item.setForEmpID(empId);
         item.setRemarks(remark);
+        item.setReqID(reqId);
         item.setTotalDays(totalDays);
         item.setLeaveID(leaveId);
         item.setEndDate(endDate);
@@ -948,7 +966,6 @@ public class AppRequestJSONString {
         item.setButton(button);
         leaveRequestModel.setLeaveReqDetail(item);
         leaveRequestModel.setLoginData(loginData);
-
         String request=leaveRequestModel.serialize();
         Log.d("TAG","Leave Request: "+request);
         return request;

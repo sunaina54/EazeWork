@@ -12,6 +12,24 @@ public class EmployResponse implements Serializable {
 
     private GetLeaveEmpListResult GetLeaveEmpListResult;
     private GetWFHEmpListResult GetWFHEmpListResult;
+    private GetWFHEmpListResult GetODEmpListResult;
+    private GetWFHEmpListResult GetTourEmpListResult;
+
+    public hr.eazework.com.model.GetWFHEmpListResult getGetODEmpListResult() {
+        return GetODEmpListResult;
+    }
+
+    public void setGetODEmpListResult(hr.eazework.com.model.GetWFHEmpListResult getODEmpListResult) {
+        GetODEmpListResult = getODEmpListResult;
+    }
+
+    public hr.eazework.com.model.GetWFHEmpListResult getGetTourEmpListResult() {
+        return GetTourEmpListResult;
+    }
+
+    public void setGetTourEmpListResult(hr.eazework.com.model.GetWFHEmpListResult getTourEmpListResult) {
+        GetTourEmpListResult = getTourEmpListResult;
+    }
 
     public hr.eazework.com.model.GetWFHEmpListResult getGetWFHEmpListResult() {
         return GetWFHEmpListResult;

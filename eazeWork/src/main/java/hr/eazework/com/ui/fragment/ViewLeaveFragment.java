@@ -17,13 +17,17 @@ import java.util.ArrayList;
 
 import hr.eazework.com.MainActivity;
 import hr.eazework.com.R;
+import hr.eazework.com.model.EmployeeLeaveModel;
 import hr.eazework.com.model.GetEmpWFHResponseItem;
 import hr.eazework.com.model.GetWFHRequestDetail;
+import hr.eazework.com.model.LeaveDetailResponseModel;
+import hr.eazework.com.model.LeaveModel;
+import hr.eazework.com.model.LeaveReqsItem;
+import hr.eazework.com.model.LeaveRequestDetailsModel;
 import hr.eazework.com.model.MenuItemModel;
 import hr.eazework.com.model.ModelManager;
 import hr.eazework.com.model.RemarkListItem;
 import hr.eazework.com.model.SupportDocsItemModel;
-import hr.eazework.com.model.TourSummaryRequestDetail;
 import hr.eazework.com.model.WFHRequestDetailItem;
 import hr.eazework.com.model.WFHSummaryResponse;
 import hr.eazework.com.model.WithdrawWFHResponse;
@@ -41,35 +45,38 @@ import hr.eazework.selfcare.communication.CommunicationConstant;
 import hr.eazework.selfcare.communication.CommunicationManager;
 
 /**
- * Created by Dell3 on 11-12-2017.
+ * Created by Dell3 on 12-02-2018.
  */
 
-public class ViewWFHSummaryFragment extends BaseFragment {
+public class ViewLeaveFragment extends BaseFragment {
+
     private Context context;
     public static final String TAG = "ViewWFHSummaryFragment";
     private String screenName = "ViewWFHSummaryFragment";
     private Preferences preferences;
-    private TextView requestIdTV,empNameTV,statusTV,startDateTV,endDateTV,daysTV;
-    private TextView submittedByTV,pendingWithTV;
-    private LinearLayout remarksLinearLayout,wfhSummaryLl,tourSummaryLl,odSummaryLl,docLl;
+    private TextView requestIdTV, empNameTV, statusTV, startDateTV, endDateTV, daysTV;
+    private TextView submittedByTV, pendingWithTV;
+    private LinearLayout remarksLinearLayout, wfhSummaryLl, tourSummaryLl, odSummaryLl, docLl;
     private RecyclerView remarksRV;
     private Button withdrawBTN;
     private LinearLayout errorLinearLayout;
     private DocumentUploadAdapter documentViewAdapter;
     private RecyclerView documentRV;
     private ImageView plus_create_newIV;
-
-    private GetEmpWFHResponseItem getEmpWFHResponseItem;
-
-    public GetEmpWFHResponseItem getGetEmpWFHResponseItem() {
-        return getEmpWFHResponseItem;
-    }
-
-    public void setGetEmpWFHResponseItem(GetEmpWFHResponseItem getEmpWFHResponseItem) {
-        this.getEmpWFHResponseItem = getEmpWFHResponseItem;
-    }
+    private EmployeeLeaveModel employeeLeaveModel;
+    private LeaveReqsItem leaveReqsItem;
+    private LeaveRequestDetailsModel leaveRequestDetailsModel;
 
     private GetWFHRequestDetail requestDetail;
+
+    public LeaveReqsItem getLeaveReqsItem() {
+        return leaveReqsItem;
+    }
+
+    public void setLeaveReqsItem(LeaveReqsItem leaveReqsItem) {
+        this.leaveReqsItem = leaveReqsItem;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,7 +87,7 @@ public class ViewWFHSummaryFragment extends BaseFragment {
         return rootView;
     }
 
-    private void setupScreen(){
+    private void setupScreen() {
         context = getActivity();
         preferences = new Preferences(getContext());
         int textColor = Utility.getTextColorCode(preferences);
@@ -105,30 +112,30 @@ public class ViewWFHSummaryFragment extends BaseFragment {
         errorLinearLayout = (LinearLayout) rootView.findViewById(R.id.errorDocTV);
         errorLinearLayout.setVisibility(View.VISIBLE);
 
-        docLl= (LinearLayout) rootView.findViewById(R.id.docLl);
-        plus_create_newIV= (ImageView) rootView.findViewById(R.id.plus_create_newIV);
+        docLl = (LinearLayout) rootView.findViewById(R.id.docLl);
+        plus_create_newIV = (ImageView) rootView.findViewById(R.id.plus_create_newIV);
         plus_create_newIV.setVisibility(View.GONE);
-        wfhSummaryLl= (LinearLayout) rootView.findViewById(R.id.wfhSummaryLl);
+        wfhSummaryLl = (LinearLayout) rootView.findViewById(R.id.wfhSummaryLl);
         wfhSummaryLl.setVisibility(View.VISIBLE);
-        tourSummaryLl= (LinearLayout) rootView.findViewById(R.id.tourSummaryLl);
+        tourSummaryLl = (LinearLayout) rootView.findViewById(R.id.tourSummaryLl);
         tourSummaryLl.setVisibility(View.GONE);
-        odSummaryLl= (LinearLayout) rootView.findViewById(R.id.odSummaryLl);
+        odSummaryLl = (LinearLayout) rootView.findViewById(R.id.odSummaryLl);
         odSummaryLl.setVisibility(View.GONE);
 
-        remarksLinearLayout= (LinearLayout) rootView.findViewById(R.id.remarksLinearLayout);
-        remarksRV= (RecyclerView) rootView.findViewById(R.id.remarksRV);
+        remarksLinearLayout = (LinearLayout) rootView.findViewById(R.id.remarksLinearLayout);
+        remarksRV = (RecyclerView) rootView.findViewById(R.id.remarksRV);
 
         //First
-        requestIdTV= (TextView) rootView.findViewById(R.id.requestIdTV);
-        empNameTV= (TextView) rootView.findViewById(R.id.empNameTV);
-        statusTV= (TextView) rootView.findViewById(R.id.statusTV);
-        submittedByTV= (TextView) rootView.findViewById(R.id.submittedByTV);
-        pendingWithTV= (TextView) rootView.findViewById(R.id.pendingWithTV);
-        startDateTV= (TextView) rootView.findViewById(R.id.startDateTV);
-        endDateTV= (TextView) rootView.findViewById(R.id.endDateTV);
-        daysTV= (TextView) rootView.findViewById(R.id.daysTV);
+        requestIdTV = (TextView) rootView.findViewById(R.id.requestIdTV);
+        empNameTV = (TextView) rootView.findViewById(R.id.empNameTV);
+        statusTV = (TextView) rootView.findViewById(R.id.statusTV);
+        submittedByTV = (TextView) rootView.findViewById(R.id.submittedByTV);
+        pendingWithTV = (TextView) rootView.findViewById(R.id.pendingWithTV);
+        startDateTV = (TextView) rootView.findViewById(R.id.startDateTV);
+        endDateTV = (TextView) rootView.findViewById(R.id.endDateTV);
+        daysTV = (TextView) rootView.findViewById(R.id.daysTV);
 
-        withdrawBTN= (Button) rootView.findViewById(R.id.withdrawBTN);
+        withdrawBTN = (Button) rootView.findViewById(R.id.withdrawBTN);
         withdrawBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,54 +143,57 @@ public class ViewWFHSummaryFragment extends BaseFragment {
             }
         });
 
-        sendViewRequestSummaryData();
-
+        if (leaveReqsItem != null && leaveReqsItem.getReqID() != null) {
+            sendViewLeaveRequestSummaryData(leaveReqsItem);
+        }
 
 
     }
 
-    private void sendViewRequestSummaryData() {
+    private void sendViewLeaveRequestSummaryData(LeaveReqsItem item) {
         requestDetail = new GetWFHRequestDetail();
-        requestDetail.setReqID(getEmpWFHResponseItem.getReqID());
+        requestDetail.setReqID(item.getReqID());
         requestDetail.setAction(AppsConstant.VIEW_ACTION);
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.WFHSummaryDetails(requestDetail),
-                CommunicationConstant.API_GET_WFH_REQUEST_DETAIL, true);
+                CommunicationConstant.API_GET_LEAVE_REQUEST_DETAIL, true);
     }
 
+
     private void sendWithdrawRequestData() {
-        requestDetail = new GetWFHRequestDetail();
-        requestDetail.setReqID(getEmpWFHResponseItem.getReqID());
+        GetWFHRequestDetail requestDetail = new GetWFHRequestDetail();
+        requestDetail.setReqID(String.valueOf(leaveRequestDetailsModel.getReqID()));
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.WFHSummaryDetails(requestDetail),
-                CommunicationConstant.API_WITHDRAW_WFH_REQUEST, true);
+                CommunicationConstant.API_WITHDRAW_LEAVE_REQUEST, true);
     }
 
     @Override
     public void validateResponse(ResponseData response) {
         switch (response.getRequestData().getReqApiId()) {
-            case CommunicationConstant.API_GET_WFH_REQUEST_DETAIL:
-                String str = response.getResponseData();
-                Log.d("TAG", "WFH Response : " + str);
-                WFHSummaryResponse wfhSummaryResponse = WFHSummaryResponse.create(str);
-                if (wfhSummaryResponse != null && wfhSummaryResponse.getGetWFHRequestDetailResult() != null
-                        && wfhSummaryResponse.getGetWFHRequestDetailResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)
-                        && wfhSummaryResponse.getGetWFHRequestDetailResult().getWFHRequestDetail()!=null) {
-                    updateUI(wfhSummaryResponse.getGetWFHRequestDetailResult().getWFHRequestDetail());
-                    refreshRemarksList(wfhSummaryResponse.getGetWFHRequestDetailResult().getWFHRequestDetail().getRemarkList());
-                    refreshDocumentList(wfhSummaryResponse.getGetWFHRequestDetailResult().getWFHRequestDetail().getAttachments());
+            case CommunicationConstant.API_GET_LEAVE_REQUEST_DETAIL:
+                String leaveResp = response.getResponseData();
+                Log.d("TAG", "WFH Response : " + leaveResp);
+                LeaveDetailResponseModel leaveDetailResponseModel = LeaveDetailResponseModel.create(leaveResp);
+                if (leaveDetailResponseModel != null && leaveDetailResponseModel.getGetLeaveRequestDetailsResult() != null
+                        && leaveDetailResponseModel.getGetLeaveRequestDetailsResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)
+                        && leaveDetailResponseModel.getGetLeaveRequestDetailsResult().getLeaveRequestDetails() != null) {
+                    leaveRequestDetailsModel = leaveDetailResponseModel.getGetLeaveRequestDetailsResult().getLeaveRequestDetails();
+                    updateUI(leaveRequestDetailsModel);
+                    refreshRemarksList(leaveRequestDetailsModel.getRemarkList());
+                    refreshDocumentList(leaveRequestDetailsModel.getAttachments());
                 }
 
                 break;
-            case CommunicationConstant.API_WITHDRAW_WFH_REQUEST:
+            case CommunicationConstant.API_WITHDRAW_LEAVE_REQUEST:
                 String strResponse = response.getResponseData();
-                Log.d("TAG", "WFH Response : " + strResponse);
+                Log.d("TAG", "Leave Withdraw Response : " + strResponse);
                 WithdrawWFHResponse withdrawWFHResponse = WithdrawWFHResponse.create(strResponse);
-                if (withdrawWFHResponse != null && withdrawWFHResponse.getWithdrawWFHRequestResult() != null
-                        && withdrawWFHResponse.getWithdrawWFHRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, withdrawWFHResponse.getWithdrawWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
-                }else {
-                    new AlertCustomDialog(getActivity(), withdrawWFHResponse.getWithdrawWFHRequestResult().getErrorMessage());
+                if (withdrawWFHResponse != null && withdrawWFHResponse.getWithdrawLeaveRequestResult() != null
+                        && withdrawWFHResponse.getWithdrawLeaveRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
+                    CustomDialog.alertOkWithFinishFragment(context, withdrawWFHResponse.getWithdrawLeaveRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                } else {
+                    new AlertCustomDialog(getActivity(), withdrawWFHResponse.getWithdrawLeaveRequestResult().getErrorMessage());
                 }
                 break;
             default:
@@ -192,7 +202,7 @@ public class ViewWFHSummaryFragment extends BaseFragment {
         super.validateResponse(response);
     }
 
-    private void updateUI(WFHRequestDetailItem item){
+    private void updateUI(LeaveRequestDetailsModel item) {
         submittedByTV.setText(item.getSubmittedBy());
         pendingWithTV.setText(item.getPendWithName());
         requestIdTV.setText(item.getReqCode());
@@ -209,7 +219,7 @@ public class ViewWFHSummaryFragment extends BaseFragment {
             remarksLinearLayout.setVisibility(View.GONE);
             remarksRV.setLayoutManager(new LinearLayoutManager(getActivity()));
             remarksRV.setVisibility(View.VISIBLE);
-            RemarksAdapter adapter = new RemarksAdapter(remarksItems,context,screenName,remarksLinearLayout);
+            RemarksAdapter adapter = new RemarksAdapter(remarksItems, context, screenName, remarksLinearLayout);
             remarksRV.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         } else {
@@ -223,7 +233,7 @@ public class ViewWFHSummaryFragment extends BaseFragment {
             errorLinearLayout.setVisibility(View.GONE);
             documentRV.setLayoutManager(new LinearLayoutManager(getActivity()));
             documentRV.setVisibility(View.VISIBLE);
-            documentViewAdapter = new DocumentUploadAdapter(docListModels,context,AppsConstant.VIEW,errorLinearLayout,getActivity());
+            documentViewAdapter = new DocumentUploadAdapter(docListModels, context, AppsConstant.VIEW, errorLinearLayout, getActivity());
             documentRV.setAdapter(documentViewAdapter);
             documentViewAdapter.notifyDataSetChanged();
         } else {
@@ -232,10 +242,10 @@ public class ViewWFHSummaryFragment extends BaseFragment {
         }
     }
 
-    private void setupButtons(WFHRequestDetailItem item){
-        if(item.getButtons()!=null){
-            for(String button : item.getButtons() ){
-                if(button.equalsIgnoreCase(AppsConstant.WITHDRAW)){
+    private void setupButtons(LeaveRequestDetailsModel item) {
+        if (item.getButtons() != null) {
+            for (String button : item.getButtons()) {
+                if (button.equalsIgnoreCase(AppsConstant.WITHDRAW)) {
                     withdrawBTN.setVisibility(View.VISIBLE);
                 }
             }

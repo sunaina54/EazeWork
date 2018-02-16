@@ -1225,6 +1225,8 @@ public class AddExpenseFragment extends MyBaseFragment {
                         tv_from_date_top.setText("From Date");
                         tv_from_date.setText(lineItemList.getDateFrom());
                         tv_to_date.setText(lineItemList.getDateTo());
+                        datePickerDialog1 = CalenderUtils.pickDateFromCalender(context, tv_to_date, tv_to_day, AppsConstant.DATE_FORMATE);
+                        datePickerDialog2 = CalenderUtils.pickDateFromCalender(context, tv_from_date, tv_from_day, AppsConstant.DATE_FORMATE);
 
                     } else {
                         todateLinearLayout.setVisibility(View.GONE);
@@ -1232,6 +1234,7 @@ public class AddExpenseFragment extends MyBaseFragment {
                         tv_from_date_top.setText("Claim Date");
                         tv_from_day.setText("Claim Date");
                         tv_from_date.setText(lineItemList.getDateFrom());
+                        datePickerDialog2 = CalenderUtils.pickDateFromCalender(context, tv_from_date, tv_from_day, AppsConstant.DATE_FORMATE);
                     }
                 } else {
                     if (category == 1) {
@@ -1242,6 +1245,8 @@ public class AddExpenseFragment extends MyBaseFragment {
                         String[] dateTo = lineItemList.getDateTo().split(" ");
                         tv_from_date.setText(dateFrom[0]);
                         tv_to_date.setText(dateTo[0]);
+                        datePickerDialog1 = CalenderUtils.pickDateFromCalender(context, tv_to_date, tv_to_day, AppsConstant.DATE_FORMATE);
+                        datePickerDialog2 = CalenderUtils.pickDateFromCalender(context, tv_from_date, tv_from_day, AppsConstant.DATE_FORMATE);
 
                     } else {
                         todateLinearLayout.setVisibility(View.GONE);
@@ -1250,6 +1255,8 @@ public class AddExpenseFragment extends MyBaseFragment {
                         tv_from_day.setText("Claim Date");
                         String[] dateTo = lineItemList.getDateFrom().split(" ");
                         tv_from_date.setText(dateTo[0]);
+                        datePickerDialog2 = CalenderUtils.pickDateFromCalender(context, tv_from_date, tv_from_day, AppsConstant.DATE_FORMATE);
+
                     }
                 }
 

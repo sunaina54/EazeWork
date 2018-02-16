@@ -165,19 +165,21 @@
                         android:layout_weight="0.7"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
+                <Button
+                    android:layout_marginRight="@dimen/margin_5"
+                    style="@style/button"
+                    android:layout_gravity="right"
+                    android:layout_alignParentBottom="true"
+                    android:textSize="@dimen/font_12"
+                    android:layout_alignParentRight="true"
+                    android:id="@+id/viewBTN"
+                    android:background="@drawable/rounded_corner_light_blue"
+                    android:textColor="@color/white"
+                    android:text="@string/viewBTN"
+                    android:layout_width="@dimen/margin_70"
+                    android:layout_height="@dimen/margin_30" />
             </LinearLayout>
-            <Button
-                android:layout_marginRight="@dimen/margin_5"
-                style="@style/button"
-                android:layout_alignParentBottom="true"
-                android:textSize="@dimen/font_12"
-                android:layout_alignParentRight="true"
-                android:id="@+id/viewBTN"
-                android:background="@drawable/rounded_corner_light_blue"
-                android:textColor="@color/white"
-                android:text="@string/viewBTN"
-                android:layout_width="@dimen/margin_70"
-                android:layout_height="@dimen/margin_30" />
+
 
         </RelativeLayout>
     </android.support.v7.widget.CardView>

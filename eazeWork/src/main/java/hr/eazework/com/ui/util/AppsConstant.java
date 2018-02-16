@@ -17,8 +17,10 @@ public class AppsConstant {
     public static String RESUBMIT="Resubmit",RETURN="Return",
             DELETE="Delete",SAVE_DRAFT="Save",SUBMIT="Submit",
             APPROVE="Approve",REJECT="Reject",WITHDRAW="Withdraw",DRAFT="Draft",PRESENT="Present",ABSENT="Absent",LEAVE_EDIT="3",
-            LEAVE_WITHDRAWAL="5",TOUR_EDIT="11",TOUR_WITHDRAWAL="12",OD_EDIT="32",OD_WITHDRAWAL="33",WFH_EDIT="13",WFH_WITHDRAWAL="14";
+            LEAVE_WITHDRAWAL="5",TOUR_EDIT="11",TOUR_WITHDRAWAL="12",VIEW_ACTION="V",EDIT_ACTION="E"
+            ,OD_EDIT="32",OD_WITHDRAWAL="33",WFH_EDIT="13",WFH_WITHDRAWAL="14";
     public  static  final String SUCCESS="0";
+
     public static final int ADD_EXPENSE_CLAIM_FRAGMENT =1;
     public static final int VIEW_EDIT_EXPENSE_CLAIM_FRAGMENT =2;
     public static final int APPROVE_EDIT_EXPENSE_CLAIM_FRAGMENT =3;

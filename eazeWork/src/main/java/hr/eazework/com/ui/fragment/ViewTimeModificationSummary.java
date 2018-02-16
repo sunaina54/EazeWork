@@ -33,6 +33,7 @@ import hr.eazework.com.ui.adapter.RemarksAdapter;
 import hr.eazework.com.ui.customview.CustomDialog;
 import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.util.AppsConstant;
+import hr.eazework.com.ui.util.DateTimeUtil;
 import hr.eazework.com.ui.util.Preferences;
 import hr.eazework.com.ui.util.Utility;
 import hr.eazework.com.ui.util.custom.AlertCustomDialog;
@@ -167,8 +168,8 @@ public class ViewTimeModificationSummary extends BaseFragment {
             empNameTV.setText(item.getName());
             statusTV.setText(item.getStatusDesc());
             dateTV.setText(item.getMarkDate());
-            startTimeTV.setText(item.getExistingTime());
-            endTimeTV.setText(item.getExistingOutTime());
+            startTimeTV.setText(item.getReqTime());
+            endTimeTV.setText(item.getReqOutTime());
             requestedOutTimeLl.setVisibility(View.GONE);
             requestedInTimeLl.setVisibility(View.GONE);
 
@@ -179,7 +180,9 @@ public class ViewTimeModificationSummary extends BaseFragment {
             empNameTV.setText(item.getName());
             statusTV.setText(item.getStatusDesc());
             dateTV.setText(item.getMarkDate());
-            startTimeTV.setText(item.getExistingTime());
+            String existingTime=item.getExistingTime();
+
+            startTimeTV.setText(DateTimeUtil.convertTimeIntoString(DateTimeUtil.convertDateIntoTimeMillis(existingTime)));
             endTimeTV.setText(item.getExistingOutTime());
             requestedOutTimeLl.setVisibility(View.VISIBLE);
             requestedInTimeLl.setVisibility(View.VISIBLE);
@@ -202,6 +205,4 @@ public class ViewTimeModificationSummary extends BaseFragment {
             remarksRV.setVisibility(View.GONE);
         }
     }
-
-
 }

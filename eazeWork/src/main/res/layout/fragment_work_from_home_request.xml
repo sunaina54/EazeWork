@@ -79,7 +79,7 @@
                                         android:background="@drawable/grey_commoborder"
                                         android:gravity="left"
                                         android:padding="@dimen/margin_10"
-                                        android:text="aaa" />
+                                        />
                                 </LinearLayout>
 
                             </LinearLayout>

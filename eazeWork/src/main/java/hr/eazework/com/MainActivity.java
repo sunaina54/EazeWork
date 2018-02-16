@@ -56,6 +56,7 @@ import hr.eazework.com.ui.fragment.AdvanceRequestFragment;
 import hr.eazework.com.ui.fragment.AdvanceRequestSummaryFragment;
 import hr.eazework.com.ui.fragment.ApproveScreen;
 import hr.eazework.com.ui.fragment.AttandanceFragment;
+import hr.eazework.com.ui.fragment.AttendanceApprovalFragment;
 import hr.eazework.com.ui.fragment.AttendanceHistory;
 import hr.eazework.com.ui.fragment.BaseFragment;
 import hr.eazework.com.ui.fragment.ChangePasswordFragment;
@@ -393,6 +394,17 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 } else {
                     addFragment(R.id.content_frame, new AdvanceApprovalFragment(),
                             AdvanceApprovalFragment.TAG);
+                }
+                break;
+            case IAction.ATTENDANCE:
+
+                if (isFragmentExistsInBackStack(PendingActivityFragment.TAG)) {
+                    if (getTopFragment() instanceof AttendanceApprovalFragment)
+                        return;
+                    popBackStack(AttendanceApprovalFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, new AttendanceApprovalFragment(),
+                            AttendanceApprovalFragment.TAG);
                 }
                 break;
             case IAction.MEMBER_APPROVAL:
@@ -1208,7 +1220,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         } else if (fragment instanceof ChangePasswordFragment) {
             return getString(R.string.msg_change_password);
         } else if (fragment instanceof PendingActivityFragment) {
-            return "Pending Approvals";
+            return "Leave Approval";
         } else if (fragment instanceof PendingEmployeeApprovalFragment) {
             return "Pending Employees";
         } else if (fragment instanceof ExpenseClaimSummaryFragment) {
@@ -1221,6 +1233,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             return "Advance Approval";
         } else if (fragment instanceof TimeAndAttendanceSummaryFragment) {
             return "Time & Attendance";
+        }else if (fragment instanceof AttendanceApprovalFragment) {
+            return "Attendance Approval";
         }else {
             return "";
         }

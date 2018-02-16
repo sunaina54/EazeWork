@@ -44,6 +44,7 @@ import hr.eazework.com.MainActivity;
 import hr.eazework.com.R;
 import hr.eazework.com.SearchOnbehalfActivity;
 import hr.eazework.com.model.AdvanceRequestResponseModel;
+import hr.eazework.com.model.AttendanceItem;
 import hr.eazework.com.model.CorpEmpParamListItem;
 import hr.eazework.com.model.EmployItem;
 import hr.eazework.com.model.EmployeeLeaveModel;
@@ -106,7 +107,7 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
     private TimePickerDialog timePickerDialog1, timePickerDialog2;
     private EmployItem employItem;
     private RelativeLayout searchLayout;
-    public static int OD_EMP = 1;
+    public static int OD_EMP = 3;
     private String empId;
     private String reqId;
     private LinearLayout remarksLinearLayout, remarksDataLl;
@@ -117,7 +118,7 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
     private ODResponseModel odResponseModel;
     private GetODRequestDetail getODRequestDetail;
     private AdvanceRequestResponseModel advanceRequestResponseModel;
-    private EmployeeLeaveModel employeeLeaveModel;
+    private AttendanceItem employeeLeaveModel;
     private ODSummaryResponse odSummaryResponse;
     private LoginUserModel loginUserModel;
 
@@ -129,11 +130,11 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
         this.screenName = screenName;
     }
 
-    public EmployeeLeaveModel getEmployeeLeaveModel() {
+    public AttendanceItem getEmployeeLeaveModel() {
         return employeeLeaveModel;
     }
 
-    public void setEmployeeLeaveModel(EmployeeLeaveModel employeeLeaveModel) {
+    public void setEmployeeLeaveModel(AttendanceItem employeeLeaveModel) {
         this.employeeLeaveModel = employeeLeaveModel;
     }
 
@@ -327,6 +328,7 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent theIntent = new Intent(getActivity(), SearchOnbehalfActivity.class);
+                theIntent.putExtra("SearchType",OD_EMP);
                 startActivityForResult(theIntent, OD_EMP);
             }
         });
@@ -337,17 +339,17 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
             remarksDataLl.setVisibility(View.VISIBLE);
             sendViewRequestSummaryData();
             getSearchEmployeeData();
-        } else if (employeeLeaveModel != null && employeeLeaveModel.getmReqID() != null
-                && !employeeLeaveModel.getmReqID().equalsIgnoreCase("0")) {
-            if (employeeLeaveModel.getmReqType() != null && employeeLeaveModel.getmReqType().equalsIgnoreCase(AppsConstant.OD_EDIT)) {
-                reqId = employeeLeaveModel.getmReqID();
+        } else if (employeeLeaveModel != null && employeeLeaveModel.getReqID() != null
+                && !employeeLeaveModel.getReqID().equalsIgnoreCase("0")) {
+            if (employeeLeaveModel.getReqType() != null && employeeLeaveModel.getReqType().equalsIgnoreCase(AppsConstant.OD_EDIT)) {
+                reqId = employeeLeaveModel.getReqID();
                 remarksDataLl.setVisibility(View.VISIBLE);
                 sendViewWFHRequestSummaryData();
                 disabledFieldData();
             }
 
-            if (employeeLeaveModel.getmReqType() != null && employeeLeaveModel.getmReqType().equalsIgnoreCase(AppsConstant.OD_WITHDRAWAL)) {
-                reqId = employeeLeaveModel.getmReqID();
+            if (employeeLeaveModel.getReqType() != null && employeeLeaveModel.getReqType().equalsIgnoreCase(AppsConstant.OD_WITHDRAWAL)) {
+                reqId = employeeLeaveModel.getReqID();
                 remarksDataLl.setVisibility(View.VISIBLE);
                 sendViewWFHRequestSummaryData();
                 disabledFieldDataForView();
@@ -677,6 +679,10 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
         odRequestModel = new ODRequestModel();
         odReqDetailModel = new OdReqDetailModel();
         if (fromButton.equalsIgnoreCase(AppsConstant.SUBMIT)) {
+            if(empNameTV.getText().toString().equalsIgnoreCase("")){
+                new AlertCustomDialog(context, getResources().getString(R.string.select_user));
+                return;
+            }
             if (fromDate.equalsIgnoreCase("") || fromDate.equalsIgnoreCase("--/--/----")) {
                 new AlertCustomDialog(context, getResources().getString(R.string.enter_date));
                 return;
@@ -753,6 +759,11 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
         }
 
         if (fromButton.equalsIgnoreCase("Save") || fromButton.equalsIgnoreCase(AppsConstant.DELETE)) {
+            if(empNameTV.getText().toString().equalsIgnoreCase("")){
+                new AlertCustomDialog(context, getResources().getString(R.string.select_user));
+                return;
+            }
+
             if (startTime.equalsIgnoreCase("--:-- AM")) {
                 startTime = "";
             }
@@ -805,6 +816,7 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
     private void sendViewRequestSummaryData() {
         getODRequestDetail = new GetODRequestDetail();
         getODRequestDetail.setReqID(Integer.parseInt(getEmpWFHResponseItem.getReqID()));
+        getODRequestDetail.setAction(AppsConstant.EDIT_ACTION);
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.ODSummaryDetails(getODRequestDetail),
                 CommunicationConstant.API_GET_OD_REQUEST_DETAIL, true);
@@ -812,7 +824,8 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
 
     private void sendViewWFHRequestSummaryData() {
         getODRequestDetail = new GetODRequestDetail();
-        getODRequestDetail.setReqID(Integer.parseInt(employeeLeaveModel.getmReqID()));
+        getODRequestDetail.setReqID(Integer.parseInt(employeeLeaveModel.getReqID()));
+        getODRequestDetail.setAction(AppsConstant.EDIT_ACTION);
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.ODSummaryDetails(getODRequestDetail),
                 CommunicationConstant.API_GET_OD_REQUEST_DETAIL, true);
@@ -951,6 +964,7 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
         empNameTV.setText(item.getForEmpName());
         tv_from_date.setText(item.getDate());
         fromDate = item.getDate();
+        datePickerDialog2 = CalenderUtils.pickDateFromCalender(context, tv_from_date, tv_from_day, AppsConstant.DATE_FORMATE);
         tv_start_time.setText(item.getStartTime());
         startTime = item.getStartTime();
         tv_end_time.setText(item.getEndTime());
@@ -971,7 +985,7 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
                 if (button.equalsIgnoreCase(AppsConstant.SUBMIT)) {
                     submitBTN.setVisibility(View.VISIBLE);
                 }
-                if (button.equalsIgnoreCase(AppsConstant.SAVE_DRAFT)) {
+                if (button.equalsIgnoreCase(AppsConstant.DRAFT)) {
                     saveDraftBTN.setVisibility(View.VISIBLE);
                 }
                 if (button.equalsIgnoreCase(AppsConstant.REJECT)) {

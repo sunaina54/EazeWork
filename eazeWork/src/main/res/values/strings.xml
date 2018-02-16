@@ -99,6 +99,7 @@
     <string name="leave_from_to_format">From : %1$s  To : %2$s</string>
     <string name="requested_date">Requested On : %1$s </string>
     <string name="request_id">Request ID : </string>
+    <string name="request_id_leave">Request Id </string>
     <string name="requested_by">Requested By : </string>
     <string name="leave_work_off_format">Date Worked : %1$s  Compensatory Off Date : %2$s</string>
     <string name="time_in_out_message">Time In/Out Done For Today</string>
@@ -159,6 +160,7 @@
     <string name="leave_summary_error_msg">There are no in process of any leave type requests</string>
     <string name="expense_summary_error_msg">There are no in process expense requests</string>
     <string name="expense_error_msg">There is no expense request pending for your approval.</string>
+    <string name="attendance_error_msg">There is no attendance request pending for your approval.</string>
     <string name="delete_btn">Delete</string>
     <string name="units">Units</string>
     <string name="limit">Limit</string>
@@ -179,6 +181,8 @@
     <string name="employee_name">Employee</string>
     <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>
+    <string name="from_date">From Date</string>
+    <string name="to_date">To Date</string>
     <string name="employee_code">Employee Code</string>
     <string name="submitted_by">Submitted By</string>
     <string name="remarks">Remarks</string>
@@ -209,6 +213,7 @@
     <string name="req_initiator">Request Initiator</string>
     <string name="req_date">Request Date</string>
     <string name="days">Days</string>
+    <string name="total_days">Total Days</string>
     <string name="duration">Duration</string>
     <string name="final_approver">Final Level Approver Details</string>
     <string name="approver">Approver</string>
@@ -256,7 +261,7 @@
     <string name="enter_in_time">Please Enter In Time</string>
     <string name="enter_out_time">Please Enter Out Time</string>
     <string name="enter_mail">Please enter your email id</string>
-
+    <string name="select_user">Please select employee </string>
     <string name="mail_label">Enter Email-Id</string>
 
 

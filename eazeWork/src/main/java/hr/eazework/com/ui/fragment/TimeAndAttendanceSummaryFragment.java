@@ -147,7 +147,7 @@ public class TimeAndAttendanceSummaryFragment extends BaseFragment {
 
             private TextView requestIdTV, descriptionTV, startDateTV, endDateTV, daysTV, pendingWithTV, statusTV,startDateLabelTV;
             private Button viewBTN;
-            private LinearLayout endDateLl;
+            private LinearLayout endDateLl,daysLl;
 
 
             public MyViewHolder(View v) {
@@ -163,7 +163,7 @@ public class TimeAndAttendanceSummaryFragment extends BaseFragment {
                 startDateLabelTV= (TextView) v.findViewById(R.id.startDateLabelTV);
                 statusTV = (TextView) v.findViewById(R.id.statusTV);
                 viewBTN = (Button) v.findViewById(R.id.viewBTN);
-
+                daysLl= (LinearLayout) v.findViewById(R.id.daysLl);
 
 
             }
@@ -196,6 +196,7 @@ public class TimeAndAttendanceSummaryFragment extends BaseFragment {
             final GetEmpWFHResponseItem item = dataSet.get(listPosition);
             holder.requestIdTV.setText(item.getReqCode());
             holder.descriptionTV.setText(item.getRequestTypeDesc());
+            holder.daysLl.setVisibility(View.VISIBLE);
 
             if(item.getRequestTypeDesc().equalsIgnoreCase("OD")){
                 holder.startDateLabelTV.setText(getResources().getString(R.string.date));
@@ -207,6 +208,11 @@ public class TimeAndAttendanceSummaryFragment extends BaseFragment {
                 holder.startDateTV.setText(item.getStartDate());
                 holder.endDateTV.setText(item.getEndDate());
             }
+
+            if(item.getRequestTypeDesc().equalsIgnoreCase("Time Modification") || item.getRequestTypeDesc().equalsIgnoreCase("Attendance")){
+                holder.daysLl.setVisibility(View.GONE);
+            }
+
             holder.daysTV.setText(item.getTotalDays());
             holder.pendingWithTV.setText(item.getPendWithName());
             holder.statusTV.setText(item.getStatusDesc());

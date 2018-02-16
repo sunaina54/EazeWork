@@ -53,6 +53,7 @@ public class SearchOnbehalfActivity extends BaseActivity {
     private ImageView ibRightIV,clearTextIV;
     private LinearLayout progressContainer,noRecordLayout,rl_edit_team_member;
     private String screenName="";
+    private int SELECTED_TYPE;
 
 
     @Override
@@ -63,6 +64,7 @@ public class SearchOnbehalfActivity extends BaseActivity {
     }
     private void setupScreen(){
         context=this;
+        SELECTED_TYPE=getIntent().getIntExtra("SearchType",0);
         progressContainer=(LinearLayout) findViewById(R.id.ll_progress_container);
         noRecordLayout=(LinearLayout) findViewById(R.id.noRecordLayout);
         preferences = new Preferences(context);
@@ -146,7 +148,7 @@ public class SearchOnbehalfActivity extends BaseActivity {
                 }
                 break;
             case CommunicationConstant.API_GET_WFH_EMP_LIST:
-                Log.d("TAG WFH",response.getResponseData());
+                Log.d("TAG","WFH employee "+response.getResponseData());
                 empResponse=EmployResponse.create(response.getResponseData()) ;
                 if(empResponse!=null && empResponse.getGetWFHEmpListResult()!=null &&
                         !empResponse.getGetWFHEmpListResult().getErrorCode()
@@ -159,6 +161,44 @@ public class SearchOnbehalfActivity extends BaseActivity {
                                 .equalsIgnoreCase(AppsConstant.SUCCESS)){
                     noRecordLayout.setVisibility(View.GONE);
                     refreshRecycle(empResponse.getGetWFHEmpListResult().getEmployees());
+
+                }else {
+
+                }
+                break;
+            case CommunicationConstant.API_GET_OD_EMP_LIST:
+                Log.d("TAG","WFH employee "+response.getResponseData());
+                empResponse=EmployResponse.create(response.getResponseData()) ;
+                if(empResponse!=null && empResponse.getGetODEmpListResult()!=null &&
+                        !empResponse.getGetODEmpListResult().getErrorCode()
+                                .equalsIgnoreCase(AppsConstant.SUCCESS) ){
+                    new AlertCustomDialog(context,empResponse.getGetODEmpListResult().getErrorMessage());
+                    return;
+                }
+                if(empResponse!=null && empResponse.getGetODEmpListResult()!=null &&
+                        empResponse.getGetODEmpListResult().getErrorCode()
+                                .equalsIgnoreCase(AppsConstant.SUCCESS)){
+                    noRecordLayout.setVisibility(View.GONE);
+                    refreshRecycle(empResponse.getGetODEmpListResult().getEmployees());
+
+                }else {
+
+                }
+                break;
+            case CommunicationConstant.API_GET_TOUR_EMP_LIST:
+                Log.d("TAG","WFH employee "+response.getResponseData());
+                empResponse=EmployResponse.create(response.getResponseData()) ;
+                if(empResponse!=null && empResponse.getGetTourEmpListResult()!=null &&
+                        !empResponse.getGetTourEmpListResult().getErrorCode()
+                                .equalsIgnoreCase(AppsConstant.SUCCESS) ){
+                    new AlertCustomDialog(context,empResponse.getGetTourEmpListResult().getErrorMessage());
+                    return;
+                }
+                if(empResponse!=null && empResponse.getGetTourEmpListResult()!=null &&
+                        empResponse.getGetTourEmpListResult().getErrorCode()
+                                .equalsIgnoreCase(AppsConstant.SUCCESS)){
+                    noRecordLayout.setVisibility(View.GONE);
+                    refreshRecycle(empResponse.getGetTourEmpListResult().getEmployees());
 
                 }else {
 
@@ -177,19 +217,19 @@ public class SearchOnbehalfActivity extends BaseActivity {
         request.setFromCount("1");
         request.setToCount("-1");
         request.setMatchStr(str);
-        if(CreateNewLeaveFragment.LEAVE_EMP == 1) { //leave employee
+        if(SELECTED_TYPE==CreateNewLeaveFragment.LEAVE_EMP) { //leave employee
             CommunicationManager.getInstance().sendPostRequest(this,
                     AppRequestJSONString.searchOnBehalfRequest(request),
                     CommunicationConstant.API_SEARCH_ONBEHALF, true);
-        }else if(WorkFromHomeRequestFragment.WFH_EMP == 1) {
+        }else if(WorkFromHomeRequestFragment.WFH_EMP == SELECTED_TYPE) {
             CommunicationManager.getInstance().sendPostRequest(this,
                     AppRequestJSONString.searchOnBehalfRequest(request),
                     CommunicationConstant.API_GET_WFH_EMP_LIST, true);
-        }else if(OutdoorDutyRequestFragment.OD_EMP == 1) {
+        }else if(OutdoorDutyRequestFragment.OD_EMP == SELECTED_TYPE) {
             CommunicationManager.getInstance().sendPostRequest(this,
                     AppRequestJSONString.searchOnBehalfRequest(request),
                     CommunicationConstant.API_GET_OD_EMP_LIST, true);
-        }else if(TourRequestFragment.TOUR_EMP == 1) {
+        }else if(TourRequestFragment.TOUR_EMP == SELECTED_TYPE) {
             CommunicationManager.getInstance().sendPostRequest(this,
                     AppRequestJSONString.searchOnBehalfRequest(request),
                     CommunicationConstant.API_GET_TOUR_EMP_LIST, true);

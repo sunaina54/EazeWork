@@ -36,6 +36,7 @@ import java.util.List;
 
 import hr.eazework.com.model.AdvanceRequestResponseModel;
 import hr.eazework.com.model.AttandanceCalenderStatusItem;
+import hr.eazework.com.model.AttendanceItem;
 import hr.eazework.com.model.AttendanceRejectItem;
 import hr.eazework.com.model.AttendanceRejectRequestModel;
 import hr.eazework.com.model.AttendanceRejectResponseModel;
@@ -54,6 +55,7 @@ import hr.eazework.com.ui.adapter.DocumentUploadAdapter;
 import hr.eazework.com.ui.adapter.RemarksAdapter;
 import hr.eazework.com.ui.customview.CustomBuilder;
 import hr.eazework.com.ui.customview.CustomDialog;
+import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.util.AppsConstant;
 import hr.eazework.com.ui.util.CalenderUtils;
 import hr.eazework.com.ui.util.ImageUtil;
@@ -74,6 +76,7 @@ import static hr.eazework.com.ui.util.ImageUtil.rotateImage;
 
 public class TimeModificationActivity extends BaseActivity {
 
+    public static int TIMEMODIFICATIONREQUESTCODE=11;
     private String screenName="TimeModificationActivity";
     private Context context;
     private Preferences preferences;
@@ -95,7 +98,7 @@ public class TimeModificationActivity extends BaseActivity {
     private RecyclerView expenseRecyclerView;
     private ArrayList<SupportDocsItemModel> uploadFileList;
     private ImageView plus_create_newIV;
-    public static EmployeeLeaveModel employeeLeaveModel;
+    public static AttendanceItem employeeLeaveModel;
     private RecyclerView remarksRV;
     private String fromButton="";
     private Button rejectBTN,approvalBTN;
@@ -188,12 +191,12 @@ public class TimeModificationActivity extends BaseActivity {
         if(attandanceCalenderStatusItem!=null){
             updateUI();
         }
-        if(employeeLeaveModel != null && employeeLeaveModel.getmReqID() != null
-                && !employeeLeaveModel.getmReqID().equalsIgnoreCase("0")){
+        if(employeeLeaveModel != null && employeeLeaveModel.getReqID() != null
+                && !employeeLeaveModel.getReqID().equalsIgnoreCase("0")){
             sendViewRequestSummaryData();
+            rightRL.setVisibility(View.GONE);
         }
         rejectBTN = (Button)findViewById(R.id.rejectBTN);
-        rejectBTN.setVisibility(View.VISIBLE);
         rejectBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,7 +206,7 @@ public class TimeModificationActivity extends BaseActivity {
         });
 
         approvalBTN = (Button)findViewById(R.id.approvalBTN);
-        approvalBTN.setVisibility(View.VISIBLE);
+
         approvalBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -244,6 +247,7 @@ public class TimeModificationActivity extends BaseActivity {
                 timeModificationItem.setAttendID(attendId);
                 timeModificationItem.setReqTime(reqInTime);
                 timeModificationItem.setReqOutTime(reqOutTime);
+                timeModificationItem.setReqId(employeeLeaveModel.getReqID());
                 timeModificationItem.setApprovalLevel(reqDetail.getApprovalLevel());
                 timeModificationItem.setStatus(reqDetail.getStatus());
                 timeModificationItem.setRemark(remarksET.getText().toString());
@@ -277,7 +281,8 @@ public class TimeModificationActivity extends BaseActivity {
     }
     private void sendViewRequestSummaryData() {
         GetTimeModificationRequestDetail getTimeModificationRequestDetail = new GetTimeModificationRequestDetail();
-        getTimeModificationRequestDetail.setReqID(employeeLeaveModel.getmReqID());
+        getTimeModificationRequestDetail.setReqID(employeeLeaveModel.getReqID());
+        getTimeModificationRequestDetail.setAction(AppsConstant.EDIT_ACTION);
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.timeModificationSummaryDetails(getTimeModificationRequestDetail),
                 CommunicationConstant.API_GET_ATTENDANCE_DETAIL, true);
@@ -292,7 +297,9 @@ public class TimeModificationActivity extends BaseActivity {
                 timeModificationResponseModel = TimeModificationResponseModel.create(responseData);
                 if (timeModificationResponseModel != null && timeModificationResponseModel.getTimeModificationResult() != null
                         && timeModificationResponseModel.getTimeModificationResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinish(context,timeModificationResponseModel.getTimeModificationResult().getErrorMessage());
+                  //  CustomDialog.alertOkWithFinish(context,timeModificationResponseModel.getTimeModificationResult().getErrorMessage());
+                    CustomDialog.alertOkWithFinishActivity(context, timeModificationResponseModel.getTimeModificationResult().getErrorMessage(), TimeModificationActivity.this, true);
+
                     //CustomDialog.alertOkWithFinishFragment(context, timeModificationResponseModel.getTimeModificationResult().getErrorMessage(), null, IAction.HOME_VIEW, true);
                 } else {
                     new AlertCustomDialog(context, timeModificationResponseModel.getTimeModificationResult().getErrorMessage());
@@ -331,7 +338,7 @@ public class TimeModificationActivity extends BaseActivity {
                 if (attendanceApproveResponseModel != null && attendanceApproveResponseModel.getApproveRequestResult() != null
                         && attendanceApproveResponseModel.getApproveRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
                     //CustomDialog.alertOkWithFinishFragment(context, attendanceApproveResponseModel.getApproveRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
-                    CustomDialog.alertOkWithFinish(context, attendanceApproveResponseModel.getApproveRequestResult().getErrorMessage());
+                    CustomDialog.alertOkWithFinishActivity(context, attendanceApproveResponseModel.getApproveRequestResult().getErrorMessage(),TimeModificationActivity.this,true);
 
                 } else {
                     new AlertCustomDialog(context, attendanceApproveResponseModel.getApproveRequestResult().getErrorMessage());
@@ -355,6 +362,8 @@ public class TimeModificationActivity extends BaseActivity {
             outTime=attandanceCalenderStatusItem.getTimeOut();
             dateTV.setText(attandanceCalenderStatusItem.getMarkDate());
             statusTV.setText(attandanceCalenderStatusItem.getStatusDesc());
+        datePickerDialog1 = CalenderUtils.pickDateFromCalender(context, tv_in_date, tv_in_day, AppsConstant.DATE_FORMATE);
+        datePickerDialog2 = CalenderUtils.pickDateFromCalender(context, tv_out_date, tv_out_day, AppsConstant.DATE_FORMATE);
     }
 
     private void updateUIForApproval(AttendanceReqDetail item){
@@ -365,16 +374,17 @@ public class TimeModificationActivity extends BaseActivity {
         empNameTV.setText(item.getName());
         String[] dateTime = item.getReqTime().split(" ");
         inDate=dateTime[0];
-        inTime=dateTime[1];
+        inTime=dateTime[1]+ " " + dateTime[2];
         tv_in_date.setText(inDate);
         tv_in_time.setText(inTime);
 
         String[] outTimeDate= item.getReqOutTime().split(" ");
         outDate=outTimeDate[0];
-        outTime=outTimeDate[1];
+        outTime=outTimeDate[1]+ " " + outTimeDate[2];
         tv_out_date.setText(outDate);
         tv_out_time.setText(outTime);
-
+        datePickerDialog1 = CalenderUtils.pickDateFromCalender(context, tv_in_date, tv_in_day, AppsConstant.DATE_FORMATE);
+        datePickerDialog2 = CalenderUtils.pickDateFromCalender(context, tv_out_date, tv_out_day, AppsConstant.DATE_FORMATE);
         remarksET.setText(item.getRemark());
         setupButtons(item);
     }

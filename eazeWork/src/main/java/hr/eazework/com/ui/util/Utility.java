@@ -740,7 +740,7 @@ public class Utility {
     }
 
 
-    public static TimePickerDialog setTime(Context context,final TextView timeTV) {
+    public static TimePickerDialog setTime(final Context context, final TextView timeTV) {
 
         Calendar newCalendar = Calendar.getInstance();
         TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
@@ -759,8 +759,8 @@ public class Utility {
             public void onClick(DialogInterface dialog, int which) {
                 if (which == DialogInterface.BUTTON_NEGATIVE) {
                     dialog.dismiss();
-                    Log.d("qqqqqqq", "Date Time : clixked");
-                    timeTV.setText("To Do Time");
+                    Log.d("qqqqqqq", "Date Time : clicked");
+                    timeTV.setText("--:-- AM");
                   /*  choresTime = null;
                     clockBTN.setChecked(false);*/
 

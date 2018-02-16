@@ -11,6 +11,15 @@ import java.io.Serializable;
 public class GetODRequestDetail implements Serializable {
     private AdvanceLoginDataRequestModel loginData;
     private int reqID;
+    private String action;
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
 
     public int getReqID() {
         return reqID;

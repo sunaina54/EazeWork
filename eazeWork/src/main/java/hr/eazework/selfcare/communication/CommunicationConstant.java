@@ -119,6 +119,7 @@ public class CommunicationConstant {
 	public static final String API_KEY_GET_ATTENDANCE_DETAIL="AttendanceService.svc/GetAttendanceReqDetail";
 	public static final String API_KEY_REJECT_ATTENDANCE_REQUEST="AttendanceService.svc/RejectRequest";
 	public static final String API_KEY_APPROVE_ATTENDANCE_REQUEST="AttendanceService.svc/ApproveRequest";
+	public static final String API_KEY_PENDING_APPROVAL_ATTENDANCE_REQUEST="AttendanceService.svc/GetEmpPendingApprovalAttendReqs";
 
 	public static final int API_LOGIN_USER = 0;
 	public static final int API_LOGOUT_USER = 1;
@@ -210,6 +211,7 @@ public class CommunicationConstant {
 	public static final int API_GET_ATTENDANCE_DETAIL=87;
 	public static final int API_REJECT_ATTENDANCE_REQUEST=88;
 	public static final int API_APPROVE_ATTENDANCE_REQUEST=89;
+	public static final int API_PENDING_APPROVAL_ATTENDANCE_REQUEST=90;
 
 	public static String ADD_EXPENSE_RESPONSE="addExpense";
 

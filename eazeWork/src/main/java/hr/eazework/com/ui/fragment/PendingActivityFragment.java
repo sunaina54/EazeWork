@@ -203,7 +203,7 @@ public class PendingActivityFragment extends BaseFragment {
                                                 fragmentTransaction.commit();
                                             }
 
-                                            if (leaveModel.getmReqCode() != null && leaveModel.getmReqCode().startsWith("HR")) {
+                                          /*  if (leaveModel.getmReqCode() != null && leaveModel.getmReqCode().startsWith("HR")) {
                                                 WorkFromHomeRequestFragment requestFragment = new WorkFromHomeRequestFragment();
                                                 requestFragment.setEmployeeLeaveModel(leaveModel);
                                                 requestFragment.setScreenName(screenName);
@@ -247,7 +247,7 @@ public class PendingActivityFragment extends BaseFragment {
                                                 Intent intent = new Intent(getActivity(),TimeModificationActivity.class);
                                                 TimeModificationActivity.employeeLeaveModel=leaveModel;
                                                 startActivity(intent);
-                                            }
+                                            }*/
 
                                         }else if(selectedObject.toString().equalsIgnoreCase("View")){
                                             if (leaveModel.getmReqCode() != null && leaveModel.getmReqCode().startsWith("WR")) {
@@ -260,7 +260,7 @@ public class PendingActivityFragment extends BaseFragment {
                                                 fragmentTransaction.addToBackStack(null);
                                                 fragmentTransaction.commit();
                                             }
-                                            if (leaveModel.getmReqCode() != null && leaveModel.getmReqCode().startsWith("HW")) {
+                                           /* if (leaveModel.getmReqCode() != null && leaveModel.getmReqCode().startsWith("HW")) {
                                                 WorkFromHomeRequestFragment requestFragment = new WorkFromHomeRequestFragment();
                                                 requestFragment.setEmployeeLeaveModel(leaveModel);
                                                 requestFragment.setScreenName(screenName);
@@ -291,7 +291,7 @@ public class PendingActivityFragment extends BaseFragment {
                                                 fragmentTransaction.commit();
                                             }
 
-
+*/
                                         }
                                         builder.dismiss();
                                     }
@@ -336,26 +336,11 @@ public class PendingActivityFragment extends BaseFragment {
                          /*   if (leaveModel.getmReqCode() != null && leaveModel.getmReqCode().startsWith("LR")) {
                                 updateLeaveStatus(v, "approve", "Leave approved", "A", null);
                             } else {*/
-                            if (leaveModel.getmReqCode() != null && leaveModel.getmReqCode().startsWith("LR")) {
+                            if (leaveModel.getmReqCode() != null && leaveModel.getmReqCode().startsWith("LR") ||
+                                    leaveModel.getmReqCode().startsWith("WR")) {
                                 sendViewLeaveRequestSummaryData(leaveModel);
                             }
-                            if (leaveModel.getmReqCode() != null && leaveModel.getmReqCode().startsWith("HR")) {
-                                sendViewRequestSummaryData(leaveModel);
-                            }
-                            if (leaveModel.getmReqCode() != null && leaveModel.getmReqCode().startsWith("OD")) {
-                                sendViewODRequestSummaryData(leaveModel);
-                            }
-                            if (leaveModel.getmReqCode() != null && leaveModel.getmReqCode().startsWith("TR")) {
-                                sendViewTourRequestSummaryData(leaveModel);
 
-                            }
-                            if (leaveModel.getmReqCode() != null && leaveModel.getmReqCode().startsWith("BA")) {
-                                sendViewAttendanceSummaryData(leaveModel);
-                            }
-                            if (leaveModel.getmReqCode() != null && leaveModel.getmReqCode().startsWith("TM")) {
-
-                                sendViewAttendanceSummaryData(leaveModel);
-                            }
                             //}
                         }
                     });
@@ -500,7 +485,7 @@ public class PendingActivityFragment extends BaseFragment {
                     populateLeaves();
                     break;
 
-                case CommunicationConstant.API_REJECT_WFH_REQUEST:
+               /* case CommunicationConstant.API_REJECT_WFH_REQUEST:
                     String responseData = response.getResponseData();
                     Log.d("TAG", "reject response : " + responseData);
                     LeaveRejectResponseModel leaveRejectResponse = LeaveRejectResponseModel.create(responseData);
@@ -602,7 +587,7 @@ public class PendingActivityFragment extends BaseFragment {
                     } else {
                         new AlertCustomDialog(getActivity(), tourResponseModel.getApproveTourRequestResult().getErrorMessage());
                     }
-                    break;
+                    break;*/
 
                 case CommunicationConstant.API_REJECT_LEAVE_REQUEST:
                     String leaveResponse = response.getResponseData();
@@ -639,7 +624,7 @@ public class PendingActivityFragment extends BaseFragment {
 
                     }
                     break;
-                case CommunicationConstant.API_REJECT_ATTENDANCE_REQUEST:
+             /*   case CommunicationConstant.API_REJECT_ATTENDANCE_REQUEST:
                     String respDataAttendance = response.getResponseData();
                     Log.d("TAG", "reject attendance response : " + respDataAttendance);
                     AttendanceRejectResponseModel attendanceRejectResponseModel = AttendanceRejectResponseModel.create(respDataAttendance);
@@ -672,7 +657,7 @@ public class PendingActivityFragment extends BaseFragment {
                         sendAttendanceApprovalData();
                     }
 
-                    break;
+                    break;*/
                 default:
                     break;
             }
@@ -770,13 +755,6 @@ public class PendingActivityFragment extends BaseFragment {
                 CommunicationConstant.API_REJECT_ATTENDANCE_REQUEST, true);
     }
 
-    private void sendViewAttendanceSummaryData(EmployeeLeaveModel item) {
-        GetTimeModificationRequestDetail getTimeModificationRequestDetail = new GetTimeModificationRequestDetail();
-        getTimeModificationRequestDetail.setReqID(item.getmReqID());
-        CommunicationManager.getInstance().sendPostRequest(this,
-                AppRequestJSONString.timeModificationSummaryDetails(getTimeModificationRequestDetail),
-                CommunicationConstant.API_GET_ATTENDANCE_DETAIL, true);
-    }
 
     private void sendAttendanceApprovalData(){
         TimeModificationItem timeModificationItem=new TimeModificationItem();
@@ -815,29 +793,7 @@ public class PendingActivityFragment extends BaseFragment {
 
     }
 
-    private void sendViewRequestSummaryData(EmployeeLeaveModel item) {
-        requestDetail = new GetWFHRequestDetail();
-        requestDetail.setReqID(item.getmReqID());
-        CommunicationManager.getInstance().sendPostRequest(this,
-                AppRequestJSONString.WFHSummaryDetails(requestDetail),
-                CommunicationConstant.API_GET_WFH_REQUEST_DETAIL, true);
-    }
 
-    private void sendViewODRequestSummaryData(EmployeeLeaveModel item) {
-        GetODRequestDetail getODRequestDetail = new GetODRequestDetail();
-        getODRequestDetail.setReqID(Integer.parseInt(item.getmReqID()));
-        CommunicationManager.getInstance().sendPostRequest(this,
-                AppRequestJSONString.ODSummaryDetails(getODRequestDetail),
-                CommunicationConstant.API_GET_OD_REQUEST_DETAIL, true);
-    }
-
-    private void sendViewTourRequestSummaryData(EmployeeLeaveModel item) {
-        requestDetail = new GetWFHRequestDetail();
-        requestDetail.setReqID(item.getmReqID());
-        CommunicationManager.getInstance().sendPostRequest(this,
-                AppRequestJSONString.WFHSummaryDetails(requestDetail),
-                CommunicationConstant.API_GET_TOUR_REQUEST_DETAIL, true);
-    }
 
     private void sendApprovalWFHData() {
         WFHRequestDetailModel wfhRequestDetailModel = new WFHRequestDetailModel();
@@ -908,6 +864,7 @@ public class PendingActivityFragment extends BaseFragment {
     private void sendViewLeaveRequestSummaryData(EmployeeLeaveModel item) {
         requestDetail = new GetWFHRequestDetail();
         requestDetail.setReqID(item.getmReqID());
+        requestDetail.setAction(AppsConstant.EDIT_ACTION);
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.WFHSummaryDetails(requestDetail),
                 CommunicationConstant.API_GET_LEAVE_REQUEST_DETAIL, true);

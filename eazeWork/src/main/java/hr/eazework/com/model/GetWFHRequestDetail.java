@@ -11,6 +11,15 @@ import java.io.Serializable;
 public class GetWFHRequestDetail implements Serializable {
     private AdvanceLoginDataRequestModel loginData;
     private String reqID;
+    private String action;
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
 
     public AdvanceLoginDataRequestModel getLoginData() {
         return loginData;

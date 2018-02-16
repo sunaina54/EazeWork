@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="hr.eazework.com"
     android:versionCode="23"
-    android:versionName="1.1.2.3">
+    android:versionName="1.1.2.4">
 
     <uses-sdk
         android:minSdkVersion="17"

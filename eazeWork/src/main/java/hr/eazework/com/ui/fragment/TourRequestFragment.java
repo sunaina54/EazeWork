@@ -53,6 +53,7 @@ import hr.eazework.com.MainActivity;
 import hr.eazework.com.R;
 import hr.eazework.com.SearchOnbehalfActivity;
 import hr.eazework.com.model.AdvanceRequestResponseModel;
+import hr.eazework.com.model.AttendanceItem;
 import hr.eazework.com.model.CorpEmpParamListItem;
 import hr.eazework.com.model.CustomFieldsModel;
 import hr.eazework.com.model.EmployItem;
@@ -82,6 +83,7 @@ import hr.eazework.com.ui.customview.CustomDialog;
 import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.util.AppsConstant;
 import hr.eazework.com.ui.util.CalenderUtils;
+import hr.eazework.com.ui.util.DateTimeUtil;
 import hr.eazework.com.ui.util.ImageUtil;
 import hr.eazework.com.ui.util.PermissionUtil;
 import hr.eazework.com.ui.util.Preferences;
@@ -115,7 +117,7 @@ public class TourRequestFragment extends BaseFragment {
     private ArrayList<SupportDocsItemModel> uploadFileList;
     private Bitmap bitmap = null;
     private String purpose = "";
-    public static int TOUR_EMP = 1;
+    public static int TOUR_EMP = 4;
     private RelativeLayout searchLayout;
     private EmployItem employItem;
     private String empId;
@@ -143,7 +145,7 @@ public class TourRequestFragment extends BaseFragment {
     private TourResponseModel tourResponseModel;
     private LinearLayout remarksLinearLayout, remarksDataLl;
     private RecyclerView remarksRV;
-    private EmployeeLeaveModel employeeLeaveModel;
+    private AttendanceItem employeeLeaveModel;
     private TourSummaryResponse tourSummaryResponse;
     private LoginUserModel loginUserModel;
 
@@ -155,11 +157,11 @@ public class TourRequestFragment extends BaseFragment {
         this.screenName = screenName;
     }
 
-    public EmployeeLeaveModel getEmployeeLeaveModel() {
+    public AttendanceItem getEmployeeLeaveModel() {
         return employeeLeaveModel;
     }
 
-    public void setEmployeeLeaveModel(EmployeeLeaveModel employeeLeaveModel) {
+    public void setEmployeeLeaveModel(AttendanceItem employeeLeaveModel) {
         this.employeeLeaveModel = employeeLeaveModel;
     }
 
@@ -225,7 +227,7 @@ public class TourRequestFragment extends BaseFragment {
 
         datePickerDialog1 = CalenderUtils.pickDateFromCalender(context, tv_to_date, tv_to_day, AppsConstant.DATE_FORMATE);
         datePickerDialog2 = CalenderUtils.pickDateFromCalender(context, tv_from_date, tv_from_day, AppsConstant.DATE_FORMATE);
-        datePickerDialog1.updateDate(2018,02,05);
+
         rootView.findViewById(R.id.ll_from_date).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -420,6 +422,7 @@ public class TourRequestFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent theIntent = new Intent(getActivity(), SearchOnbehalfActivity.class);
+                theIntent.putExtra("SearchType", TOUR_EMP);
                 startActivityForResult(theIntent, TOUR_EMP);
             }
         });
@@ -496,17 +499,17 @@ public class TourRequestFragment extends BaseFragment {
             remarksDataLl.setVisibility(View.VISIBLE);
             sendViewRequestSummaryData();
             getSearchEmployeeData();
-        } else if (employeeLeaveModel != null && employeeLeaveModel.getmReqID() != null
-                && !employeeLeaveModel.getmReqID().equalsIgnoreCase("0")) {
-            if (employeeLeaveModel.getmReqType() != null && employeeLeaveModel.getmReqType().equalsIgnoreCase(AppsConstant.TOUR_EDIT)) {
-                reqId = employeeLeaveModel.getmReqID();
+        } else if (employeeLeaveModel != null && employeeLeaveModel.getReqID() != null
+                && !employeeLeaveModel.getReqID().equalsIgnoreCase("0")) {
+            if (employeeLeaveModel.getReqType() != null && employeeLeaveModel.getReqType().equalsIgnoreCase(AppsConstant.TOUR_EDIT)) {
+                reqId = employeeLeaveModel.getReqID();
                 remarksDataLl.setVisibility(View.VISIBLE);
                 sendViewTourRequestSummaryData();
                 disabledFieldData();
             }
 
-            if (employeeLeaveModel.getmReqType() != null && employeeLeaveModel.getmReqType().equalsIgnoreCase(AppsConstant.TOUR_WITHDRAWAL)) {
-                reqId = employeeLeaveModel.getmReqID();
+            if (employeeLeaveModel.getReqType() != null && employeeLeaveModel.getReqType().equalsIgnoreCase(AppsConstant.TOUR_WITHDRAWAL)) {
+                reqId = employeeLeaveModel.getReqID();
                 remarksDataLl.setVisibility(View.VISIBLE);
                 sendViewTourRequestSummaryData();
                 disabledFieldDataForView();
@@ -924,13 +927,13 @@ public class TourRequestFragment extends BaseFragment {
                                     }
                                 }*/
 
-                                for(CorpEmpParamListItem item:corpEmpParamResultResponse.getGetCorpEmpParamResult().getCorpEmpParamList()){
-                                    if(item.getParam().equalsIgnoreCase("TourOnBehalfOfYN") && item.getValue().equalsIgnoreCase("Y")){
+                                for (CorpEmpParamListItem item : corpEmpParamResultResponse.getGetCorpEmpParamResult().getCorpEmpParamList()) {
+                                    if (item.getParam().equalsIgnoreCase("TourOnBehalfOfYN") && item.getValue().equalsIgnoreCase("Y")) {
                                         ((RelativeLayout) rootView.findViewById(R.id.searchLayout)).setVisibility(View.VISIBLE);
 
                                     }
 
-                                    if(item.getParam().equalsIgnoreCase("TourSelfInitYN") && item.getValue().equalsIgnoreCase("Y")){
+                                    if (item.getParam().equalsIgnoreCase("TourSelfInitYN") && item.getValue().equalsIgnoreCase("Y")) {
                                         employItem.setEmpID(Long.parseLong(loginUserModel.getUserModel().getEmpId()));
                                         empId = loginUserModel.getUserModel().getEmpId();
                                         employItem.setName(loginUserModel.getUserModel().getUserName());
@@ -940,7 +943,9 @@ public class TourRequestFragment extends BaseFragment {
                                     }
                                 }
                             }
-                            setTravelAndReasonData();
+                            if (empId != null) {
+                                setTravelAndReasonData();
+                            }
                         } else {
 
                         }
@@ -1042,6 +1047,11 @@ public class TourRequestFragment extends BaseFragment {
                     new AlertCustomDialog(context, getResources().getString(R.string.enter_photography_date));
                     return;
                 }
+            }
+
+            if(empNameTV.getText().toString().equalsIgnoreCase("")){
+                new AlertCustomDialog(context, getResources().getString(R.string.select_user));
+                return;
             }
 
             if (travelFromEt.getText().toString().equalsIgnoreCase("")) {
@@ -1162,6 +1172,10 @@ public class TourRequestFragment extends BaseFragment {
 
 
         if (fromButton.equalsIgnoreCase(AppsConstant.SAVE_AS_DRAFT) || fromButton.equalsIgnoreCase(AppsConstant.DELETE)) {
+            if(empNameTV.getText().toString().equalsIgnoreCase("")){
+                new AlertCustomDialog(context, getResources().getString(R.string.select_user));
+                return;
+            }
             if (getScreenName().equalsIgnoreCase(AppsConstant.PENDING_APPROVAL)) {
                 if (tourSummaryResponse != null && tourSummaryResponse.getGetTourRequestDetailResult() != null
                         && tourSummaryResponse.getGetTourRequestDetailResult().getTourRequestDetail() != null
@@ -1417,6 +1431,13 @@ public class TourRequestFragment extends BaseFragment {
 
         public DatePickerDialog pickDateFromCalender(ArrayList<CustomFieldsModel> list, final int listPosition, final CustomFieldsModel item, Context mContext, final TextView dobTextView, final TextView dayTV, String dateFormat) {
             Calendar newCalendar = Calendar.getInstance();
+            String dateStr = null;
+            if (dobTextView.getText().toString().equalsIgnoreCase("") || dobTextView.getText().toString().equalsIgnoreCase("--/--/----")) {
+                dateStr = DateTimeUtil.currentDate(AppsConstant.DATE_FORMATE);
+            } else {
+                dateStr = dobTextView.getText().toString();
+            }
+            String date[] = dateStr.split("/");
             final SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat, Locale.US);
             DatePickerDialog datePickerDialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
 
@@ -1438,8 +1459,8 @@ public class TourRequestFragment extends BaseFragment {
 
                 }
 
-            }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH),
-                    newCalendar.get(Calendar.DAY_OF_MONTH));
+            }, Integer.parseInt(date[2]), Integer.parseInt(date[1]) - 1,
+                    Integer.parseInt(date[0]));
             return datePickerDialog;
         }
 
@@ -1457,6 +1478,7 @@ public class TourRequestFragment extends BaseFragment {
     private void sendViewRequestSummaryData() {
         requestDetail = new GetWFHRequestDetail();
         requestDetail.setReqID(getEmpWFHResponseItem.getReqID());
+        requestDetail.setAction(AppsConstant.EDIT_ACTION);
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.WFHSummaryDetails(requestDetail),
                 CommunicationConstant.API_GET_TOUR_REQUEST_DETAIL, true);
@@ -1464,7 +1486,8 @@ public class TourRequestFragment extends BaseFragment {
 
     private void sendViewTourRequestSummaryData() {
         requestDetail = new GetWFHRequestDetail();
-        requestDetail.setReqID(employeeLeaveModel.getmReqID());
+        requestDetail.setReqID(employeeLeaveModel.getReqID());
+        requestDetail.setAction(AppsConstant.EDIT_ACTION);
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.WFHSummaryDetails(requestDetail),
                 CommunicationConstant.API_GET_TOUR_REQUEST_DETAIL, true);
@@ -1478,6 +1501,8 @@ public class TourRequestFragment extends BaseFragment {
         startDate = item.getStartDate();
         tv_to_date.setText(item.getEndDate());
         endDate = item.getEndDate();
+        datePickerDialog1 = CalenderUtils.pickDateFromCalender(context, tv_to_date, tv_to_day, AppsConstant.DATE_FORMATE);
+        datePickerDialog2 = CalenderUtils.pickDateFromCalender(context, tv_from_date, tv_from_day, AppsConstant.DATE_FORMATE);
         if (item.getTravelFrom() != null && item.getTravelTo() != null) {
             travelFromLl.setVisibility(View.VISIBLE);
             travelToLl.setVisibility(View.VISIBLE);
@@ -1558,7 +1583,7 @@ public class TourRequestFragment extends BaseFragment {
                 if (button.equalsIgnoreCase(AppsConstant.SUBMIT)) {
                     submitBTN.setVisibility(View.VISIBLE);
                 }
-                if (button.equalsIgnoreCase(AppsConstant.SAVE_DRAFT)) {
+                if (button.equalsIgnoreCase(AppsConstant.DRAFT)) {
                     saveDraftBTN.setVisibility(View.VISIBLE);
                 }
                 if (button.equalsIgnoreCase(AppsConstant.REJECT)) {

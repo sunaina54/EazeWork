@@ -180,7 +180,9 @@ public class ViewTourSummaryFragment extends BaseFragment {
 
     private void sendViewRequestSummaryData() {
         requestDetail = new GetWFHRequestDetail();
+
         requestDetail.setReqID(getEmpWFHResponseItem.getReqID());
+        requestDetail.setAction(AppsConstant.VIEW_ACTION);
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.WFHSummaryDetails(requestDetail),
                 CommunicationConstant.API_GET_TOUR_REQUEST_DETAIL, true);

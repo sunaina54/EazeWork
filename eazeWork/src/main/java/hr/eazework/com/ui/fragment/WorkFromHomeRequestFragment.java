@@ -51,6 +51,7 @@ import hr.eazework.com.MainActivity;
 import hr.eazework.com.R;
 import hr.eazework.com.SearchOnbehalfActivity;
 import hr.eazework.com.model.AdvanceRequestResponseModel;
+import hr.eazework.com.model.AttendanceItem;
 import hr.eazework.com.model.CorpEmpParamListItem;
 import hr.eazework.com.model.EmployItem;
 import hr.eazework.com.model.EmployeeLeaveModel;
@@ -81,6 +82,7 @@ import hr.eazework.com.ui.customview.CustomDialog;
 import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.util.AppsConstant;
 import hr.eazework.com.ui.util.CalenderUtils;
+import hr.eazework.com.ui.util.DateTimeUtil;
 import hr.eazework.com.ui.util.ImageUtil;
 import hr.eazework.com.ui.util.PermissionUtil;
 import hr.eazework.com.ui.util.Preferences;
@@ -108,7 +110,7 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
     private String fromButton;
     private EmployItem employItem;
     private RelativeLayout searchLayout;
-    public static int WFH_EMP = 1;
+    public static int WFH_EMP = 2;
     private String empId;
     private LinearLayout errorLinearLayout;
     private RecyclerView expenseRecyclerView;
@@ -143,13 +145,13 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
         this.screenName = screenName;
     }
 
-    private EmployeeLeaveModel employeeLeaveModel;
+    private AttendanceItem employeeLeaveModel;
 
-    public EmployeeLeaveModel getEmployeeLeaveModel() {
+    public AttendanceItem getEmployeeLeaveModel() {
         return employeeLeaveModel;
     }
 
-    public void setEmployeeLeaveModel(EmployeeLeaveModel employeeLeaveModel) {
+    public void setEmployeeLeaveModel(AttendanceItem employeeLeaveModel) {
         this.employeeLeaveModel = employeeLeaveModel;
     }
 
@@ -213,6 +215,8 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
         tv_to_date = ((TextView) rootView.findViewById(R.id.tv_to_date));
         tv_from_day = ((TextView) rootView.findViewById(R.id.tv_from_day));
         tv_from_date = ((TextView) rootView.findViewById(R.id.tv_from_date));
+        String dateStr=null;
+
         datePickerDialog1 = pickDateFromCalenderFromDate(context, tv_to_date, tv_to_day, AppsConstant.DATE_FORMATE);
         datePickerDialog2 = pickDateFromCalenderToDate(context, tv_from_date, tv_from_day, AppsConstant.DATE_FORMATE);
 
@@ -264,7 +268,7 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
         remarksET = (EditText) rootView.findViewById(R.id.remarksET);
 
         saveDraftBTN = (Button) rootView.findViewById(R.id.saveDraftBTN);
-        saveDraftBTN.setVisibility(View.VISIBLE);
+
         saveDraftBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -322,6 +326,7 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 Intent theIntent = new Intent(getActivity(), SearchOnbehalfActivity.class);
+                theIntent.putExtra("SearchType",WFH_EMP);
                 startActivityForResult(theIntent, WFH_EMP);
             }
         });
@@ -371,17 +376,17 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
             remarksDataLl.setVisibility(View.VISIBLE);
             sendViewRequestSummaryData();
             getSearchEmployeeData();
-        } else if (employeeLeaveModel != null && employeeLeaveModel.getmReqID() != null
-                && !employeeLeaveModel.getmReqID().equalsIgnoreCase("0")) {   //Approval edit
-            if (employeeLeaveModel.getmReqType() != null && employeeLeaveModel.getmReqType().equalsIgnoreCase(AppsConstant.WFH_EDIT)) {
-                reqId = employeeLeaveModel.getmReqID();
+        } else if (employeeLeaveModel != null && employeeLeaveModel.getReqID() != null
+                && !employeeLeaveModel.getReqID().equalsIgnoreCase("0")) {   //Approval edit
+            if (employeeLeaveModel.getReqType() != null && employeeLeaveModel.getReqType().equalsIgnoreCase(AppsConstant.WFH_EDIT)) {
+                reqId = employeeLeaveModel.getReqID();
                 remarksDataLl.setVisibility(View.VISIBLE);
                 sendViewWFHRequestSummaryData();
                 disabledFieldData();
             }
 
-            if (employeeLeaveModel.getmReqType() != null && employeeLeaveModel.getmReqType().equalsIgnoreCase(AppsConstant.WFH_WITHDRAWAL)) {
-                reqId = employeeLeaveModel.getmReqID();
+            if (employeeLeaveModel.getReqType() != null && employeeLeaveModel.getReqType().equalsIgnoreCase(AppsConstant.WFH_WITHDRAWAL)) {
+                reqId = employeeLeaveModel.getReqID();
                 remarksDataLl.setVisibility(View.VISIBLE);
                 sendViewWFHRequestSummaryData();
                 disabledFieldDataForView();
@@ -391,6 +396,7 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
         } else {
             uploadFileList = new ArrayList<SupportDocsItemModel>();
             getSearchEmployeeData();
+            saveDraftBTN.setVisibility(View.VISIBLE);
         }
 
         sendAdvanceRequestData();
@@ -697,6 +703,13 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
 
     public DatePickerDialog pickDateFromCalenderToDate(Context mContext, final TextView dobTextView, final TextView dayTV, String dateFormat) {
         Calendar newCalendar = Calendar.getInstance();
+        String dateStr=null;
+        if(dobTextView.getText().toString().equalsIgnoreCase("") || dobTextView.getText().toString().equalsIgnoreCase("--/--/----")){
+            dateStr= DateTimeUtil.currentDate(AppsConstant.DATE_FORMATE);
+        }else{
+            dateStr=dobTextView.getText().toString();
+        }
+        String date[] =dateStr.split("/");
         final SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat, Locale.US);
         DatePickerDialog datePickerDialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
 
@@ -718,13 +731,23 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
                 }
             }
 
-        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH),
-                newCalendar.get(Calendar.DAY_OF_MONTH));
+        },Integer.parseInt(date[2]), Integer.parseInt(date[1])-1,
+                Integer.parseInt(date[0]));
         return datePickerDialog;
     }
 
     public DatePickerDialog pickDateFromCalenderFromDate(Context mContext, final TextView dobTextView, final TextView dayTV, String dateFormat) {
         Calendar newCalendar = Calendar.getInstance();
+        String dateStr=null;
+        if(dobTextView.getText().toString().equalsIgnoreCase("") || dobTextView.getText().toString().equalsIgnoreCase("--/--/----")){
+            dateStr= DateTimeUtil.currentDate(AppsConstant.DATE_FORMATE);
+        }else{
+            dateStr=dobTextView.getText().toString();
+        }
+        String date[] =dateStr.split("/");
+        /*if(!predefinedDate.getText().toString().equalsIgnoreCase("")){
+            String date[] =predefinedDate.getText().toString().split("/");
+        }*/
         final SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat, Locale.US);
         DatePickerDialog datePickerDialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
 
@@ -746,8 +769,8 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
 
             }
 
-        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH),
-                newCalendar.get(Calendar.DAY_OF_MONTH));
+        }, Integer.parseInt(date[2]), Integer.parseInt(date[1])-1,
+                Integer.parseInt(date[0]));
         return datePickerDialog;
     }
 
@@ -766,6 +789,10 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
         partialDayDataModel = new PartialDayDataModel();
 
         if (fromButton.equalsIgnoreCase(AppsConstant.SUBMIT)) {
+            if(empNameTV.getText().toString().equalsIgnoreCase("")){
+                new AlertCustomDialog(context, getResources().getString(R.string.select_user));
+                return;
+            }
             if (fromDate.equalsIgnoreCase("") || fromDate.equalsIgnoreCase("--/--/----")) {
                 new AlertCustomDialog(context, "Please Enter From Date");
                 return;
@@ -807,6 +834,7 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
         }
 
         if (fromButton.equalsIgnoreCase(AppsConstant.APPROVE)) {
+
             if (fromDate.equalsIgnoreCase("") || fromDate.equalsIgnoreCase("--/--/----")) {
                 new AlertCustomDialog(context, "Please Enter From Date");
                 return;
@@ -851,6 +879,10 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
         }
 
         if (fromButton.equalsIgnoreCase(AppsConstant.SAVE_AS_DRAFT) || fromButton.equalsIgnoreCase(AppsConstant.DELETE)) {
+            if(empNameTV.getText().toString().equalsIgnoreCase("")){
+                new AlertCustomDialog(context, getResources().getString(R.string.select_user));
+                return;
+            }
             if (getScreenName().equalsIgnoreCase(AppsConstant.PENDING_APPROVAL)) {
                 if (wfhSummaryResponse != null && wfhSummaryResponse.getGetWFHRequestDetailResult() != null
                         && wfhSummaryResponse.getGetWFHRequestDetailResult().getWFHRequestDetail() != null
@@ -1044,6 +1076,7 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
     private void sendViewRequestSummaryData() {
         requestDetail = new GetWFHRequestDetail();
         requestDetail.setReqID(getEmpWFHResponseItem.getReqID());
+        requestDetail.setAction(AppsConstant.EDIT_ACTION);
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.WFHSummaryDetails(requestDetail),
                 CommunicationConstant.API_GET_WFH_REQUEST_DETAIL, true);
@@ -1051,7 +1084,8 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
 
     private void sendViewWFHRequestSummaryData() {
         requestDetail = new GetWFHRequestDetail();
-        requestDetail.setReqID(employeeLeaveModel.getmReqID());
+        requestDetail.setReqID(employeeLeaveModel.getReqID());
+        requestDetail.setAction(AppsConstant.EDIT_ACTION);
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.WFHSummaryDetails(requestDetail),
                 CommunicationConstant.API_GET_WFH_REQUEST_DETAIL, true);
@@ -1064,6 +1098,8 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
         fromDate = item.getStartDate();
         tv_to_date.setText(item.getEndDate());
         toDate = item.getEndDate();
+        datePickerDialog1 = pickDateFromCalenderFromDate(context, tv_to_date, tv_to_day, AppsConstant.DATE_FORMATE);
+        datePickerDialog2 = pickDateFromCalenderToDate(context, tv_from_date, tv_from_day, AppsConstant.DATE_FORMATE);
         remarksET.setText(item.getRemark());
 
         if(item.getPartialDay().getPartialDayParams().getDayP50Visible().equalsIgnoreCase("Y")){
@@ -1103,7 +1139,7 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
                 if (button.equalsIgnoreCase(AppsConstant.SUBMIT)) {
                     submitBTN.setVisibility(View.VISIBLE);
                 }
-                if (button.equalsIgnoreCase(AppsConstant.SAVE_DRAFT)) {
+                if (button.equalsIgnoreCase(AppsConstant.DRAFT)) {
                     saveDraftBTN.setVisibility(View.VISIBLE);
                 }
                 if (button.equalsIgnoreCase(AppsConstant.REJECT)) {

@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-
+        android:paddingBottom="@dimen/margin_10"
         android:layout_alignParentTop="true"
         card_view:cardBackgroundColor="@color/white"
         card_view:cardCornerRadius="2dp"
@@ -32,11 +32,26 @@
                     android:weightSum="1">
 
                     <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/font_14"
+                        android:id="@+id/leaveTypeTV"
+                        android:textColor="@color/accent"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
                         style="@style/textView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:text="@string/request_id_voucher"
+                        android:layout_weight="0.35"
+                        android:text="@string/request_id_leave"
                         android:textSize="@dimen/font_12" />
 
                     <TextView
@@ -49,43 +64,11 @@
                         android:textColor="@color/black" />
 
                     <TextView
-                        android:id="@+id/requestIdTV"
+                        android:id="@+id/requestIdLeaveTV"
                         style="@style/textViewYellow"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
-                        android:text="text"
-                        android:textSize="@dimen/font_12" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        style="@style/textView"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:text="@string/date"
-                        android:textSize="@dimen/font_12" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/padding_default"
-                        android:paddingRight="@dimen/padding_default"
-                        android:text=":"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:id="@+id/dateTV"
-                        style="@style/textViewYellow"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
+                        android:layout_weight="0.65"
                         android:text="-"
                         android:textSize="@dimen/font_12" />
                 </LinearLayout>
@@ -100,8 +83,8 @@
                         style="@style/textView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:text="@string/reason"
+                        android:layout_weight="0.35"
+                        android:text="@string/from_date"
                         android:textSize="@dimen/font_12" />
 
                     <TextView
@@ -113,11 +96,11 @@
                         android:textColor="@color/black" />
 
                     <TextView
-                        android:id="@+id/reasonTV"
+                        android:id="@+id/fromDateLeaveTV"
                         style="@style/textViewYellow"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
+                        android:layout_weight="0.65"
                         android:text="-"
                         android:textSize="@dimen/font_12" />
                 </LinearLayout>
@@ -132,8 +115,8 @@
                         style="@style/textView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:text="@string/currency"
+                        android:layout_weight="0.35"
+                        android:text="@string/to_date"
                         android:textSize="@dimen/font_12" />
 
                     <TextView
@@ -145,17 +128,16 @@
                         android:textColor="@color/black" />
 
                     <TextView
-                        android:id="@+id/currencyTV"
+                        android:id="@+id/toDateLeaveTV"
                         style="@style/textViewYellow"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
+                        android:layout_weight="0.65"
                         android:text="-"
                         android:textSize="@dimen/font_12" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/wardLinearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -165,8 +147,40 @@
                         style="@style/textView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:text="@string/balance"
+                        android:layout_weight="0.35"
+                        android:text="@string/total_days"
+                        android:textSize="@dimen/font_12" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="@dimen/padding_default"
+                        android:paddingRight="@dimen/padding_default"
+                        android:text=":"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/totalDaysTV"
+                        style="@style/textViewYellow"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.65"
+                        android:text="-"
+                        android:textSize="@dimen/font_12" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        style="@style/textView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.35"
+                        android:text="@string/remarks"
                         android:textSize="@dimen/font_12" />
 
                     <TextView
@@ -179,17 +193,15 @@
                         android:textColor="@color/black" />
 
                     <TextView
-                        android:id="@+id/balanceTV"
+                        android:id="@+id/leaveRemarksTV"
                         style="@style/textViewYellow"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
+                        android:layout_weight="0.65"
                         android:text="-"
                         android:textSize="@dimen/font_12" />
                 </LinearLayout>
-
                 <LinearLayout
-                    android:id="@+id/ebLinearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -199,45 +211,12 @@
                         style="@style/textView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
-                        android:text="@string/pendingWith"
-                        android:textSize="@dimen/font_12" />
-
-                    <TextView
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/padding_default"
-                        android:paddingRight="@dimen/padding_default"
-                        android:text=":"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:id="@+id/pendingWithTV"
-                        style="@style/textViewYellow"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
-                        android:text="-"
-                        android:textSize="@dimen/font_12" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/subEbLinearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <TextView
-                        style="@style/textView"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.3"
+                        android:layout_weight="0.35"
                         android:text="@string/status"
                         android:textSize="@dimen/font_12" />
 
                     <TextView
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/padding_default"
@@ -246,21 +225,22 @@
                         android:textColor="@color/black" />
 
                     <TextView
-                        android:id="@+id/statusTV"
+                        android:id="@+id/statusLeaveTV"
                         style="@style/textViewYellow"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.7"
+                        android:layout_weight="0.65"
                         android:text="-"
                         android:textSize="@dimen/font_12" />
                 </LinearLayout>
                 <Button
+                    android:layout_marginTop="@dimen/margin_10"
                     android:id="@+id/viewBTN"
                     style="@style/button"
                     android:layout_gravity="right"
                     android:layout_alignParentBottom="true"
                     android:layout_width="@dimen/margin_70"
-                    android:layout_height="@dimen/margin_30"
+                    android:layout_height="@dimen/margin_25"
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="@dimen/margin_5"
                     android:background="@drawable/rounded_corner_light_blue"

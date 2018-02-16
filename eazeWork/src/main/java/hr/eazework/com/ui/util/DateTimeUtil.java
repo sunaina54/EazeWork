@@ -21,6 +21,17 @@ public class DateTimeUtil {
         return mSec;
     }
 
+    public static Calendar convertStringDateToCalendar(String date){
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        try {
+            cal.setTime(sdf.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return cal;
+    }
+
     public static String currentDate(String dateFormat) {
         Calendar cal = Calendar.getInstance(Locale.getDefault());
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
@@ -135,7 +146,7 @@ public class DateTimeUtil {
     public static long convertDateIntoTimeMillis(String stringDate) {
         long timeMillis = -1;
         try {
-            SimpleDateFormat parser = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat parser = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
             Date date = parser.parse(stringDate);
             Calendar c = Calendar.getInstance();
             c.setTime(date);

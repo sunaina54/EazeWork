@@ -161,13 +161,15 @@ public class AttandanceFragment extends BaseFragment {
                         if (item.getTimeModYN().equalsIgnoreCase(AppsConstant.YES)) {
                             Intent theIntent = new Intent(getActivity(), TimeModificationActivity.class);
                             TimeModificationActivity.attandanceCalenderStatusItem = item;
-                            startActivity(theIntent);
+                            startActivityForResult(theIntent, TimeModificationActivity.TIMEMODIFICATIONREQUESTCODE);
+
                         }
 
                         if (item.getBackDateAttendYN().equalsIgnoreCase(AppsConstant.YES)) {
                             Intent theIntent = new Intent(getActivity(), BackdatedAttendanceActivity.class);
                             BackdatedAttendanceActivity.attandanceCalenderStatusItem = item;
-                            startActivity(theIntent);
+                            startActivityForResult(theIntent, BackdatedAttendanceActivity.TIMEMODIFICATIONREQUESTCODE);
+
                         }
 
                         break;
@@ -220,6 +222,16 @@ public class AttandanceFragment extends BaseFragment {
 
         // Setup Caldroid
         caldroidFragment.setCaldroidListener(listener);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        showLog(AttandanceFragment.class,"ResultCode "+ resultCode+"" + data);
+        if (requestCode == TimeModificationActivity.TIMEMODIFICATIONREQUESTCODE && resultCode==1) {
+            mUserActionListener.performUserAction(IAction.HOME_VIEW, null, null);
+            showLog(AttandanceFragment.class, "ResultCode1 " + resultCode + "");
+        }
     }
 
     protected void updateSelectedDateDetail(Date date) {
