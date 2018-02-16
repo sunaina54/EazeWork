@@ -200,7 +200,7 @@ public class ViewWFHSummaryFragment extends BaseFragment {
         statusTV.setText(item.getStatusDesc());
         startDateTV.setText(item.getStartDate());
         endDateTV.setText(item.getEndDate());
-        daysTV.setText(item.getTotalDays());
+        daysTV.setText(item.getTotalDays()+" " + "day(s)");
         setupButtons(item);
     }
 

@@ -161,16 +161,17 @@ public class PendingActivityFragment extends BaseFragment {
                             if (str.equalsIgnoreCase("Approve")) {
                                 approveBTN.setVisibility(View.VISIBLE);
                             }
-                            if (str.equalsIgnoreCase("Reject")) {
-                                menuList.add(str);
-
-                            }
                             if (str.equalsIgnoreCase("Edit")) {
                                 menuList.add(str);
                             }
                             if(str.equalsIgnoreCase("View")){
                                 menuList.add(str);
                             }
+                            if (str.equalsIgnoreCase("Reject")) {
+                                menuList.add(str);
+
+                            }
+
                         }
                     }
 

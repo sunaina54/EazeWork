@@ -248,7 +248,7 @@
     <string name="enter_travel_from">Please enter Travel From</string>
     <string name="enter_travel_to">Please enter Travel To</string>
     <string name="request_type">Requset Type</string>
-    <string name="request_no">Request No</string>
+    <string name="request_no">Request Id</string>
     <string name="employee">Employee Name</string>
     <string name="approve">Approve</string>
     <string name="reject_label">Enter Rejection Remarks</string>

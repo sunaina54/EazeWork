@@ -380,15 +380,16 @@ public class AttendanceApprovalFragment extends BaseFragment {
             final ArrayList<String> menuList = new ArrayList<>();
             if (item.getButtons() != null) {
                 for (String str : item.getButtons()) {
-                    if (str.equalsIgnoreCase("Reject")) {
-                        menuList.add(str);
-                    }
                     if (str.equalsIgnoreCase("Edit")) {
                         menuList.add(str);
                     }
                     if (str.equalsIgnoreCase("View")) {
                         menuList.add(str);
                     }
+                    if (str.equalsIgnoreCase("Reject")) {
+                        menuList.add(str);
+                    }
+
                 }
             }
 
@@ -515,7 +516,8 @@ public class AttendanceApprovalFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         showLog(AttandanceFragment.class,"ResultCode "+ resultCode+"" + data);
         if (requestCode == TimeModificationActivity.TIMEMODIFICATIONREQUESTCODE && resultCode==1) {
-            mUserActionListener.performUserAction(IAction.HOME_VIEW, null, null);
+          //  mUserActionListener.performUserAction(IAction.HOME_VIEW, null, null);
+            sendRequestSummaryData();
             showLog(AttandanceFragment.class,"ResultCode1 "+ resultCode+"");
         }
 

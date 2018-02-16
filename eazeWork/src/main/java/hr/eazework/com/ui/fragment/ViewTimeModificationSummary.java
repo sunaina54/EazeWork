@@ -33,7 +33,6 @@ import hr.eazework.com.ui.adapter.RemarksAdapter;
 import hr.eazework.com.ui.customview.CustomDialog;
 import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.util.AppsConstant;
-import hr.eazework.com.ui.util.DateTimeUtil;
 import hr.eazework.com.ui.util.Preferences;
 import hr.eazework.com.ui.util.Utility;
 import hr.eazework.com.ui.util.custom.AlertCustomDialog;
@@ -168,8 +167,10 @@ public class ViewTimeModificationSummary extends BaseFragment {
             empNameTV.setText(item.getName());
             statusTV.setText(item.getStatusDesc());
             dateTV.setText(item.getMarkDate());
-            startTimeTV.setText(item.getReqTime());
-            endTimeTV.setText(item.getReqOutTime());
+            String[] reqTime= item.getReqTime().split(" ");
+            String[] reqOutTime= item.getReqOutTime().split(" ");
+            startTimeTV.setText(reqTime[1]+" "+reqTime[2]);
+            endTimeTV.setText(reqOutTime[1]+" "+reqOutTime[2]);
             requestedOutTimeLl.setVisibility(View.GONE);
             requestedInTimeLl.setVisibility(View.GONE);
 
@@ -180,14 +181,16 @@ public class ViewTimeModificationSummary extends BaseFragment {
             empNameTV.setText(item.getName());
             statusTV.setText(item.getStatusDesc());
             dateTV.setText(item.getMarkDate());
-            String existingTime=item.getExistingTime();
-
-            startTimeTV.setText(DateTimeUtil.convertTimeIntoString(DateTimeUtil.convertDateIntoTimeMillis(existingTime)));
-            endTimeTV.setText(item.getExistingOutTime());
+            String[] existingTime= item.getExistingTime().split(" ");
+            startTimeTV.setText(existingTime[1] + " "+existingTime[2]);
+            String[] existingOutTime= item.getExistingTime().split(" ");
+            endTimeTV.setText(existingOutTime[1]+" "+ existingOutTime[2]);
             requestedOutTimeLl.setVisibility(View.VISIBLE);
             requestedInTimeLl.setVisibility(View.VISIBLE);
-            requestedInTimeTV.setText(item.getReqTime());
-            requestedOutTimeTV.setText(item.getReqOutTime());
+            String[] reqTime= item.getReqTime().split(" ");
+            String[] reqOutTime= item.getReqOutTime().split(" ");
+            requestedInTimeTV.setText(reqTime[1]+" "+reqTime[2]);
+            requestedOutTimeTV.setText(reqOutTime[1]+" "+reqOutTime[2]);
         }
     }
 

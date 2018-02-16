@@ -325,7 +325,8 @@ public class TimeModificationActivity extends BaseActivity {
                 if (attendanceRejectResponseModel != null && attendanceRejectResponseModel.getRejectRequestResult() != null
                         && attendanceRejectResponseModel.getRejectRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
                     //CustomDialog.alertOkWithFinishFragment(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
-                    CustomDialog.alertOkWithFinish(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage());
+                  //  CustomDialog.alertOkWithFinish(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage());
+                    CustomDialog.alertOkWithFinishActivity(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage(),TimeModificationActivity.this,true);
 
                 } else {
                     new AlertCustomDialog(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage());
