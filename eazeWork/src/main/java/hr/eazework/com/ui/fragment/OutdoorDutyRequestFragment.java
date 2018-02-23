@@ -357,6 +357,7 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
         } else {
             uploadFileList = new ArrayList<SupportDocsItemModel>();
             getSearchEmployeeData();
+            saveDraftBTN.setVisibility(View.VISIBLE);
         }
 
         sendAdvanceRequestData();
@@ -930,7 +931,7 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
                 ODResponseModel odResponseModel = ODResponseModel.create(odresponseData);
                 if (odResponseModel != null && odResponseModel.getApproveODRequestResult() != null
                         && odResponseModel.getApproveODRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, odResponseModel.getApproveODRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    CustomDialog.alertOkWithFinishFragment(context, odResponseModel.getApproveODRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
                 } else {
                     new AlertCustomDialog(getActivity(), odResponseModel.getApproveODRequestResult().getErrorMessage());
                 }
@@ -942,7 +943,7 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
                 LeaveRejectResponseModel rejectODResponse = LeaveRejectResponseModel.create(data);
                 if (rejectODResponse != null && rejectODResponse.getRejectODRequestResult() != null
                         && rejectODResponse.getRejectODRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, rejectODResponse.getRejectODRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    CustomDialog.alertOkWithFinishFragment(context, rejectODResponse.getRejectODRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
                 } else {
                     new AlertCustomDialog(getActivity(), rejectODResponse.getRejectODRequestResult().getErrorMessage());
                 }

@@ -53,8 +53,7 @@ public class ViewTimeModificationSummary extends BaseFragment {
     private Preferences preferences;
     private TextView requestIdTV, empNameTV, empCodeTV, statusTV, reqInitiatorTV, reqDateTV, startDateTV, endDateTV, daysTV;
     private TextView dateTV, submittedByTV, pendingWithTV, startTimeTV, endTimeTV, requestedInTimeTV, requestedOutTimeTV;
-    private LinearLayout remarksLinearLayout, wfhSummaryLl, tourSummaryLl, odSummaryLl,timeModificationSummaryLl,docLl,requestedOutTimeLl
-            ,requestedInTimeLl;
+    private LinearLayout remarksLinearLayout, wfhSummaryLl, tourSummaryLl, odSummaryLl, timeModificationSummaryLl, docLl, requestedOutTimeLl, requestedInTimeLl;
     private RecyclerView remarksRV;
     private GetTimeModificationRequestDetail getTimeModificationRequestDetail;
 
@@ -64,6 +63,7 @@ public class ViewTimeModificationSummary extends BaseFragment {
     private DocumentUploadAdapter documentViewAdapter;
     private RecyclerView documentRV;
     private ImageView plus_create_newIV;
+    private TextView timeOutTV,timeInTV;
     private GetEmpWFHResponseItem getEmpWFHResponseItem;
 
     public GetEmpWFHResponseItem getGetEmpWFHResponseItem() {
@@ -98,9 +98,9 @@ public class ViewTimeModificationSummary extends BaseFragment {
         tourSummaryLl.setVisibility(View.GONE);
         odSummaryLl = (LinearLayout) rootView.findViewById(R.id.odSummaryLl);
         odSummaryLl.setVisibility(View.GONE);
-        timeModificationSummaryLl= (LinearLayout) rootView.findViewById(R.id.timeModificationSummaryLl);
+        timeModificationSummaryLl = (LinearLayout) rootView.findViewById(R.id.timeModificationSummaryLl);
         timeModificationSummaryLl.setVisibility(View.VISIBLE);
-        docLl= (LinearLayout) rootView.findViewById(R.id.docLl);
+        docLl = (LinearLayout) rootView.findViewById(R.id.docLl);
         docLl.setVisibility(View.GONE);
 
         remarksLinearLayout = (LinearLayout) rootView.findViewById(R.id.remarksLinearLayout);
@@ -117,10 +117,12 @@ public class ViewTimeModificationSummary extends BaseFragment {
         dateTV = (TextView) rootView.findViewById(R.id.dateTmTV);
         startTimeTV = (TextView) rootView.findViewById(R.id.startTimeTmTV);
         endTimeTV = (TextView) rootView.findViewById(R.id.endTimeTmTV);
+        timeInTV= (TextView) rootView.findViewById(R.id.timeInTV);
+        timeOutTV= (TextView) rootView.findViewById(R.id.timeOutTV);
         requestedInTimeTV = (TextView) rootView.findViewById(R.id.requestedInTimeTV);
         requestedOutTimeTV = (TextView) rootView.findViewById(R.id.requestedOutTimeTV);
-        requestedInTimeLl= (LinearLayout) rootView.findViewById(R.id.requestedInTimeLl);
-        requestedOutTimeLl= (LinearLayout) rootView.findViewById(R.id.requestedOutTimeLl);
+        requestedInTimeLl = (LinearLayout) rootView.findViewById(R.id.requestedInTimeLl);
+        requestedOutTimeLl = (LinearLayout) rootView.findViewById(R.id.requestedOutTimeLl);
 
         sendViewRequestSummaryData();
 
@@ -161,16 +163,26 @@ public class ViewTimeModificationSummary extends BaseFragment {
 
     private void updateUI(AttendanceReqDetail item) {
         if (item.getReqCategoryDesc().equalsIgnoreCase(AppsConstant.BACK_DATED_ATTENDANCE)) {
+            timeInTV.setText("In Time");
+            timeOutTV.setText("Out Time");
             submittedByTV.setText(item.getSubmittedBy());
             pendingWithTV.setText(item.getPendWithName());
             requestIdTV.setText(item.getReqCode());
             empNameTV.setText(item.getName());
             statusTV.setText(item.getStatusDesc());
             dateTV.setText(item.getMarkDate());
-            String[] reqTime= item.getReqTime().split(" ");
-            String[] reqOutTime= item.getReqOutTime().split(" ");
-            startTimeTV.setText(reqTime[1]+" "+reqTime[2]);
-            endTimeTV.setText(reqOutTime[1]+" "+reqOutTime[2]);
+            String[] reqTime = item.getReqTime().split(" ");
+            String[] reqOutTime = item.getReqOutTime().split(" ");
+            if (reqTime.length == 3) {
+                startTimeTV.setText(reqTime[1] + " " + reqTime[2]);
+            } else {
+                startTimeTV.setText(reqTime[1]);
+            }
+            if (reqOutTime.length == 3) {
+                endTimeTV.setText(reqOutTime[1] + " " + reqOutTime[2]);
+            }else {
+                endTimeTV.setText(reqOutTime[1]);
+            }
             requestedOutTimeLl.setVisibility(View.GONE);
             requestedInTimeLl.setVisibility(View.GONE);
 
@@ -181,16 +193,34 @@ public class ViewTimeModificationSummary extends BaseFragment {
             empNameTV.setText(item.getName());
             statusTV.setText(item.getStatusDesc());
             dateTV.setText(item.getMarkDate());
-            String[] existingTime= item.getExistingTime().split(" ");
-            startTimeTV.setText(existingTime[1] + " "+existingTime[2]);
-            String[] existingOutTime= item.getExistingTime().split(" ");
-            endTimeTV.setText(existingOutTime[1]+" "+ existingOutTime[2]);
+            String[] existingTime = item.getExistingTime().split(" ");
+            if (existingTime.length == 3) {
+                startTimeTV.setText(existingTime[1] + " " + existingTime[2]);
+            } else {
+                startTimeTV.setText(existingTime[1]);
+            }
+            String[] existingOutTime = item.getExistingTime().split(" ");
+            if (existingOutTime.length == 3) {
+                endTimeTV.setText(existingOutTime[1] + " " + existingOutTime[2]);
+            } else {
+                endTimeTV.setText(existingOutTime[1]);
+            }
             requestedOutTimeLl.setVisibility(View.VISIBLE);
             requestedInTimeLl.setVisibility(View.VISIBLE);
-            String[] reqTime= item.getReqTime().split(" ");
-            String[] reqOutTime= item.getReqOutTime().split(" ");
-            requestedInTimeTV.setText(reqTime[1]+" "+reqTime[2]);
-            requestedOutTimeTV.setText(reqOutTime[1]+" "+reqOutTime[2]);
+
+            String[] reqTime = item.getReqTime().split(" ");
+            String[] reqOutTime = item.getReqOutTime().split(" ");
+            if (reqTime.length == 3) {
+                requestedInTimeTV.setText(reqTime[1] + " " + reqTime[2]);
+            } else {
+                requestedInTimeTV.setText(reqTime[1]);
+            }
+
+            if (reqOutTime.length == 3) {
+                requestedOutTimeTV.setText(reqOutTime[1] + " " + reqOutTime[2]);
+            } else {
+                requestedOutTimeTV.setText(reqOutTime[1]);
+            }
         }
     }
 

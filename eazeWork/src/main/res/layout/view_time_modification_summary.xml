@@ -242,7 +242,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
                     android:padding="@dimen/margin_5"
-                    android:text="@string/in_time"
+                    android:id="@+id/timeInTV"
+                    android:text="@string/mark_in_time"
                     android:textColor="@color/black"
                     android:textSize="@dimen/font_14"
                     android:textStyle="bold" />
@@ -277,7 +278,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.4"
                 android:padding="@dimen/margin_5"
-                android:text="@string/out_time"
+                android:id="@+id/timeOutTV"
+                android:text="@string/mark_out_time"
                 android:textColor="@color/black"
                 android:textSize="@dimen/font_14"
                 android:textStyle="bold" />

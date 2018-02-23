@@ -120,7 +120,7 @@
                                android:layout_height="wrap_content"
                                android:gravity="center"
                                android:padding="10dp"
-                               android:text="@string/expense_error_msg"
+                               android:text="@string/leave_summary_error_msg"
                                android:textColor="@color/black"
                                android:textSize="@dimen/font_14"
                                android:visibility="visible" />

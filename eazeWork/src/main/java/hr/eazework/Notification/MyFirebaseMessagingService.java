@@ -174,15 +174,16 @@ private Context context;
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
       //  int icon=R.drawable.ic_launcher;\
         NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher))
-                        .setContentTitle("EazeWork")
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody.getNotification().getBody()))
-                        .setContentText(messageBody.getNotification().getBody())
-                        .setAutoCancel(true)
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
+                new NotificationCompat.Builder(context);
+        notificationBuilder .setSmallIcon(R.drawable.ic_stat_ic_launcher_new);
+        notificationBuilder .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.ic_stat_ic_launcher_new));
+        notificationBuilder.setContentTitle("EazeWork");
+        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody.getNotification().getBody()));
+        notificationBuilder.setContentText(messageBody.getNotification().getBody());
+        notificationBuilder.setAutoCancel(true);
+        notificationBuilder.setSound(defaultSoundUri);
+        notificationBuilder.setContentIntent(pendingIntent);
       /*  if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             notificationBuilder.setSmallIcon(R.drawable.ic_launcher);
         } else {
@@ -193,5 +194,17 @@ private Context context;
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationManager.notify(notificationId, notificationBuilder.build());
+
+    }
+
+    private int getNotificationIcon(NotificationCompat.Builder notificationBuilder) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int color = 0x008000;
+            notificationBuilder.setColor(color);
+            return R.drawable.time1;
+        }
+
+        return R.drawable.ic_launcher;
     }
 }

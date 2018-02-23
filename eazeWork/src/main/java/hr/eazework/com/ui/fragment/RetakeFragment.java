@@ -110,6 +110,7 @@ public class RetakeFragment extends Fragment {
 
         if (bmp != null) {
             imageView.setImageBitmap(bmp);
+            imageView.invalidate();
         }
 
         return view;

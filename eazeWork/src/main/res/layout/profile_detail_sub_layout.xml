@@ -10,15 +10,52 @@
         android:orientation="horizontal"
         android:background="@color/primary"
         android:layout_height="wrap_content">
-        <hr.eazework.com.ui.util.custom.RoundedImageView
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_width="@dimen/margin_82"
+                android:layout_height="@dimen/margin_82">
+                <hr.eazework.com.ui.util.custom.RoundedImageView
 
-            android:id="@+id/img_user_img"
-            android:layout_width="@dimen/margin_82"
-            android:layout_height="@dimen/margin_82"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="@dimen/margin_default"
-            android:background="@drawable/profile_image"/>
+                    android:id="@+id/img_user_img"
+                    android:layout_width="@dimen/margin_70"
+                    android:layout_height="@dimen/margin_70"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="@dimen/margin_default"
+                    android:background="@drawable/profile_image"/>
+                <RelativeLayout
+                    android:id="@+id/editProfilePicLayout"
+                    android:background="@drawable/circular_shape"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="@dimen/margin_10"
+                    android:layout_marginRight="@dimen/margin_10"
+                    android:layout_width="@dimen/margin_30"
+                    android:layout_height="@dimen/margin_30">
+                    <hr.eazework.com.ui.util.custom.RoundedImageView
+                        android:layout_centerInParent="true"
+                        android:layout_width="@dimen/margin_20"
+                        android:layout_height="@dimen/margin_20"
+                        android:background="@android:drawable/ic_menu_camera"/>
+                </RelativeLayout>
 
+            </RelativeLayout>
+
+        <TextView
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_5"
+            android:paddingLeft="@dimen/margin_5"
+            android:paddingRight="@dimen/margin_5"
+            android:paddingBottom="@dimen/margin_5"
+            android:textSize="@dimen/font_14"
+            android:id="@+id/changeImageTV"
+            android:textColor="@color/black"
+            android:text="@string/change_image"/>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

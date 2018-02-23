@@ -17,6 +17,7 @@ public class LeaveReqDetailModel implements Serializable {
     private String Remarks;
     private int ApprovalLevel;
     private int Status;
+    private String HalfDayFS;
     private String Button;
     private ArrayList<SupportDocsItemModel> Attachments;
 
@@ -26,6 +27,14 @@ public class LeaveReqDetailModel implements Serializable {
 
     public void setAttachments(ArrayList<SupportDocsItemModel> attachments) {
         Attachments = attachments;
+    }
+
+    public String getHalfDayFS() {
+        return HalfDayFS;
+    }
+
+    public void setHalfDayFS(String halfDayFS) {
+        HalfDayFS = halfDayFS;
     }
 
     public String getButton() {

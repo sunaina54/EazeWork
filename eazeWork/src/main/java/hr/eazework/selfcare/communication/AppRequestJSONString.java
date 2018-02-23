@@ -41,6 +41,7 @@ import hr.eazework.com.model.GetHeadDetailsWithPolicyRequestModel;
 import hr.eazework.com.model.GetODRequestDetail;
 import hr.eazework.com.model.GetTimeModificationRequestDetail;
 import hr.eazework.com.model.GetWFHRequestDetail;
+import hr.eazework.com.model.HolidayRequestModel;
 import hr.eazework.com.model.LeaveReqDetailModel;
 import hr.eazework.com.model.LeaveRequestModel;
 import hr.eazework.com.model.LineItemsModel;
@@ -59,6 +60,7 @@ import hr.eazework.com.model.SearchOnBehalfItem;
 import hr.eazework.com.model.SupportDocsItemModel;
 import hr.eazework.com.model.TimeModificationRequestModel;
 import hr.eazework.com.model.TourRequestModel;
+import hr.eazework.com.model.UploadProfilePicModel;
 import hr.eazework.com.model.ViewExpenseClaimRequestModel;
 import hr.eazework.com.model.VisibilityExpenseItem;
 import hr.eazework.com.model.VisibilityExpenseModel;
@@ -100,6 +102,29 @@ public class AppRequestJSONString {
             subJson.put("DeviceID", MyApplication.getDeviceId());
             subJson.put("SessionID", SharedPreference.getSessionId());
             subJson.put("FCMToken", token);
+            jsonObject.put("loginCred", subJson);
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Log.d("TAG","login request"+jsonObject.toString());
+        return jsonObject.toString();
+    }
+
+    public static String getLoginWithGoogle(String url,String token,String gmailToken) {
+        JSONObject jsonObject = new JSONObject();
+        JSONObject subJson = new JSONObject();
+
+        try {
+            subJson.put("CorpUrl", url);
+            subJson.put("OS", 1);
+            subJson.put("OSVersion", DeviceUtil.getOsVersion());
+            subJson.put("AppVersion", DeviceUtil.getAppVersion());
+            subJson.put("DeviceMake", DeviceUtil.getDeviceMake());
+            subJson.put("DeviceID", MyApplication.getDeviceId());
+            subJson.put("SessionID", SharedPreference.getSessionId());
+            subJson.put("FCMToken", token);
+            jsonObject.put("token",gmailToken);
             jsonObject.put("loginCred", subJson);
         } catch (JSONException e) {
             // TODO Auto-generated catch block
@@ -433,6 +458,17 @@ public class AppRequestJSONString {
 
     }
 
+    public static String uploadProfileRequest(UploadProfilePicModel item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","Upload Profile Request : "+request);
+        return request;
+
+    }
+
     public static String WFHRequest(WFHRequestModel item){
         AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
         loginData.setDeviceID(MyApplication.getDeviceId());
@@ -491,6 +527,18 @@ public class AppRequestJSONString {
         Log.d("TAG","WFH Summary Request: "+request);
         return request;
     }
+
+    public static String holidayListRequest(){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        HolidayRequestModel item = new HolidayRequestModel();
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","WFH Summary Request: "+request);
+        return request;
+    }
+
 
     public static String leaveRequest(LeaveRequestModel item){
         AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
@@ -863,6 +911,7 @@ public class AppRequestJSONString {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.d("TAG","Attendance Request "+ jsonObject.toString());
         return jsonObject.toString();
     }
 
@@ -898,7 +947,7 @@ public class AppRequestJSONString {
         return jsonObject.toString();
     }
 
-    public static String getSaveLeaveRequestData(String empId, String leaveId, String startDate, String endDate, String totalDays, String remark,ArrayList<SupportDocsItemModel> attachments,String reqId) {
+    public static String getSaveLeaveRequestData(String empId, String leaveId, String startDate, String endDate, String totalDays, String remark,ArrayList<SupportDocsItemModel> attachments,String reqId,String halfDayFS) {
         LeaveRequestModel leaveRequestModel=new LeaveRequestModel();
         AdvanceLoginDataRequestModel loginData=new AdvanceLoginDataRequestModel();
         loginData.setSessionID(SharedPreference.getSessionId());
@@ -909,6 +958,7 @@ public class AppRequestJSONString {
         item.setTotalDays(totalDays);
         item.setLeaveID(leaveId);
         item.setEndDate(endDate);
+        item.setHalfDayFS(halfDayFS);
         item.setStartDate(startDate);
         item.setReqID(reqId);
         item.setAttachments(attachments);
@@ -949,7 +999,8 @@ public class AppRequestJSONString {
 
     }*/
 
-    public static String getSaveAsDraftLeaveRequestData(String empId, String leaveId, String startDate, String endDate, String totalDays, String remark,ArrayList<SupportDocsItemModel> attachments,String button, String reqId) {
+    public static String getSaveAsDraftLeaveRequestData(String empId, String leaveId, String startDate, String endDate, String totalDays,
+                                                        String remark,ArrayList<SupportDocsItemModel> attachments,String button, String reqId, String halfDayFS) {
         LeaveRequestModel leaveRequestModel=new LeaveRequestModel();
         AdvanceLoginDataRequestModel loginData=new AdvanceLoginDataRequestModel();
         loginData.setSessionID(SharedPreference.getSessionId());
@@ -962,6 +1013,7 @@ public class AppRequestJSONString {
         item.setLeaveID(leaveId);
         item.setEndDate(endDate);
         item.setStartDate(startDate);
+        item.setHalfDayFS(halfDayFS);
         item.setAttachments(attachments);
         item.setButton(button);
         leaveRequestModel.setLeaveReqDetail(item);

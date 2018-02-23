@@ -287,8 +287,7 @@ public class AdvanceApprovalFragment extends BaseFragment {
                 Log.d("TAG", "Advance Response : " + str);
                 advanceApprovalResponseModel = AdvanceApprovalResponseModel.create(str);
                 if (advanceApprovalResponseModel != null && advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult() != null &&
-                        advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult().getAdvanceList() != null &&
-                        advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult().getAdvanceList().size() > 0) {
+                        advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult().getAdvanceList() != null) {
                     refresh(advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult().getAdvanceList());
                 }
 

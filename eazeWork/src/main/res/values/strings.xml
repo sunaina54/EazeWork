@@ -40,7 +40,8 @@
     <string name="msg_confirm_password">Confirm Password</string>
     <string name="msg_department">Department : </string>
     <string name="msg_role">Designation : </string>
-    <string name="msg_employee_id">Employee Id : </string>
+    <string name="msg_employee_id">Employee Code : </string>
+
     <string name="msg_sign_in">SIGN IN</string>
     <string name="lost_your_password">Lost your password?</string>
     <string name="dont_have_account">Do not have an account - Register for a demo</string>
@@ -67,8 +68,8 @@
     <string name="msg_today_in_time">Today\'s In-Time</string>
     <string name="msg_today_out_time">Today\'s Out-Time</string>
     <string name="msg_leave_balance">Leave Balance</string>
-    <string name="msg_in_time">In Time</string>
-    <string name="msg_out_time">Out Time</string>
+    <string name="msg_in_time">In Time : </string>
+    <string name="msg_out_time">Out Time : </string>
     <string name="msg_last_pay_slip">Last Payslip</string>
     <string name="msg_download">Download</string>
     <string name="msg_manager">Manager</string>
@@ -99,7 +100,7 @@
     <string name="leave_from_to_format">From : %1$s  To : %2$s</string>
     <string name="requested_date">Requested On : %1$s </string>
     <string name="request_id">Request ID : </string>
-    <string name="request_id_leave">Request Id </string>
+    <string name="request_id_leave">Request ID </string>
     <string name="requested_by">Requested By : </string>
     <string name="leave_work_off_format">Date Worked : %1$s  Compensatory Off Date : %2$s</string>
     <string name="time_in_out_message">Time In/Out Done For Today</string>
@@ -156,9 +157,10 @@
     <string name="details">Details</string>
     <string name="mode">Mode</string>
     <string name="advance_error_msg">There is no advance request pending for your approval.</string>
-    <string name="advance_summary_error_msg">There are no in process advance requests</string>
-    <string name="leave_summary_error_msg">There are no in process of any leave type requests</string>
-    <string name="expense_summary_error_msg">There are no in process expense requests</string>
+    <string name="advance_summary_error_msg">There is no in process advance requests</string>
+    <string name="leave_summary_error_msg">There is no in process of any leave type requests</string>
+    <string name="leave_approval_error_msg">There is no leave request pending for your approval</string>
+    <string name="expense_summary_error_msg">There is no in process expense requests</string>
     <string name="expense_error_msg">There is no expense request pending for your approval.</string>
     <string name="attendance_error_msg">There is no attendance request pending for your approval.</string>
     <string name="delete_btn">Delete</string>
@@ -167,7 +169,7 @@
     <string name="policy_amount">Amount As Per Policy</string>
     <string name="claim_amount">Claim Amount</string>
     <string name="status_policy">Status</string>
-    <string name="request_id_voucher">Request Id</string>
+    <string name="request_id_voucher">Request ID</string>
     <string name="approved_amount">Approved Amount</string>
 
     <string name="emp_id">Emp Id</string>
@@ -201,18 +203,25 @@
     <string name="tour">Tour Request</string>
     <string name="work_from_home">Work From Home</string>
     <string name="outdoor_duty">Outdoor Duty</string>
-    <string name="request_id_label">Request Id</string>
+    <string name="request_id_label">Request ID</string>
     <string name="accommodation_needed">Accommodation Needed</string>
     <string name="accommodation_details">Accommodation Details</string>
     <string name="tickets_needed">Tickets Needed</string>
     <string name="ticket_details">Ticket Details</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="mark_attendance_btn">Mark Attendance</string>
+    <string name="time_modification_btn">Time Modification</string>
+    <string name="holiday">Holiday</string>
+    <string name="change_image">Change Image</string>
+
 
     <string name="initiator_detail">Initiator Detail</string>
     <string name="req_initiator">Request Initiator</string>
     <string name="req_date">Request Date</string>
     <string name="days">Days</string>
+    <string name="day">Day</string>
+    <string name="type">Type</string>
     <string name="total_days">Total Days</string>
     <string name="duration">Duration</string>
     <string name="final_approver">Final Level Approver Details</string>
@@ -248,12 +257,13 @@
     <string name="enter_travel_from">Please enter Travel From</string>
     <string name="enter_travel_to">Please enter Travel To</string>
     <string name="request_type">Requset Type</string>
-    <string name="request_no">Request Id</string>
+    <string name="request_no">Request ID</string>
     <string name="employee">Employee Name</string>
     <string name="approve">Approve</string>
     <string name="reject_label">Enter Rejection Remarks</string>
     <string name="date_attendance">Date - </string>
     <string name="day_status">Day\'s Status - </string>
+    <string name="day_status_attendance">Day\'s Status : </string>
     <string name="Time_Modification_Request">Time Modification Request</string>
     <string name="Attendance_Request">Attendance Request</string>
     <string name="enter_out_date">Please Enter Out Date</string>
@@ -265,5 +275,9 @@
     <string name="mail_label">To recover your url / username / password please enter your email id. We will email your credentials.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="marked_in_time">Marked In Time : </string>
+    <string name="marked_out_time">Marked Out Time : </string>
+    <string name="mark_in_time">Marked In Time</string>
+    <string name="mark_out_time">Marked Out Time</string>
 
 </resources>

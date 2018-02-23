@@ -81,7 +81,7 @@ import static hr.eazework.com.ui.util.ImageUtil.rotateImage;
 
 public class BackdatedAttendanceActivity extends BaseActivity {
     private String screenName = "TimeModificationActivity";
-    public static int TIMEMODIFICATIONREQUESTCODE=11;
+    public static int TIMEMODIFICATIONREQUESTCODE = 11;
     private Context context;
     private Preferences preferences;
     private TextView empNameTV, tv_header_text, dateTV, statusTV, tv_in_day, tv_in_date, tv_in_time, tv_out_day, tv_out_date, tv_out_time, remarksET;
@@ -99,6 +99,7 @@ public class BackdatedAttendanceActivity extends BaseActivity {
     private AttendanceReqDetail reqDetail;
     private Button rejectBTN, approvalBTN;
     private String fromButton;
+    private LinearLayout markedTimeLl;
     private TimeModificationSummaryResponseModel summaryResponseModel;
 
     @Override
@@ -114,6 +115,7 @@ public class BackdatedAttendanceActivity extends BaseActivity {
         tv_header_text.setTextColor(textColor);
         rl_edit_team_member = (LinearLayout) findViewById(R.id.rl_edit_team_member);
         rl_edit_team_member.setBackgroundColor(bgColor);
+
         backLayout = (RelativeLayout) findViewById(R.id.backLayout);
         backLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,11 +128,12 @@ public class BackdatedAttendanceActivity extends BaseActivity {
         rightRL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fromButton="Submit";
+                fromButton = "Submit";
                 doSubmitOperation();
             }
         });
-
+        markedTimeLl= (LinearLayout) findViewById(R.id.markedTimeLl);
+        markedTimeLl.setVisibility(View.GONE);
         empNameTV = (TextView) findViewById(R.id.empNameTV);
         LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
         empId = loginUserModel.getUserModel().getEmpId();
@@ -297,7 +300,7 @@ public class BackdatedAttendanceActivity extends BaseActivity {
                 timeModificationResponseModel = TimeModificationResponseModel.create(responseData);
                 if (timeModificationResponseModel != null && timeModificationResponseModel.getBackDateAttendanceResult() != null
                         && timeModificationResponseModel.getBackDateAttendanceResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishActivity(context, timeModificationResponseModel.getBackDateAttendanceResult().getErrorMessage(),BackdatedAttendanceActivity.this,true);
+                    CustomDialog.alertOkWithFinishActivity(context, timeModificationResponseModel.getBackDateAttendanceResult().getErrorMessage(), BackdatedAttendanceActivity.this, true);
 
                     //CustomDialog.alertOkWithFinishFragment(context, timeModificationResponseModel.getTimeModificationResult().getErrorMessage(), null, IAction.HOME_VIEW, true);
                 } else {
@@ -324,7 +327,8 @@ public class BackdatedAttendanceActivity extends BaseActivity {
                 if (attendanceRejectResponseModel != null && attendanceRejectResponseModel.getRejectRequestResult() != null
                         && attendanceRejectResponseModel.getRejectRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
                     //CustomDialog.alertOkWithFinishFragment(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
-                    CustomDialog.alertOkWithFinish(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage());
+                   // CustomDialog.alertOkWithFinish(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage());
+                    CustomDialog.alertOkWithFinishActivity(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage(), BackdatedAttendanceActivity.this, true);
 
                 } else {
                     new AlertCustomDialog(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage());
@@ -338,6 +342,7 @@ public class BackdatedAttendanceActivity extends BaseActivity {
                         && attendanceApproveResponseModel.getApproveRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
                     //CustomDialog.alertOkWithFinishFragment(context, attendanceApproveResponseModel.getApproveRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
                     CustomDialog.alertOkWithFinish(context, attendanceApproveResponseModel.getApproveRequestResult().getErrorMessage());
+                    CustomDialog.alertOkWithFinishActivity(context, attendanceApproveResponseModel.getApproveRequestResult().getErrorMessage(), BackdatedAttendanceActivity.this, true);
 
                 } else {
                     new AlertCustomDialog(context, attendanceApproveResponseModel.getApproveRequestResult().getErrorMessage());
@@ -381,19 +386,27 @@ public class BackdatedAttendanceActivity extends BaseActivity {
 
     private void updateUIForApproval(AttendanceReqDetail item) {
         attendId = item.getAttendID();
-        empId=item.getEmpID()+"";
+        empId = item.getEmpID() + "";
         dateTV.setText(item.getMarkDate());
-        statusTV.setText(item.getStatusDesc());
+        statusTV.setText(item.getDayStatusDesc());
         empNameTV.setText(item.getName());
         String[] dateTime = item.getReqTime().split(" ");
         inDate = dateTime[0];
-        inTime=dateTime[1]+ " " + dateTime[2];
+        if (dateTime.length == 3) {
+            inTime = dateTime[1] + " " + dateTime[2];
+        } else {
+            inTime = dateTime[1];
+        }
         tv_in_date.setText(inDate);
         tv_in_time.setText(inTime);
 
         String[] outTimeDate = item.getReqOutTime().split(" ");
         outDate = outTimeDate[0];
-        outTime=outTimeDate[1]+ " " + outTimeDate[2];
+        if (outTimeDate.length == 3) {
+            outTime = outTimeDate[1] + " " + outTimeDate[2];
+        }else {
+            outTime = outTimeDate[1];
+        }
         tv_out_date.setText(outDate);
         tv_out_time.setText(outTime);
         datePickerDialog1 = CalenderUtils.pickDateFromCalender(context, tv_in_date, tv_in_day, AppsConstant.DATE_FORMATE);

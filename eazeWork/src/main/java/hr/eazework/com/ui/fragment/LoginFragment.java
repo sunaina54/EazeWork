@@ -83,6 +83,7 @@ public class LoginFragment extends BaseFragment {
     private GoogleApiClient mGoogleApiClient;
     private static final int RC_SIGN_IN = 234;
     private String email="";
+    private String sUrlGoogle = "";
     //creating a GoogleSignInClient object
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -111,7 +112,7 @@ public class LoginFragment extends BaseFragment {
         textView.setText(R.string.continue_with_google);
         MainActivity.animateToVisible(rootView, -1);
         et_password = (TextView) rootView.findViewById(R.id.et_password);
-        ((TextView) rootView.findViewById(R.id.tv_register)).setText(Html.fromHtml("<u>" + getString(R.string.dont_have_account) + "</u>"));
+        ((TextView) rootView.findViewById(R.id.tv_register)).setText( getString(R.string.dont_have_account) );
         rootView.findViewById(R.id.tv_register).setOnClickListener(this);
         rootView.findViewById(R.id.icon_eye).setOnTouchListener(
                 new OnTouchListener() {
@@ -214,8 +215,16 @@ public class LoginFragment extends BaseFragment {
                     CommunicationConstant.setServerLocation(CommunicationConstant.isTestServer(), CommunicationConstant.isProduction());
                 }
                 if (sUrl1.equalsIgnoreCase("")) {
-                    new AlertCustomDialog(getContext(), getResources().getString(R.string.enter_url));
-                    return;
+                    preferences.saveBoolean(Preferences.ISPRODUCTION, true);
+                    preferences.saveBoolean(Preferences.ISTESTSERVER, false);
+                    preferences.commit();
+                    CommunicationConstant.setIsTestServer(false);
+                    CommunicationConstant.setIsProduction(true);
+                    sUrl1 = strUrl1;
+                    CommunicationConstant.setServerLocation(CommunicationConstant.isTestServer(), CommunicationConstant.isProduction());
+
+                    //new AlertCustomDialog(getContext(), getResources().getString(R.string.enter_url));
+                   // return;
                 }
                 forgotCredentialsPopup();
                 break;
@@ -274,6 +283,44 @@ public class LoginFragment extends BaseFragment {
                 view.performClick();
                 break;
             case R.id.btn_gmail_sign_in:
+                TextView url = (TextView) rootView.findViewById(R.id.et_url);
+                String strUrl = url.getText().toString();
+
+                int urlLength = strUrl.length();
+                if (urlLength >= 2 && strUrl.charAt(1) == '*') {
+                    if (strUrl.charAt(0) == 't' || strUrl.charAt(0) == 'T') {
+                        preferences.saveBoolean(Preferences.ISPRODUCTION, false);
+                        preferences.saveBoolean(Preferences.ISTESTSERVER, true);
+                        preferences.commit();
+                        CommunicationConstant.setIsProduction(false);
+                        CommunicationConstant.setIsTestServer(true);
+                        int endlength = strUrl.length();
+                        sUrlGoogle = strUrl.substring(2, endlength);
+                        CommunicationConstant.setServerLocation(CommunicationConstant.isTestServer(), CommunicationConstant.isProduction());
+                    } else if (strUrl.charAt(0) == 's' || strUrl.charAt(0) == 'S') {
+                        preferences.saveBoolean(Preferences.ISTESTSERVER, false);
+                        preferences.saveBoolean(Preferences.ISPRODUCTION, false);
+                        preferences.commit();
+                        CommunicationConstant.setIsProduction(false);
+                        CommunicationConstant.setIsTestServer(false);
+                        int endlength = strUrl.length();
+                        sUrlGoogle = strUrl.substring(2, endlength);
+                        CommunicationConstant.setServerLocation(CommunicationConstant.isTestServer(), CommunicationConstant.isProduction());
+                    }
+                } else {
+                    preferences.saveBoolean(Preferences.ISPRODUCTION, true);
+                    preferences.saveBoolean(Preferences.ISTESTSERVER, false);
+                    preferences.commit();
+                    CommunicationConstant.setIsTestServer(false);
+                    CommunicationConstant.setIsProduction(true);
+                    sUrlGoogle = strUrl;
+                    CommunicationConstant.setServerLocation(CommunicationConstant.isTestServer(), CommunicationConstant.isProduction());
+                }
+
+                if(sUrlGoogle.equalsIgnoreCase("")){
+                    new AlertCustomDialog(getContext(), getResources().getString(R.string.enter_url));
+                    return;
+                }
                 signIn();
                 break;
             default:
@@ -396,6 +443,50 @@ public class LoginFragment extends BaseFragment {
                     }
                 }
                 break;
+            case CommunicationConstant.API_LOGIN_USER_WITH_GOOGLE:
+                try {
+                    ModelManager.getInstance().setLoginUserModel(((new JSONObject(response.getResponseData())).getJSONObject("LoginUserWithGoogleResult")).toString());
+                    Log.d("TAG", "Login Response :" + ((new JSONObject(response.getResponseData())).getJSONObject("LoginUserWithGoogleResult")).toString());
+                    TextView url = (TextView) rootView.findViewById(R.id.et_url);
+                    DataCacheManager.getInstance().setDataCachingNoExpiry(CommonValues.DB_KEY_CORP_URL, url.getText().toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                LoginUserModel loginUserModelGoogle = ModelManager.getInstance().getLoginUserModel();
+                if (loginUserModelGoogle != null) {
+                    if (loginUserModelGoogle.isLoggedIn()) {
+
+                        CommunicationManager.getInstance().sendPostRequest(this,
+                                AppRequestJSONString.getSallarySlipMonthData(),
+                                CommunicationConstant.API_GET_MENU_DATA, true);
+
+
+                    } else {
+                        if (loginUserModelGoogle.getErroreCode() == -9) {
+                            new AlertCustomDialog(getActivity(), loginUserModelGoogle.getErroreMessage(), "Upgrade", true, new AlertCustomDialog.AlertClickListener() {
+                                @Override
+                                public void onPositiveBtnListener() {
+                                    final String appPackageName = getActivity().getPackageName(); // getPackageName() from Context or Activity object
+                                    try {
+                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                                    } catch (android.content.ActivityNotFoundException e) {
+                                        Crashlytics.logException(e);
+                                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                                    }
+                                }
+
+                                @Override
+                                public void onNegativeBtnListener() {
+
+                                }
+                            });
+                        } else {
+                            new AlertCustomDialog(getActivity(), loginUserModelGoogle.getErroreMessage());
+                        }
+                    }
+                }
+                break;
+
             case CommunicationConstant.API_USER_PROFILE_DETAILS:
                 Log.d("TAG", "Response Profile" + response.getResponseData());
                 ModelManager.getInstance().setEmployeeProfileModel(response.getResponseData());
@@ -473,24 +564,38 @@ public class LoginFragment extends BaseFragment {
 
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
         //getting the auth credential
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         Log.d(TAG,"Gmail token :"+acct.getIdToken());
 
+        if (Utility.isNetworkAvailable(getContext())) {
+            showHideProgressView(true);
+            loginWithGoogle(sUrlGoogle,acct);
+        } else {
+            showHideNetworkErrorView(true);
+        }
+
         //Now using firebase we are signing in the user here
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithCredential:success");
+                            /*if (Utility.isNetworkAvailable(getContext())) {
+                                showHideProgressView(true);
+                                loginWithGoogle(sUrlGoogle,acct);
+                            } else {
+                                showHideNetworkErrorView(true);
+                            }*/
+                      /*      Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Log.d(TAG,"User name :"+ user.getDisplayName());
                             Log.d(TAG,"email :"+ user.getEmail());
-                            Toast.makeText(getContext(), "User Signed In", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "User Signed In", Toast.LENGTH_SHORT).show();*/
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -513,5 +618,11 @@ public class LoginFragment extends BaseFragment {
            // finish();
             //startActivity(new Intent(this, ProfileActivity.class));
         }
+    }
+
+    private void loginWithGoogle(String sUrl,GoogleSignInAccount acct){
+        CommunicationManager.getInstance().sendPostRequest(this,
+                AppRequestJSONString.getLoginWithGoogle(sUrl,fcmToken,acct.getIdToken()),
+                CommunicationConstant.API_LOGIN_USER_WITH_GOOGLE, true);
     }
 }

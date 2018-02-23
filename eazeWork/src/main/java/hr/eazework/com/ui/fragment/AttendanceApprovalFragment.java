@@ -383,9 +383,9 @@ public class AttendanceApprovalFragment extends BaseFragment {
                     if (str.equalsIgnoreCase("Edit")) {
                         menuList.add(str);
                     }
-                    if (str.equalsIgnoreCase("View")) {
+                 /*   if (str.equalsIgnoreCase("View")) {
                         menuList.add(str);
-                    }
+                    }*/
                     if (str.equalsIgnoreCase("Reject")) {
                         menuList.add(str);
                     }
@@ -455,7 +455,38 @@ public class AttendanceApprovalFragment extends BaseFragment {
                                         startActivityForResult(intent, TimeModificationActivity.TIMEMODIFICATIONREQUESTCODE);
                                     }
 
-                                } else if (selectedObject.toString().equalsIgnoreCase("View")) {
+                                    if (item.getReqCode() != null && item.getReqCode().startsWith("HW")) {
+                                        WorkFromHomeRequestFragment requestFragment = new WorkFromHomeRequestFragment();
+                                        requestFragment.setEmployeeLeaveModel(item);
+                                        requestFragment.setScreenName(screenName);
+                                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                        fragmentTransaction.replace(R.id.view_advance_expense, requestFragment);
+                                        fragmentTransaction.addToBackStack(null);
+                                        fragmentTransaction.commit();
+                                    }
+                                    if (item.getReqCode() != null && item.getReqCode().startsWith("OW")) {
+                                        OutdoorDutyRequestFragment outdoorDutyRequestFragment = new OutdoorDutyRequestFragment();
+                                        outdoorDutyRequestFragment.setEmployeeLeaveModel(item);
+                                        outdoorDutyRequestFragment.setScreenName(screenName);
+                                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                        fragmentTransaction.replace(R.id.view_advance_expense, outdoorDutyRequestFragment);
+                                        fragmentTransaction.addToBackStack(null);
+                                        fragmentTransaction.commit();
+                                    }
+                                    if (item.getReqCode() != null && item.getReqCode().startsWith("TW")) {
+                                        TourRequestFragment tourRequestFragment = new TourRequestFragment();
+                                        tourRequestFragment.setEmployeeLeaveModel(item);
+                                        tourRequestFragment.setScreenName(screenName);
+                                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                        fragmentTransaction.replace(R.id.view_advance_expense, tourRequestFragment);
+                                        fragmentTransaction.addToBackStack(null);
+                                        fragmentTransaction.commit();
+                                    }
+
+                                }/* else if (selectedObject.toString().equalsIgnoreCase("View")) {
 
                                     if (item.getReqCode() != null && item.getReqCode().startsWith("HW")) {
                                         WorkFromHomeRequestFragment requestFragment = new WorkFromHomeRequestFragment();
@@ -489,7 +520,7 @@ public class AttendanceApprovalFragment extends BaseFragment {
                                     }
 
 
-                                }
+                                }*/
                                 builder.dismiss();
                             }
                         });
@@ -515,11 +546,12 @@ public class AttendanceApprovalFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         showLog(AttandanceFragment.class,"ResultCode "+ resultCode+"" + data);
-        if (requestCode == TimeModificationActivity.TIMEMODIFICATIONREQUESTCODE && resultCode==1) {
+        /*if (requestCode == TimeModificationActivity.TIMEMODIFICATIONREQUESTCODE && resultCode==1) {
           //  mUserActionListener.performUserAction(IAction.HOME_VIEW, null, null);
             sendRequestSummaryData();
             showLog(AttandanceFragment.class,"ResultCode1 "+ resultCode+"");
-        }
+        }*/
+        sendRequestSummaryData();
 
     }
 

@@ -19,6 +19,7 @@
         android:paddingRight="@dimen/padding_default"/>-->
 
     <ListView
+        android:divider="@null"
         android:id="@+id/list_team_members"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

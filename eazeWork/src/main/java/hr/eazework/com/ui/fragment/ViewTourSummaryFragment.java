@@ -237,7 +237,7 @@ public class ViewTourSummaryFragment extends BaseFragment {
         pendingWithTV.setText(item.getPendWithName());
         startDateTV.setText(item.getStartDate());
         endDateTV.setText(item.getEndDate());
-        daysTV.setText(item.getTotalDays());
+        daysTV.setText(item.getTotalDays() +" "+ "day(s)");
         travelFromTV.setText(item.getTravelFrom());
         travelToTV.setText(item.getTravelTo());
         reasonTV.setText(item.getTourReason().getReason());

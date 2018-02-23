@@ -1045,7 +1045,7 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
                 WFHResponseModel wfhResponseModel = WFHResponseModel.create(res);
                 if (wfhResponseModel != null && wfhResponseModel.getApproveWFHRequestResult() != null
                         && wfhResponseModel.getApproveWFHRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, wfhResponseModel.getApproveWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    CustomDialog.alertOkWithFinishFragment(context, wfhResponseModel.getApproveWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
                 } else {
                     new AlertCustomDialog(getActivity(), wfhResponseModel.getApproveWFHRequestResult().getErrorMessage());
                 }
@@ -1056,7 +1056,7 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
                 LeaveRejectResponseModel leaveRejectResponse = LeaveRejectResponseModel.create(rejectResponse);
                 if (leaveRejectResponse != null && leaveRejectResponse.getRejectWFHRequestResult() != null
                         && leaveRejectResponse.getRejectWFHRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, leaveRejectResponse.getRejectWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    CustomDialog.alertOkWithFinishFragment(context, leaveRejectResponse.getRejectWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
                 } else {
                     new AlertCustomDialog(getActivity(), leaveRejectResponse.getRejectWFHRequestResult().getErrorMessage());
                 }

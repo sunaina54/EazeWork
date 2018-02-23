@@ -12,10 +12,13 @@ import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,6 +131,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
     private ArrayList<SupportDocsItemModel> uploadFileList;
     private Bitmap bitmap = null;
     private String purpose = "";
+    private String halfDayFS;
     private static int UPLOAD_DOC_REQUEST = 2;
     private String empId, reqId;
     private Button rejectBTN, saveDraftBTN, approvalBTN, deleteBTN, submitBTN;
@@ -138,8 +142,9 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
     private TextView daysTV;
     private RecyclerView remarksRV;
     private AdvanceRequestResponseModel advanceRequestResponseModel;
-    private LinearLayout remarksDataLl, remarksLinearLayout;
+    private LinearLayout remarksDataLl, remarksLinearLayout, halfLl;
     private boolean isDaysCount = false;
+    private CheckBox firstHalfCB, secondHalfCB;
 
     private LeaveReqsItem leaveReqsItem;
     private String defaultFromDateLabel = "From Date", defaultToDateLable = "To Date", value = "--/--/----", defaultLeaveLable = "Select Leave";
@@ -203,13 +208,18 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         this.toDate = null;
         this.leaveTypeModel = null;
         reqId = "0";
-        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.ll_create_new_leave, container, false);
+        rootView = LayoutInflater.from(getActivity()).inflate(R.layout.ll_create_new_leave,null);
         context = getContext();
         preferences = new Preferences(getContext());
         int textColor = Utility.getTextColorCode(preferences);
         int bgColor = Utility.getBgColorCode(getActivity(), preferences);
         ((TextView) getActivity().findViewById(R.id.tv_header_text)).setTextColor(textColor);
-
+        halfLl = (LinearLayout) rootView.findViewById(R.id.halfLl);
+        halfLl.setVisibility(View.GONE);
+        firstHalfCB = (CheckBox) rootView.findViewById(R.id.firstHalfCB);
+        firstHalfCB.setOnCheckedChangeListener(this);
+        secondHalfCB = (CheckBox) rootView.findViewById(R.id.secondHalfCB);
+        secondHalfCB.setOnCheckedChangeListener(this);
 
         remarksDataLl = (LinearLayout) rootView.findViewById(R.id.remarksDataLl);
         remarksDataLl.setVisibility(View.GONE);
@@ -217,8 +227,28 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         remarksRV = (RecyclerView) rootView.findViewById(R.id.remarksRV);
 
         etRemark = (EditText) rootView.findViewById(R.id.et_remark);
-        // etRemark.setText("");
+        etRemark.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+       etRemark.setText("");
+
+
+        //etRemark.invalidate();
         daysTV = (TextView) rootView.findViewById(R.id.daysTV);
+        daysTV.setText("");
         rootView.findViewById(R.id.tv_select_leave_type).setOnClickListener(this);
         rootView.findViewById(R.id.tv_select_rest_leaves).setOnClickListener(this);
         rootView.findViewById(R.id.ll_from_date).setOnClickListener(this);
@@ -240,7 +270,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
             showHideProgressView(false);
         }
 
-        ((TextView) ((MainActivity) getActivity()).findViewById(R.id.tv_header_text)).setText("Create Leave");
+        ((TextView) ((MainActivity) getActivity()).findViewById(R.id.tv_header_text)).setText("Leave Request");
         ((MainActivity) getActivity()).findViewById(R.id.ibRight).setVisibility(View.VISIBLE);
         ((MainActivity) getActivity()).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,7 +278,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                 if (leaveTypeModel != null) {
                     if (isSubmitClicked) {
                         isSubmitClicked = false;
-                        fromButton="Submit";
+                        fromButton = "Submit";
                         doSubmitOperation();
                     }
                 } else {
@@ -288,7 +318,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
             public void onClick(View v) {
                 if (isSubmitClicked) {
                     isSubmitClicked = false;
-                    fromButton="Submit";
+                    fromButton = "Submit";
                     doSubmitOperation();
                 }
             }
@@ -392,11 +422,34 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         return rootView;
     }
 
+  /*  @Override
+    public void onStart() {
+        super.onStart();
+        etRemark.setText("");
+    }*/
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+     //   etRemark.setText("");
+         /*  if (!etRemark.getText().toString().equalsIgnoreCase("")) {
+            etRemark.setText("");
+        }*/
+
+    }
+
     @Override
     public void onStop() {
         super.onStop();
-        etRemark.setText("");
+        // etRemark.setText("");
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
 
     @Override
     public void onPause() {
@@ -431,6 +484,13 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
     }
 
     private void doSubmitOperationForSaveAsDraft() {
+        if (startDate != null) {
+            startDate1 = String.format("%1$td/%1$tm/%1$tY", this.startDate);
+        }
+
+        if (toDate != null) {
+            endDate1 = String.format("%1$td/%1$tm/%1$tY", toDate);
+        }
         String leaveId = "0";
 
         LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
@@ -468,7 +528,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         AppRequestJSONString.getSaveAsDraftLeaveRequestData(
                                 empCode,
                                 leaveId, selectedRs,
-                                selectedRs, "1", remark, uploadFileList, fromButton, reqId),
+                                selectedRs, "1", remark, uploadFileList, fromButton, reqId, halfDayFS),
                         CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
 
 
@@ -493,8 +553,8 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
             showHideProgressView(true);
             setActiveInActive(false);
             if (loginUserModel != null && loginUserModel.getUserModel() != null) {
-                startDate1 = String.format("%1$td/%1$tm/%1$tY", this.startDate);
-                endDate1 = String.format("%1$td/%1$tm/%1$tY", toDate);
+                // startDate1 = String.format("%1$td/%1$tm/%1$tY", this.startDate);
+                //  endDate1 = String.format("%1$td/%1$tm/%1$tY", toDate);
                 MainActivity.isAnimationLoaded = false;
                 if (uploadFileList != null && uploadFileList.size() > 0) {
                     for (int i = 0; i < uploadFileList.size(); i++) {
@@ -517,7 +577,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         AppRequestJSONString.getSaveAsDraftLeaveRequestData(
                                 empCode,
                                 leaveId, startDate1, endDate1,
-                                "" + getOneDayData(), remark, uploadFileList, fromButton, reqId),
+                                "" + getOneDayData(), remark, uploadFileList, fromButton, reqId, halfDayFS),
                         CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
 
 
@@ -527,8 +587,8 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
 
         showHideProgressView(true);
 
-        startDate1 = String.format("%1$td/%1$tm/%1$tY", this.startDate);
-        endDate1 = String.format("%1$td/%1$tm/%1$tY", this.toDate);
+        // startDate1 = String.format("%1$td/%1$tm/%1$tY", this.startDate);
+        //  endDate1 = String.format("%1$td/%1$tm/%1$tY", this.toDate);
         if (getTotalDay(this.startDate, toDate) == 1) {
             setActiveInActive(false);
             if (getOneDayData() != 1) {
@@ -555,7 +615,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                             AppRequestJSONString.getSaveAsDraftLeaveRequestData(
                                     empCode,
                                     leaveId, startDate1, endDate1,
-                                    "" + getOneDayData(), remark, uploadFileList, fromButton, reqId),
+                                    "" + getOneDayData(), remark, uploadFileList, fromButton, reqId, halfDayFS),
                             CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
 
                 }
@@ -578,7 +638,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                                 AppRequestJSONString.getSaveAsDraftLeaveRequestData(
                                         empCode,
                                         leaveId, startDate1, endDate1,
-                                        "", remark, uploadFileList, fromButton, reqId),
+                                        "", remark, uploadFileList, fromButton, reqId, halfDayFS),
                                 CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
                     }
                 }
@@ -602,7 +662,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         AppRequestJSONString.getSaveAsDraftLeaveRequestData(
                                 empCode,
                                 leaveId, startDate1, endDate1,
-                                "", remark, uploadFileList, fromButton, reqId),
+                                "", remark, uploadFileList, fromButton, reqId, halfDayFS),
                         CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
             }
         }
@@ -645,17 +705,9 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         AppRequestJSONString.getSaveLeaveRequestData(
                                 empCode,
                                 leaveTypeModel.getLeaveId(), selectedRs,
-                                selectedRs, "1", remark, uploadFileList, reqId),
+                                selectedRs, "1", remark, uploadFileList, reqId, halfDayFS),
                         CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
 
-           /*     if (fromButton.equalsIgnoreCase(AppsConstant.SAVE_AS_DRAFT)) {
-                    CommunicationManager.getInstance().sendPostRequest(this,
-                            AppRequestJSONString.getSaveAsDraftLeaveRequestData(
-                                    empCode,
-                                    leaveTypeModel.getLeaveId(), selectedRs,
-                                    selectedRs, "1", remark, uploadFileList, fromButton),
-                            CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
-                }*/
 
             }
             return;
@@ -690,17 +742,8 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         AppRequestJSONString.getSaveLeaveRequestData(
                                 empCode,
                                 leaveTypeModel.getLeaveId(), startDate, endDate,
-                                "" + getOneDayData(), remark, uploadFileList, reqId),
+                                "" + getOneDayData(), remark, uploadFileList, reqId, halfDayFS),
                         CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
-             /*   if (fromButton.equalsIgnoreCase(AppsConstant.SAVE_AS_DRAFT)) {
-                    CommunicationManager.getInstance().sendPostRequest(
-                            this,
-                            AppRequestJSONString.getSaveAsDraftLeaveRequestData(
-                                    empCode,
-                                    leaveTypeModel.getLeaveId(), startDate, endDate,
-                                    "" + getOneDayData(), remark, uploadFileList, fromButton),
-                            CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
-                }*/
 
             }
             return;
@@ -741,7 +784,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                             AppRequestJSONString.getSaveLeaveRequestData(
                                     empCode,
                                     leaveTypeModel.getLeaveId(), startDate, endDate,
-                                    "" + getOneDayData(), remark, uploadFileList, reqId),
+                                    "" + getOneDayData(), remark, uploadFileList, reqId, halfDayFS),
                             CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
 /*
                     if (fromButton.equalsIgnoreCase(AppsConstant.SAVE_AS_DRAFT)) {
@@ -865,6 +908,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
             ((TextView) rootView.findViewById(R.id.tv_to_date)).setText(value);
             ((TextView) rootView.findViewById(R.id.tv_select_leave_type)).setText(defaultLeaveLable);
             rootView.findViewById(R.id.rg_leave_time_type).setVisibility(View.GONE);
+            etRemark.setText("");
         }
     }
 
@@ -1108,7 +1152,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                                     AppRequestJSONString.getSaveLeaveRequestData(
                                             empCode,
                                             leaveId, fromDateFormatted, toDateFormatted, "" + d,
-                                            remark, uploadFileList, reqId),
+                                            remark, uploadFileList, reqId, halfDayFS),
                                     CommunicationConstant.API_SAVE_LEAVE_REQUEST,
                                     true);
                         }
@@ -1120,7 +1164,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                                     AppRequestJSONString.getSaveAsDraftLeaveRequestData(
                                             empCode,
                                             leaveId, startDate1, endDate1,
-                                            "", remark, uploadFileList, fromButton, reqId),
+                                            "", remark, uploadFileList, fromButton, reqId, halfDayFS),
                                     CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
                         }
                     } catch (JSONException e) {
@@ -1303,7 +1347,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                 break;
             case R.id.searchLayout:
                 Intent theIntent = new Intent(getActivity(), SearchOnbehalfActivity.class);
-                theIntent.putExtra("SearchType",LEAVE_EMP);
+                theIntent.putExtra("SearchType", LEAVE_EMP);
                 startActivityForResult(theIntent, LEAVE_EMP);
 
                 break;
@@ -1329,7 +1373,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                                 this,
                                 AppRequestJSONString.getSaveLeaveRequestData(empCode,
                                         leaveTypeModel.getLeaveId(), selectedRs,
-                                        selectedRs, "1", remark, uploadFileList, reqId),
+                                        selectedRs, "1", remark, uploadFileList, reqId, halfDayFS),
                                 CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
                     }
                     return;
@@ -1366,7 +1410,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                                     AppRequestJSONString.getSaveLeaveRequestData(
                                             empCode, leaveTypeModel
                                                     .getLeaveId(), startDate, endDate,
-                                            "" + getOneDayData(), remark, uploadFileList, reqId),
+                                            "" + getOneDayData(), remark, uploadFileList, reqId, halfDayFS),
                                     CommunicationConstant.API_SAVE_LEAVE_REQUEST, true);
                         }
                     } else {
@@ -1589,6 +1633,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                     ((CheckBox) rootView.findViewById(R.id.rb_half_day)).setChecked(false);
                     ((CheckBox) rootView.findViewById(R.id.rb_full_day)).setChecked(false);
                     ((CheckBox) rootView.findViewById(R.id.rb_75_day)).setChecked(false);
+                    halfLl.setVisibility(View.GONE);
                     daysTV.setText("0.25");
                     break;
                 case R.id.rb_half_day:
@@ -1596,18 +1641,33 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                     ((CheckBox) rootView.findViewById(R.id.rb_full_day)).setChecked(false);
                     ((CheckBox) rootView.findViewById(R.id.rb_75_day)).setChecked(false);
                     daysTV.setText("0.5");
+                    halfLl.setVisibility(View.VISIBLE);
+                    halfDayFS = "F";
+                    Log.d("TAG", "Half day " + halfDayFS);
                     break;
                 case R.id.rb_75_day:
                     ((CheckBox) rootView.findViewById(R.id.rb_25_day)).setChecked(false);
                     ((CheckBox) rootView.findViewById(R.id.rb_full_day)).setChecked(false);
                     ((CheckBox) rootView.findViewById(R.id.rb_half_day)).setChecked(false);
                     daysTV.setText("0.75");
+                    halfLl.setVisibility(View.GONE);
                     break;
                 case R.id.rb_full_day:
                     ((CheckBox) rootView.findViewById(R.id.rb_25_day)).setChecked(false);
                     ((CheckBox) rootView.findViewById(R.id.rb_75_day)).setChecked(false);
                     ((CheckBox) rootView.findViewById(R.id.rb_half_day)).setChecked(false);
                     daysTV.setText("1.00");
+                    halfLl.setVisibility(View.GONE);
+                    break;
+                case R.id.firstHalfCB:
+                    secondHalfCB.setChecked(false);
+                    halfDayFS = "F";
+                    Log.d("TAG", "Half day " + halfDayFS);
+                    break;
+                case R.id.secondHalfCB:
+                    firstHalfCB.setChecked(false);
+                    halfDayFS = "S";
+                    Log.d("TAG", "Half day " + halfDayFS);
                     break;
                 default:
                     break;
@@ -1988,6 +2048,16 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
 
             if (item.getPartialDay().getPartialDayData().getDayP50().equalsIgnoreCase("Y")) {
                 ((CheckBox) rootView.findViewById(R.id.rb_half_day)).setChecked(true);
+                if (item.getHalfDayFS() != null) {
+                    halfLl.setVisibility(View.VISIBLE);
+                    if (item.getHalfDayFS().equalsIgnoreCase("F")) {
+                        firstHalfCB.setChecked(true);
+
+                    } else {
+                        secondHalfCB.setChecked(true);
+                    }
+                }
+
             }
             if (item.getPartialDay().getPartialDayData().getDayFull().equalsIgnoreCase("Y")) {
                 ((CheckBox) rootView.findViewById(R.id.rb_full_day)).setChecked(true);
@@ -2048,6 +2118,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         leaveReqDetailModel.setLeaveID(leaveId);
         leaveReqDetailModel.setRemarks(etRemark.getText().toString());
         leaveReqDetailModel.setTotalDays(daysTV.getText().toString());
+        leaveReqDetailModel.setHalfDayFS(halfDayFS);
         leaveReqDetailModel.setApprovalLevel(approvalLevel);
         leaveReqDetailModel.setStatus(status);
         leaveReqDetailModel.setButton(fromButton);

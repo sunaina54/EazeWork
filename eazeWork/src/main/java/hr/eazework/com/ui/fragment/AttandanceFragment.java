@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,11 +12,16 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -30,6 +36,10 @@ import hr.eazework.com.R;
 import hr.eazework.com.model.AttandanceCalenderStatusItem;
 import hr.eazework.com.model.AttandanceCalenderStatusResult;
 import hr.eazework.com.model.CheckInOutModel;
+import hr.eazework.com.model.GetEmpWFHResponseItem;
+import hr.eazework.com.model.HolidayList;
+import hr.eazework.com.model.HolidayListResponseModel;
+import hr.eazework.com.model.MenuItemModel;
 import hr.eazework.com.model.ModelManager;
 import hr.eazework.com.BackdatedAttendanceActivity;
 import hr.eazework.com.ui.interfaces.IAction;
@@ -46,6 +56,7 @@ import hr.eazework.selfcare.communication.CommunicationManager;
 public class AttandanceFragment extends BaseFragment {
 
     public static final String TAG = "AttandanceFragment";
+    public static String screenName = "AttandanceFragment";
     private CaldroidFragment caldroidFragment;
     private ArrayList<DateTime> mleavesList;
     private ArrayList<DateTime> mHalfDayList;
@@ -53,12 +64,58 @@ public class AttandanceFragment extends BaseFragment {
     private int mSelectedMonth;
     private int mSelectedYear;
     private String currentDate;
+    private TextView dayStatusTV;
+    private LinearLayout holidayLl;
+    private RecyclerView holidayRecyclerView;
+    private HolidayAdapter holidayAdapter;
+    private Button markAttendanceBTN, timeModificationBTN;
     private ArrayList<AttandanceCalenderStatusItem> attandanceCalenderStatusItem;
+    private AttandanceCalenderStatusItem item = null;
+    private HolidayList holidayList;
+    private LinearLayout errorHolidayLl,tourLl,wfhLl,leaveLl;
+    private TextView shiftTimeTV, weeklyOffTV;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         this.setShowPlusMenu(true);
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.attandance_detail_root_container, container, false);
+        dayStatusTV = (TextView) rootView.findViewById(R.id.dayStatusTV);
+        errorHolidayLl = (LinearLayout) rootView.findViewById(R.id.errorHolidayLl);
+        errorHolidayLl.setVisibility(View.GONE);
+        shiftTimeTV = (TextView) rootView.findViewById(R.id.shiftTimeTV);
+        weeklyOffTV = (TextView) rootView.findViewById(R.id.weeklyOffTV);
+
+        tourLl= (LinearLayout) rootView.findViewById(R.id.tourLl);
+        tourLl.setVisibility(View.GONE);
+        wfhLl= (LinearLayout) rootView.findViewById(R.id.wfhLl);
+        wfhLl.setVisibility(View.GONE);
+        leaveLl= (LinearLayout) rootView.findViewById(R.id.leaveLl);
+        leaveLl.setVisibility(View.GONE);
+        MenuItemModel menuItemModel = ModelManager.getInstance().getMenuItemModel();
+        if (menuItemModel != null) {
+            MenuItemModel itemModel = menuItemModel.getItemModel(MenuItemModel.TOUR_REQUEST);
+            if (itemModel != null && itemModel.isAccess()) {
+                tourLl.setVisibility(View.VISIBLE);
+            }
+        }
+
+        if (menuItemModel != null) {
+            MenuItemModel itemModel = menuItemModel.getItemModel(MenuItemModel.WORK_FROM_HOME);
+            if (itemModel != null && itemModel.isAccess()) {
+                wfhLl.setVisibility(View.VISIBLE);
+            }
+        }
+
+        if (menuItemModel != null) {
+            MenuItemModel itemModel = menuItemModel.getItemModel(MenuItemModel.LEAVE_KEY);
+            if (itemModel != null && itemModel.isAccess()) {
+                leaveLl.setVisibility(View.VISIBLE);
+            }
+        }
+        markAttendanceBTN = (Button) rootView.findViewById(R.id.markAttendanceBTN);
+        timeModificationBTN = (Button) rootView.findViewById(R.id.timeModificationBTN);
+        holidayLl = (LinearLayout) rootView.findViewById(R.id.holidayLl);
+        holidayRecyclerView = (RecyclerView) rootView.findViewById(R.id.holidayRecyclerView);
         MainActivity.updataProfileData(getActivity(), rootView);
 
         mSelectedMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
@@ -72,6 +129,8 @@ public class AttandanceFragment extends BaseFragment {
             }
         }, 500);
         ((MainActivity) getActivity()).showHideProgress(true);
+
+        holidayListRequest();
         return rootView;
     }
 
@@ -148,33 +207,7 @@ public class AttandanceFragment extends BaseFragment {
                     }
                 }
 
-                attandanceCalenderStatusItem = AttandanceCalenderStatusResult.getInstance().getAttandanceCalenderStatusItems();
-                Log.d("TAG", "Attendance " + attandanceCalenderStatusItem);
-                Date dateObj = new Date(date.getTime());
-                //Log.d("TAG","CURRENT DATE : "+dateObj);
-                //currentDate= Utility.convertStringIntoDate(String.valueOf(dateObj));
-                currentDate = DateTimeUtil.convertTimeMillisIntoStringDate(date.getTime(), "dd/MM/yyyy");
-                showLog(AttandanceFragment.class, currentDate);
-                for (AttandanceCalenderStatusItem item : attandanceCalenderStatusItem) {
-                    Log.d("TAG", "Mark Date " + item.getMarkDate());
-                    if (item.getMarkDate().equalsIgnoreCase(currentDate)) {
-                        if (item.getTimeModYN().equalsIgnoreCase(AppsConstant.YES)) {
-                            Intent theIntent = new Intent(getActivity(), TimeModificationActivity.class);
-                            TimeModificationActivity.attandanceCalenderStatusItem = item;
-                            startActivityForResult(theIntent, TimeModificationActivity.TIMEMODIFICATIONREQUESTCODE);
 
-                        }
-
-                        if (item.getBackDateAttendYN().equalsIgnoreCase(AppsConstant.YES)) {
-                            Intent theIntent = new Intent(getActivity(), BackdatedAttendanceActivity.class);
-                            BackdatedAttendanceActivity.attandanceCalenderStatusItem = item;
-                            startActivityForResult(theIntent, BackdatedAttendanceActivity.TIMEMODIFICATIONREQUESTCODE);
-
-                        }
-
-                        break;
-                    }
-                }
             }
 
             @Override
@@ -199,7 +232,7 @@ public class AttandanceFragment extends BaseFragment {
             @Override
             public void onLongClickDate(Date date, View view) {
                 /*
-				 * Toast.makeText(getActivity(), "Long click " +
+                 * Toast.makeText(getActivity(), "Long click " +
 				 * formatter.format(date), Toast.LENGTH_SHORT).show();
 				 */
             }
@@ -211,8 +244,8 @@ public class AttandanceFragment extends BaseFragment {
                     ((MainActivity) getActivity()).showHideProgress(false);
                     rootView.findViewById(R.id.ll_bottom_main_container).setVisibility(View.VISIBLE);
                     rootView.findViewById(R.id.ll_top_main_container).setBackgroundResource(R.drawable.focus_style_gray);
-					/*
-					 * Toast.makeText(getActivity(), "Caldroid view is created",
+                    /*
+                     * Toast.makeText(getActivity(), "Caldroid view is created",
 					 * Toast.LENGTH_SHORT).show();
 					 */
                 }
@@ -227,8 +260,8 @@ public class AttandanceFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        showLog(AttandanceFragment.class,"ResultCode "+ resultCode+"" + data);
-        if (requestCode == TimeModificationActivity.TIMEMODIFICATIONREQUESTCODE && resultCode==1) {
+        showLog(AttandanceFragment.class, "ResultCode " + resultCode + "" + data);
+        if (requestCode == TimeModificationActivity.TIMEMODIFICATIONREQUESTCODE && resultCode == 1) {
             mUserActionListener.performUserAction(IAction.HOME_VIEW, null, null);
             showLog(AttandanceFragment.class, "ResultCode1 " + resultCode + "");
         }
@@ -259,8 +292,10 @@ public class AttandanceFragment extends BaseFragment {
             } else if (attandanceCalenderStatusItem != null) {
                 String timeIn = attandanceCalenderStatusItem.getTimeIn();
                 String timeOut = attandanceCalenderStatusItem.getTimeOut();
+                dayStatusTV.setText(attandanceCalenderStatusItem.getStatusDesc());
                 ((TextView) rootView.findViewById(R.id.tv_date_in_time)).setText(StringUtils.isNotEmptyAndNULLString(timeIn) ? timeIn : "--:--");
                 ((TextView) rootView.findViewById(R.id.tv_date_out_time)).setText(StringUtils.isNotEmptyAndNULLString(timeOut) ? timeOut : "--:--");
+                attendanceData(date);
             } else if (calendar.get(Calendar.DAY_OF_WEEK) == 1 || calendar.get(Calendar.DAY_OF_WEEK) == 7) {
                 ((TextView) rootView.findViewById(R.id.tv_date_in_time)).setText(getString(R.string.msg_holiday));
                 ((TextView) rootView.findViewById(R.id.tv_date_out_time)).setText("");
@@ -332,8 +367,158 @@ public class AttandanceFragment extends BaseFragment {
                 }
                 AttandanceCalenderStatusResult.getInstance();
                 break;
+            case CommunicationConstant.API_GET_HOLIDAY_LIST:
+                String str = response.getResponseData();
+                Log.d("TAG", "WFH Response : " + str);
+                HolidayListResponseModel holidayListResponseModel = HolidayListResponseModel.create(str);
+                if (holidayListResponseModel != null && holidayListResponseModel.getGetHolidayListResult() != null
+                        && holidayListResponseModel.getGetHolidayListResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
+                    shiftTimeTV.setText(holidayListResponseModel.getGetHolidayListResult().getShiftDet());
+                    weeklyOffTV.setText(holidayListResponseModel.getGetHolidayListResult().getWeeklyOffDet());
+                    if (holidayListResponseModel.getGetHolidayListResult().getHolidayList() != null && holidayListResponseModel.getGetHolidayListResult().getHolidayList().size() > 0) {
+                        refresh(holidayListResponseModel.getGetHolidayListResult().getHolidayList());
+                    }
+                }
+
+                break;
             default:
                 break;
+        }
+    }
+
+    private void attendanceData(Date date) {
+        markAttendanceBTN.setVisibility(View.GONE);
+        timeModificationBTN.setVisibility(View.GONE);
+        attandanceCalenderStatusItem = AttandanceCalenderStatusResult.getInstance().getAttandanceCalenderStatusItems();
+        Log.d("TAG", "Attendance " + attandanceCalenderStatusItem);
+        Date dateObj = new Date(date.getTime());
+        currentDate = DateTimeUtil.convertTimeMillisIntoStringDate(date.getTime(), "dd/MM/yyyy");
+        showLog(AttandanceFragment.class, currentDate);
+
+        for (final AttandanceCalenderStatusItem item1 : attandanceCalenderStatusItem) {
+            Log.d("TAG", "Mark Date " + item1.getMarkDate());
+            if (item1.getMarkDate().equalsIgnoreCase(currentDate)) {
+
+                item = item1;
+                if (item.getBackDateAttendYN().equalsIgnoreCase(AppsConstant.YES)) {
+                    markAttendanceBTN.setVisibility(View.VISIBLE);
+                    markAttendanceBTN.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent theIntent = new Intent(getActivity(), BackdatedAttendanceActivity.class);
+                            BackdatedAttendanceActivity.attandanceCalenderStatusItem = item;
+                            startActivityForResult(theIntent, BackdatedAttendanceActivity.TIMEMODIFICATIONREQUESTCODE);
+                        }
+                    });
+                }
+
+                if (item.getTimeModYN().equalsIgnoreCase(AppsConstant.YES)) {
+                    timeModificationBTN.setVisibility(View.VISIBLE);
+                    timeModificationBTN.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent theIntent = new Intent(getActivity(), TimeModificationActivity.class);
+                            TimeModificationActivity.attandanceCalenderStatusItem = item;
+                            startActivityForResult(theIntent, TimeModificationActivity.TIMEMODIFICATIONREQUESTCODE);
+                        }
+                    });
+
+
+                }
+                break;
+            }
+        }
+
+
+    }
+
+    private void holidayListRequest() {
+        CommunicationManager.getInstance().sendPostRequest(this,
+                AppRequestJSONString.holidayListRequest(),
+                CommunicationConstant.API_GET_HOLIDAY_LIST, true);
+    }
+
+    private void refresh(ArrayList<HolidayList> holidayLists) {
+
+        if (holidayLists != null && holidayLists.size() > 0 && holidayLists.get(0) != null) {
+            errorHolidayLl.setVisibility(View.GONE);
+            holidayAdapter = new HolidayAdapter(holidayLists);
+            holidayRecyclerView.setAdapter(holidayAdapter);
+            holidayRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            holidayAdapter.notifyDataSetChanged();
+        } else {
+            errorHolidayLl.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private class HolidayAdapter extends
+            RecyclerView.Adapter<HolidayAdapter.MyViewHolder> {
+        private ArrayList<HolidayList> dataSet;
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+
+            private TextView holidayTV, holidayDateTV, holidayDayTV, holidayDescTV;
+            private LinearLayout holidayHeaderLl;
+
+
+            public MyViewHolder(View v) {
+                super(v);
+
+                holidayTV = (TextView) v.findViewById(R.id.holidayTV);
+                holidayDateTV = (TextView) v.findViewById(R.id.holidayDateTV);
+                holidayDayTV = (TextView) v.findViewById(R.id.holidayDayTV);
+                holidayDescTV = (TextView) v.findViewById(R.id.holidayDescTV);
+                holidayHeaderLl = (LinearLayout) v.findViewById(R.id.holidayHeaderLl);
+
+
+            }
+
+        }
+
+        public void addAll(List<HolidayList> list) {
+
+            dataSet.addAll(list);
+            notifyDataSetChanged();
+        }
+
+        public HolidayAdapter(List<HolidayList> data) {
+            this.dataSet = (ArrayList<HolidayList>) data;
+
+        }
+
+        @Override
+        public HolidayAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
+                                                              int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.holiday_item, parent, false);
+            //view.setOnClickListener(MainActivity.myOnClickListener);
+            HolidayAdapter.MyViewHolder myViewHolder = new HolidayAdapter.MyViewHolder(view);
+            return myViewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(final HolidayAdapter.MyViewHolder holder, final int listPosition) {
+            final HolidayList item = dataSet.get(listPosition);
+            holder.holidayHeaderLl.setVisibility(View.GONE);
+            if (listPosition == 0) {
+                holder.holidayHeaderLl.setVisibility(View.VISIBLE);
+            }
+
+            holder.holidayTV.setText(item.getHolidayDesc());
+            holder.holidayDateTV.setText(item.getHolidayDate());
+            holder.holidayDayTV.setText(item.getWeekDay());
+            holder.holidayDescTV.setText(item.getHolidayTypeDesc());
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return dataSet.size();
+        }
+
+        public void clearDataSource() {
+            dataSet.clear();
+            notifyDataSetChanged();
         }
     }
 }

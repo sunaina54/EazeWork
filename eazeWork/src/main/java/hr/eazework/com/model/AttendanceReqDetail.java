@@ -29,11 +29,20 @@ public class AttendanceReqDetail implements Serializable{
     private String ReqType;
     private String StatusDesc;
     private String SubmittedBy;
+    private String DayStatusDesc;
     private String[] Buttons;
     private ArrayList<RemarkListItem> RemarkList;
 
     public String[] getButtons() {
         return Buttons;
+    }
+
+    public String getDayStatusDesc() {
+        return DayStatusDesc;
+    }
+
+    public void setDayStatusDesc(String dayStatusDesc) {
+        DayStatusDesc = dayStatusDesc;
     }
 
     public void setButtons(String[] buttons) {

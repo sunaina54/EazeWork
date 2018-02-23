@@ -19,8 +19,11 @@
         <attr name="state_date_leave" format="boolean"/>
         <attr name="state_date_present" format="boolean"/>
         <attr name="state_date_absent" format="boolean"/>
+        <attr name="state_date_multiple_status" format="boolean"/>
         <attr name="state_date_comp_off" format="boolean"/>
         <attr name="state_date_half_day" format="boolean"/>
+        <attr name="state_date_wfh" format="boolean"/>
+        <attr name="state_date_tour" format="boolean"/>
     </declare-styleable>
 
     <!-- Declare stylable attribute for a cell -->

@@ -528,11 +528,12 @@ public class TourRequestFragment extends BaseFragment {
 
     private void disabledFieldData() {
         ((RelativeLayout) rootView.findViewById(R.id.searchLayout)).setVisibility(View.GONE);
-        yesRB.setEnabled(false);
+        reasonTV.setEnabled(true);
+     /*   yesRB.setEnabled(false);
         noRB.setEnabled(false);
         reasonTV.setEnabled(false);
         yesTicketRB.setEnabled(false);
-        noTicketRB.setEnabled(false);
+        noTicketRB.setEnabled(false);*/
     }
 
     private void disabledFieldDataForView() {
@@ -880,15 +881,16 @@ public class TourRequestFragment extends BaseFragment {
                 empChangeResponseModel = GetDetailsOnEmpChangeResponseModel.create(responseData);
                 if (empChangeResponseModel != null && empChangeResponseModel.getGetDetailsOnEmpChangeResult() != null
                         && empChangeResponseModel.getGetDetailsOnEmpChangeResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    if (empChangeResponseModel.getGetDetailsOnEmpChangeResult().getShowTravelYN().equalsIgnoreCase(AppsConstant.YES)) {
-                        travelFromLl.setVisibility(View.VISIBLE);
-                        travelToLl.setVisibility(View.VISIBLE);
+                    if (!getScreenName().equalsIgnoreCase(AppsConstant.PENDING_APPROVAL)) {
+                        if (empChangeResponseModel.getGetDetailsOnEmpChangeResult().getShowTravelYN().equalsIgnoreCase(AppsConstant.YES)) {
+                            travelFromLl.setVisibility(View.VISIBLE);
+                            travelToLl.setVisibility(View.VISIBLE);
+                        }
+                        if (empChangeResponseModel.getGetDetailsOnEmpChangeResult().getShowReasonYN().equalsIgnoreCase(AppsConstant.YES)) {
+                            reasonLl.setVisibility(View.VISIBLE);
+                        }
+                        sendTourRequestCustomFieldList();
                     }
-                    if (empChangeResponseModel.getGetDetailsOnEmpChangeResult().getShowReasonYN().equalsIgnoreCase(AppsConstant.YES)) {
-                        reasonLl.setVisibility(View.VISIBLE);
-                    }
-                    sendTourRequestCustomFieldList();
-
                 } else {
                     new AlertCustomDialog(getActivity(), empChangeResponseModel.getGetDetailsOnEmpChangeResult().getErrorMessage());
                 }
@@ -987,7 +989,7 @@ public class TourRequestFragment extends BaseFragment {
                 LeaveRejectResponseModel rejectTourResponse = LeaveRejectResponseModel.create(respData);
                 if (rejectTourResponse != null && rejectTourResponse.getRejectTourRequestResult() != null
                         && rejectTourResponse.getRejectTourRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, rejectTourResponse.getRejectTourRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    CustomDialog.alertOkWithFinishFragment(context, rejectTourResponse.getRejectTourRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
                 } else {
                     new AlertCustomDialog(getActivity(), rejectTourResponse.getRejectTourRequestResult().getErrorMessage());
                 }
@@ -998,7 +1000,7 @@ public class TourRequestFragment extends BaseFragment {
                 TourResponseModel tourResponseModel = TourResponseModel.create(tourResp);
                 if (tourResponseModel != null && tourResponseModel.getApproveTourRequestResult() != null
                         && tourResponseModel.getApproveTourRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, tourResponseModel.getApproveTourRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    CustomDialog.alertOkWithFinishFragment(context, tourResponseModel.getApproveTourRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
                 } else {
                     new AlertCustomDialog(getActivity(), tourResponseModel.getApproveTourRequestResult().getErrorMessage());
                 }
@@ -1049,23 +1051,28 @@ public class TourRequestFragment extends BaseFragment {
                 }
             }
 
-            if(empNameTV.getText().toString().equalsIgnoreCase("")){
+            if (empNameTV.getText().toString().equalsIgnoreCase("")) {
                 new AlertCustomDialog(context, getResources().getString(R.string.select_user));
                 return;
             }
 
-            if (travelFromEt.getText().toString().equalsIgnoreCase("")) {
-                new AlertCustomDialog(context, getResources().getString(R.string.enter_travel_from));
-                return;
-            }
+            if (empChangeResponseModel != null && empChangeResponseModel.getGetDetailsOnEmpChangeResult() != null
+                    && empChangeResponseModel.getGetDetailsOnEmpChangeResult().getShowTravelYN().equalsIgnoreCase("Y")) {
 
-            if (travelToET.getText().toString().equalsIgnoreCase("")) {
-                new AlertCustomDialog(context, getResources().getString(R.string.enter_travel_to));
-                return;
+                if (travelFromEt.getText().toString().equalsIgnoreCase("")) {
+                    new AlertCustomDialog(context, getResources().getString(R.string.enter_travel_from));
+                    return;
+                }
+
+                if (travelToET.getText().toString().equalsIgnoreCase("")) {
+                    new AlertCustomDialog(context, getResources().getString(R.string.enter_travel_to));
+                    return;
+                }
             }
 
             if (empChangeResponseModel != null && empChangeResponseModel.getGetDetailsOnEmpChangeResult() != null &&
-                    empChangeResponseModel.getGetDetailsOnEmpChangeResult().getTourReasonList() != null) {
+                    empChangeResponseModel.getGetDetailsOnEmpChangeResult().getTourReasonList() != null
+                    && empChangeResponseModel.getGetDetailsOnEmpChangeResult().getShowReasonYN().equalsIgnoreCase("Y")) {
                 if (reasonCode.equalsIgnoreCase("")) {
                     new AlertCustomDialog(context, getResources().getString(R.string.select_reason));
                     return;
@@ -1150,8 +1157,12 @@ public class TourRequestFragment extends BaseFragment {
             reasonListModel.setReasonCode(reasonCode);
             tourReqDetail.setTourReason(reasonListModel);
 
+
             if (adapter.dataSet != null) {
                 tourReqDetail.setCustomFields(adapter.dataSet);
+            } else {
+                ArrayList<CustomFieldsModel> customFieldsModels = new ArrayList<>();
+                tourReqDetail.setCustomFields(customFieldsModels);
             }
 
             if (uploadFileList != null && uploadFileList.size() > 0) {
@@ -1172,7 +1183,7 @@ public class TourRequestFragment extends BaseFragment {
 
 
         if (fromButton.equalsIgnoreCase(AppsConstant.SAVE_AS_DRAFT) || fromButton.equalsIgnoreCase(AppsConstant.DELETE)) {
-            if(empNameTV.getText().toString().equalsIgnoreCase("")){
+            if (empNameTV.getText().toString().equalsIgnoreCase("")) {
                 new AlertCustomDialog(context, getResources().getString(R.string.select_user));
                 return;
             }
@@ -1200,6 +1211,9 @@ public class TourRequestFragment extends BaseFragment {
 
             if (adapter.dataSet != null) {
                 tourReqDetail.setCustomFields(adapter.dataSet);
+            } else {
+                ArrayList<CustomFieldsModel> customFieldsModels = new ArrayList<>();
+                tourReqDetail.setCustomFields(customFieldsModels);
             }
 
             if (uploadFileList != null && uploadFileList.size() > 0) {
@@ -1302,13 +1316,13 @@ public class TourRequestFragment extends BaseFragment {
 
             if (getScreenName().equalsIgnoreCase(AppsConstant.PENDING_APPROVAL)) {
                 RadioButton radio = (RadioButton) holder.studentRG.findViewById(R.id.yesStudentRB);
-                radio.setEnabled(false);
+                radio.setEnabled(true);
 
                 RadioButton radio1 = (RadioButton) holder.studentRG.findViewById(R.id.noStudentRB);
-                radio1.setEnabled(false);
+                radio1.setEnabled(true);
 
-                holder.editTextLayoutEt.setEnabled(false);
-                holder.ll_photography.setEnabled(false);
+                holder.editTextLayoutEt.setEnabled(true);
+                holder.ll_photography.setEnabled(true);
             }
             if (item.getFieldCode().equalsIgnoreCase(AppsConstant.STUDENT_SPECIAL)) {
                 holder.radiotextLayout.setVisibility(View.VISIBLE);
@@ -1496,6 +1510,7 @@ public class TourRequestFragment extends BaseFragment {
 
     private void updateUI(TourSummaryRequestDetail item) {
         empId = item.getForEmpID();
+        setTravelAndReasonData();
         empNameTV.setText(item.getForEmpName());
         tv_from_date.setText(item.getStartDate());
         startDate = item.getStartDate();

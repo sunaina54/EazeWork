@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="5dp"
-                android:text="No data"
+                android:text="No Remarks"
                 android:textColor="@color/black"
                 android:textSize="@dimen/font_14" />
         </LinearLayout>

@@ -323,7 +323,7 @@ public class EditTeamMember extends BaseFragment {
             if(model.getmSubDivisionNameYN().equalsIgnoreCase("y")) {
                 Utility.addElementToView(activity,empOfficialFieldLayout,"Sub-Division",model.getmSubDivisionName());
             }
-            Utility.addElementToView(activity, empOfficialFieldLayout, "Status", model.getmEmploymentStatusDesc());
+            Utility.addElementToView(activity, empOfficialFieldLayout, "Employment Status", model.getmEmploymentStatusDesc());
         }
     }
 

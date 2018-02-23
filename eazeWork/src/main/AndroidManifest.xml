@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="hr.eazework.com"
     android:versionCode="23"
-    android:versionName="1.1.2.4">
+    android:versionName="1.1.2.6">
 
     <uses-sdk
         android:minSdkVersion="17"
@@ -77,10 +77,12 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="46027071bb12057a8883cfe7ac7e9cb7e3139dec" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_launcher" />
+            android:resource="@drawable/ic_stat_ic_launcher_new" />
+        <!--<meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_launcher" />-->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/primary_dark" />

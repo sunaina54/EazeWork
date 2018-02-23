@@ -16,6 +16,7 @@ public class LeaveRequestDetailsModel implements Serializable {
     private String ReqCode;
     private int ReqID;
     private int ReqStatus ;
+    private String HalfDayFS;
     private String EndDate;
     private String StartDate ;
     private String TotalDays;
@@ -32,6 +33,14 @@ public class LeaveRequestDetailsModel implements Serializable {
     private String LeaveID;
     private String[] Buttons;
     private ArrayList<SupportDocsItemModel> Attachments;
+
+    public String getHalfDayFS() {
+        return HalfDayFS;
+    }
+
+    public void setHalfDayFS(String halfDayFS) {
+        HalfDayFS = halfDayFS;
+    }
 
     public String getApprovalLevel() {
         return ApprovalLevel;

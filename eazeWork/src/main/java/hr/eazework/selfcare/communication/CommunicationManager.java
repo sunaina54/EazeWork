@@ -561,6 +561,15 @@ public class CommunicationManager extends CommunicationManagerBase {
             case CommunicationConstant.API_PENDING_APPROVAL_ATTENDANCE_REQUEST:
                 key = CommunicationConstant.API_KEY_PENDING_APPROVAL_ATTENDANCE_REQUEST;
                 break;
+            case CommunicationConstant.API_GET_HOLIDAY_LIST:
+                key = CommunicationConstant.API_KEY_GET_HOLIDAY_LIST;
+                break;
+            case CommunicationConstant.API_LOGIN_USER_WITH_GOOGLE:
+                key = CommunicationConstant.API_KEY_LOGIN_USER_WITH_GOOGLE;
+                break;
+            case CommunicationConstant.API_UPLOAD_PROFILE_PIC:
+                key = CommunicationConstant.API_KEY_UPLOAD_PROFILE_PIC;
+                break;
         }
         return CommunicationConstant.getMobileCareURl() + "/WCFService/" + key;
     }

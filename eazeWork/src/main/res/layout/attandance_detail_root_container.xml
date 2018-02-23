@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <include layout="@layout/profile_detail_sub_layout"/>
+    <include
+        layout="@layout/profile_detail_sub_layout"
+        android:visibility="gone" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -51,7 +54,7 @@
                             android:gravity="center_vertical"
                             android:text="15th"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/font_16"/>
+                            android:textSize="@dimen/font_16" />
 
                         <TextView
                             android:id="@+id/tv_selected_date_day"
@@ -60,15 +63,23 @@
                             android:gravity="center"
                             android:text="Wednesday"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/font_16"/>
+                            android:textSize="@dimen/font_16" />
                     </LinearLayout>
 
-                    <LinearLayout
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@color/accent"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:padding="@dimen/margin_10"
+                        android:weightSum="1">
+                    <LinearLayout
 
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/accent"
+                        android:orientation="vertical"
+                        android:padding="@dimen/margin_10">
                         <ImageView
                             android:id="@+id/imageView1"
                             android:layout_width="70dp"
@@ -76,182 +87,519 @@
                             android:layout_gravity="center_vertical"
                             android:padding="@dimen/padding_mini"
                             android:src="@drawable/profile_image"
-                            android:visibility="gone"/>
-
+                            android:visibility="gone" />
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
-                            android:orientation="vertical">
+                            android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:padding="@dimen/padding_default"
-                                android:singleLine="true"
+                                android:text="@string/day_status_attendance"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/font_12" />
+
+                            <TextView
+                                android:id="@+id/dayStatusTV"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="@dimen/margin_5"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/font_12"
+
+                                />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:text="@string/msg_in_time"
                                 android:textColor="@color/white"
-                                android:textSize="@dimen/font_16"/>
+                                android:textSize="@dimen/font_12" />
 
                             <TextView
                                 android:id="@+id/tv_date_in_time"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:padding="@dimen/padding_default"
+                                android:paddingLeft="@dimen/margin_10"
                                 android:singleLine="true"
                                 android:text="@string/in_out_time_format"
                                 android:textColor="@color/white"
-                                android:textSize="@dimen/font_16"/>
+                                android:textSize="@dimen/font_12" />
+
                         </LinearLayout>
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:padding="@dimen/padding_default"
-                                android:singleLine="true"
                                 android:text="@string/msg_out_time"
                                 android:textColor="@color/white"
-                                android:textSize="@dimen/font_16"/>
+                                android:textSize="@dimen/font_12" />
 
                             <TextView
                                 android:id="@+id/tv_date_out_time"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:padding="@dimen/padding_default"
-                                android:singleLine="true"
+                                android:paddingLeft="@dimen/margin_10"
                                 android:text="@string/in_out_time_format"
                                 android:textColor="@color/white"
-                                android:textSize="@dimen/font_16"/>
+                                android:textSize="@dimen/font_12" />
+
                         </LinearLayout>
+
+
                     </LinearLayout>
+                        <RelativeLayout
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="@dimen/margin_5">
+
+                            <Button
+                                android:id="@+id/markAttendanceBTN"
+                                style="@style/button"
+                                android:layout_width="@dimen/margin_82"
+                                android:layout_height="@dimen/margin_30"
+                                android:layout_centerInParent="true"
+                                android:background="@drawable/rounded_corner_light_blue"
+                                android:paddingLeft="@dimen/margin_10"
+                                android:paddingRight="@dimen/margin_10"
+                                android:text="@string/mark_attendance_btn"
+                                android:textColor="@color/white"
+                                android:textSize="8sp"
+                                android:visibility="gone" />
+
+                            <Button
+                                android:id="@+id/timeModificationBTN"
+                                style="@style/button"
+                                android:layout_width="@dimen/margin_82"
+                                android:layout_height="@dimen/margin_30"
+                                android:layout_centerInParent="true"
+                                android:background="@drawable/rounded_corner_light_blue"
+                                android:paddingLeft="@dimen/margin_10"
+                                android:paddingRight="@dimen/margin_10"
+                                android:text="@string/time_modification_btn"
+                                android:textColor="@color/white"
+                                android:textSize="8sp"
+                                android:visibility="gone" />
+
+                        </RelativeLayout>
+                    </RelativeLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/calendar_attandance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"></LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_default">
+
+                    <FrameLayout
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/focus_style_gray">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="bottom"
+                            android:background="@color/wo_co_cell" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:text="WO/CO"
+                        android:textColor="@color/black" />
                 </LinearLayout>
+
+              <!--  <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_default">
+
+                    <FrameLayout
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/focus_style_gray">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="bottom"
+                            android:background="@color/rh_cell" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:text="RH"
+                        android:textColor="@color/black" />
+                </LinearLayout>-->
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:id="@+id/leaveLl"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_default">
+
+                    <FrameLayout
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/focus_style_gray">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="bottom"
+                            android:background="@color/leave_cell" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:text="Leave"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_default">
+
+                    <FrameLayout
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/focus_style_gray">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="bottom"
+                            android:background="@color/multiple_status_cell" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:text="Multiple Status"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
             </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="@dimen/padding_default">
+                android:orientation="horizontal">
 
-                <FrameLayout
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/focus_style_gray">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="bottom"
-                        android:background="@color/primary_blue"/>
-                </FrameLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding_default"
-                    android:text="Weekly Off/ Compulsory Off"
-                    android:textColor="@color/black"/>
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_default">
+
+                    <FrameLayout
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/focus_style_gray">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="bottom"
+                            android:background="@color/absent_cell" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:text="Absent"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_default">
+
+                    <FrameLayout
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/focus_style_gray">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="bottom"
+                            android:background="@color/present_cell" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:text="Present"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_default"
+                    android:id="@+id/wfhLl">
+
+                    <FrameLayout
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/focus_style_gray">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="bottom"
+                            android:background="@color/wfh" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:text="WFH"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:id="@+id/tourLl"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_default">
+
+                    <FrameLayout
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/focus_style_gray">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="bottom"
+                            android:background="@color/tour" />
+                    </FrameLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_default"
+                        android:text="Tour"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
             </LinearLayout>
+
 
             <LinearLayout
+                android:background="#F2F2F2"
+                android:id="@+id/holidayLl"
+                android:layout_margin="@dimen/margin_10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="@dimen/padding_default">
+                android:orientation="vertical">
 
-                <FrameLayout
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/focus_style_gray">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="bottom"
-                        android:background="@color/primary_blue_light"/>
-                </FrameLayout>
-
-                <TextView
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cardViewExpense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding_default"
-                    android:text="Restricted Holiday"
-                    android:textColor="@color/black"/>
-            </LinearLayout>
+                    android:paddingBottom="20dp"
+                    card_view:cardBackgroundColor="#F2F2F2"
+                    card_view:cardCornerRadius="2dp"
+                    card_view:cardElevation="2dp"
+                    card_view:cardUseCompatPadding="true">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="@dimen/padding_default">
-
-                <FrameLayout
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/focus_style_gray">
-
-                    <View
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="bottom"
-                        android:background="@color/primary_pink"/>
-                </FrameLayout>
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding_default"
-                    android:text="Leave"
-                    android:textColor="@color/black"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                >
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="#F2F2F2"
+                                    android:orientation="horizontal"
+                                    android:paddingLeft="@dimen/margin_5"
+                                    android:weightSum="1"
+                                    >
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="40dp"
+                                        android:layout_weight="0.7"
+                                        android:paddingLeft="5dp"
+                                        android:paddingTop="10dp"
+                                        android:text="List of Upcoming Holidays"
+                                        android:textColor="@color/black"
+                                        android:textSize="14sp" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/errorHolidayLl"
+                            style="@style/blueBorderEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_13"
+                            android:layout_marginLeft="@dimen/margin_13"
+                            android:layout_marginRight="@dimen/margin_13"
+                            android:layout_marginTop="@dimen/margin_7"
+                            android:visibility="gone"
+                            android:background="@color/white">
+
+                            <TextView
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:text="No Holiday List"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/font_14"
+                                android:visibility="visible" />
+                        </LinearLayout>
+                        <LinearLayout
+                            android:background="@color/white"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/margin_10"
+                            android:layout_marginBottom="@dimen/margin_10"
+                            android:layout_marginRight="@dimen/margin_10"
+                            android:orientation="vertical">
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/holidayRecyclerView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:scrollbars="vertical"
+                                >
+
+                            </android.support.v7.widget.RecyclerView>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingLeft="@dimen/margin_5">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:padding="@dimen/margin_5"
+                              >
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Shift -"
+                                    style="@style/textView"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/shiftTimeTV"
+                                    style="@style/textViewYellow"/>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:padding="@dimen/margin_5">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Weekly Offs -"
+                                    style="@style/textView"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/weeklyOffTV"
+                                    style="@style/textViewYellow"/>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+
+
+                </android.support.v7.widget.CardView>
+
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="@dimen/padding_default">
-
-                <FrameLayout
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/focus_style_gray">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="bottom"
-                        android:background="@color/primary_dark"/>
-                </FrameLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding_default"
-                    android:text="Absent"
-                    android:textColor="@color/black"/>
-            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

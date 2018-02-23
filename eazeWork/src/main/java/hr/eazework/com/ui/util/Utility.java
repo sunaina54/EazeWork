@@ -760,7 +760,7 @@ public class Utility {
                 if (which == DialogInterface.BUTTON_NEGATIVE) {
                     dialog.dismiss();
                     Log.d("qqqqqqq", "Date Time : clicked");
-                    timeTV.setText("--:-- AM");
+                    timeTV.setText(timeTV.getText().toString());
                   /*  choresTime = null;
                     clockBTN.setChecked(false);*/
 

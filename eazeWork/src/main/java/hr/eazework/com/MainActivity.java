@@ -191,22 +191,22 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 builder.setSingleChoiceItems(menuList, null, new CustomBuilder.OnClickListener() {
                     @Override
                     public void onClick(CustomBuilder builder, Object selectedObject) {
-                        if (selectedObject.toString().equalsIgnoreCase("Location")) {
-                            performUserAction(IAction.CREATE_LOCATION_VIEW, null, null);
+                        if (selectedObject.toString().equalsIgnoreCase("Advance")) {
+                            performUserAction(IAction.ADVANCE_REQUEST, null, null);
                         } else if (selectedObject.toString().equalsIgnoreCase("Employee")) {
                             performUserAction(IAction.CREATE_EMPLOYEE_VIEW, null, null);
-                        } else if (selectedObject.toString().equalsIgnoreCase("Leave")) {
-                            performUserAction(IAction.CREATE_NEW_LEAVE, null, null);
-                        }else if (selectedObject.toString().equalsIgnoreCase("Advance")) {
-                            performUserAction(IAction.ADVANCE_REQUEST, null, null);
                         } else if (selectedObject.toString().equalsIgnoreCase("Expense")) {
                             performUserAction(IAction.ADD_EXPENSE_CLAIM, null, null);
-                        }else if (selectedObject.toString().equalsIgnoreCase("Work From Home")) {
-                            performUserAction(IAction.WORK_FROM_HOME, null, null);
+                        }else if (selectedObject.toString().equalsIgnoreCase("Leave")) {
+                            performUserAction(IAction.CREATE_NEW_LEAVE, null, null);
+                        } else if (selectedObject.toString().equalsIgnoreCase("Location")) {
+                            performUserAction(IAction.CREATE_LOCATION_VIEW, null, null);
                         } else if (selectedObject.toString().equalsIgnoreCase("Outdoor Duty")) {
                             performUserAction(IAction.OUTDOOR_DUTY, null, null);
-                        } else if (selectedObject.toString().equalsIgnoreCase("Tour")) {
+                        }else if (selectedObject.toString().equalsIgnoreCase("Tour")) {
                             performUserAction(IAction.TOUR, null, null);
+                        } else if (selectedObject.toString().equalsIgnoreCase("Work From Home")) {
+                            performUserAction(IAction.WORK_FROM_HOME, null, null);
                         }
                         builder.dismiss();
                     }
@@ -1336,9 +1336,11 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             }
             ((TextView) rootView.findViewById(R.id.tv_employee)).setText(context.getString(R.string.msg_employee_id) + " " + model.getmEmpCode());
             String profilePhoto = CommunicationConstant.getMobileCareURl() + model.getmImageUrl();
+            Log.d("TAG","IMAGE URL " +profilePhoto);
             Picasso picasso = Picasso.with(context);
+
             picasso.invalidate(profilePhoto);
-            picasso.load(profilePhoto).fit().into((ImageView) rootView.findViewById(R.id.img_user_img));
+            picasso.load(profilePhoto).fit().memoryPolicy(MemoryPolicy.NO_CACHE).networkPolicy(NetworkPolicy.NO_CACHE).into((ImageView) rootView.findViewById(R.id.img_user_img));
             Log.d("Image", CommunicationConstant.getMobileCareURl() + model.getmImageUrl());
         } else {
             ((TextView) rootView.findViewById(R.id.tv_profile_name)).setText("Guest");
@@ -1398,7 +1400,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             if ((fragment instanceof AddExpenseFragment)||
                     (fragment instanceof AdvanceRequestFragment) || (fragment instanceof EditAdvanceApprovalFragment) ||
                     (fragment instanceof AdvanceApprovalFragment) || (fragment instanceof EditViewExpenseClaimFragment)
-                    || (fragment instanceof EditExpenseApprovalFragment) || (fragment instanceof OutdoorDutyRequestFragment)) {
+                    || (fragment instanceof EditExpenseApprovalFragment) || (fragment instanceof TeamMemberProfile)||
+                    (fragment instanceof OutdoorDutyRequestFragment)) {
                 fragment.onActivityResult(requestCode, resultCode, data);
             }
         }
