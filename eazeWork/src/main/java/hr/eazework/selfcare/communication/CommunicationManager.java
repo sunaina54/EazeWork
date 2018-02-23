@@ -570,6 +570,9 @@ public class CommunicationManager extends CommunicationManagerBase {
             case CommunicationConstant.API_UPLOAD_PROFILE_PIC:
                 key = CommunicationConstant.API_KEY_UPLOAD_PROFILE_PIC;
                 break;
+            case CommunicationConstant.API_GET_EMP_ATTENDANCE_DETAIL:
+                key = CommunicationConstant.API_KEY_GET_EMP_ATTENDANCE_DETAIL;
+                break;
         }
         return CommunicationConstant.getMobileCareURl() + "/WCFService/" + key;
     }

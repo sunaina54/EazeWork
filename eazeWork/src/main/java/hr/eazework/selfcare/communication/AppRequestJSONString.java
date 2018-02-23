@@ -29,6 +29,7 @@ import hr.eazework.com.model.AttendanceRejectRequestModel;
 import hr.eazework.com.model.CategoryExpenseModel;
 import hr.eazework.com.model.CategoryRequestModel;
 import hr.eazework.com.model.DocListModel;
+import hr.eazework.com.model.EmpAttendanceRequestModel;
 import hr.eazework.com.model.ExpenseRequestModel;
 import hr.eazework.com.model.FileInfoModel;
 import hr.eazework.com.model.ForgotCredentialsRequestModel;
@@ -567,6 +568,16 @@ public class AppRequestJSONString {
         item.setLoginData(loginData);
         String request=item.serialize();
         Log.d("TAG","Time Summary Request: "+request);
+        return request;
+    }
+
+    public static String empAttendanceDetail(EmpAttendanceRequestModel item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","Attendance Request: "+request);
         return request;
     }
     public static String ODRequest(ODRequestModel item){

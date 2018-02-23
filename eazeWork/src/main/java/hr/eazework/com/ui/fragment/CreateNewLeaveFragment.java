@@ -89,6 +89,7 @@ import hr.eazework.com.ui.customview.CustomBuilder;
 import hr.eazework.com.ui.customview.CustomDialog;
 import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.util.AppsConstant;
+import hr.eazework.com.ui.util.CalenderUtils;
 import hr.eazework.com.ui.util.DateTimeUtil;
 import hr.eazework.com.ui.util.ImageUtil;
 import hr.eazework.com.ui.util.PermissionUtil;
@@ -108,6 +109,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
     public static final String TAG = "CreateNewLeaveFragment";
     private String screenName = "CreateNewLeaveFragment";
     private CaldroidFragment dialogCaldroidFragment;
+    private DatePickerDialog datePickerDialog1, datePickerDialog2;
     private LeaveTypeModel leaveTypeModel;
     private Calendar startDate;
     private boolean isCompensatory;
@@ -227,32 +229,18 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         remarksRV = (RecyclerView) rootView.findViewById(R.id.remarksRV);
 
         etRemark = (EditText) rootView.findViewById(R.id.et_remark);
-        etRemark.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-       etRemark.setText("");
-
-
-        //etRemark.invalidate();
         daysTV = (TextView) rootView.findViewById(R.id.daysTV);
         daysTV.setText("");
         rootView.findViewById(R.id.tv_select_leave_type).setOnClickListener(this);
         rootView.findViewById(R.id.tv_select_rest_leaves).setOnClickListener(this);
+
         rootView.findViewById(R.id.ll_from_date).setOnClickListener(this);
         rootView.findViewById(R.id.ll_to_date).setOnClickListener(this);
+
+        datePickerDialog1 = pickDateFromCalenderToDate(context, ((TextView) rootView.findViewById(R.id.tv_to_date)),  ((TextView) rootView.findViewById(R.id.tv_to_day)), AppsConstant.DATE_FORMATE);
+
+        datePickerDialog2 = pickDateFromCalenderFromDate(context, ((TextView) rootView.findViewById(R.id.tv_from_date)),  ((TextView) rootView.findViewById(R.id.tv_from_day)), AppsConstant.DATE_FORMATE);
+
         rootView.findViewById(R.id.btn_submit).setOnClickListener(this);
         rootView.findViewById(R.id.btn_save_as_draft).setOnClickListener(this);
         empNameTV = (TextView) rootView.findViewById(R.id.empNameTV);
@@ -422,21 +410,6 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         return rootView;
     }
 
-  /*  @Override
-    public void onStart() {
-        super.onStart();
-        etRemark.setText("");
-    }*/
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-     //   etRemark.setText("");
-         /*  if (!etRemark.getText().toString().equalsIgnoreCase("")) {
-            etRemark.setText("");
-        }*/
-
-    }
 
     @Override
     public void onStop() {
@@ -444,11 +417,6 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         // etRemark.setText("");
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
 
 
     @Override
@@ -1498,7 +1466,9 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
 
                 break;
             case R.id.ll_from_date:
-                dialogCaldroidFragment = new CaldroidFragment();
+                datePickerDialog2.show();
+
+               /* dialogCaldroidFragment = new CaldroidFragment();
                 dialogCaldroidFragment.setCaldroidListener(new CaldroidListener() {
                     @Override
                     public void onSelectDate(Date date, View view) {
@@ -1547,11 +1517,11 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                     // Setup dialogTitle
                     dialogCaldroidFragment.setArguments(bundle);
                 }
-                dialogCaldroidFragment.show(getChildFragmentManager(), dialogTag);
+                dialogCaldroidFragment.show(getChildFragmentManager(), dialogTag);*/
                 break;
             case R.id.ll_to_date:
-
-                // Setup caldroid to use as dialog
+                    datePickerDialog1.show();
+                /*// Setup caldroid to use as dialog
                 dialogCaldroidFragment = new CaldroidFragment();
                 dialogCaldroidFragment.setCaldroidListener(new CaldroidListener() {
                     @Override
@@ -1597,13 +1567,15 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                     // Setup dialogTitle
                     dialogCaldroidFragment.setArguments(bundle);
                 }
-                dialogCaldroidFragment.show(getChildFragmentManager(), dialogTag2);
+                dialogCaldroidFragment.show(getChildFragmentManager(), dialogTag2);*/
                 break;
             default:
                 break;
         }
         super.onClick(v);
     }
+
+
 
     private double getOneDayData() {
         if (((CheckBox) rootView.findViewById(R.id.rb_25_day)).isChecked()) {
@@ -2144,5 +2116,105 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                         leaveTypeModel.getLeaveId(), startDate1, endDate1),
                 CommunicationConstant.API_LEAVE_REQ_TOTAL_DAY, true);
     }
+
+    public DatePickerDialog pickDateFromCalenderFromDate(Context mContext, final TextView dobTextView, final TextView dayTV, String dateFormat) {
+        Calendar newCalendar = Calendar.getInstance();
+        String dateStr=null;
+        if(dobTextView.getText().toString().equalsIgnoreCase("") || dobTextView.getText().toString().equalsIgnoreCase("--/--/----")){
+            dateStr= DateTimeUtil.currentDate(AppsConstant.DATE_FORMATE);
+        }else{
+            dateStr=dobTextView.getText().toString();
+        }
+        String date[] =dateStr.split("/");
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat, Locale.US);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                Calendar calendar = Calendar.getInstance();
+                startDate=calendar;
+                calendar.set(year, monthOfYear, dayOfMonth);
+
+                dayTV.setText(String.format("%1$tA", calendar));
+                String formatedData = String.format("%1$td/%1$tm/%1$tY", calendar);
+                startDate1 = formatedData;
+                dobTextView.setText(formatedData);
+                if (leaveTypeModel == null)
+                    return;
+                if (!startDate1.equalsIgnoreCase("") && !endDate1.equalsIgnoreCase("")) {
+                    if (leaveTypeModel != null) {
+                        daysCount();
+                    }
+                }
+
+                updateLeaveDayType(leaveTypeModel);
+                boolean isCompensatory = leaveTypeModel.getLeaveId().equalsIgnoreCase("E008001000") && leaveTypeModel.getProcessStep().equalsIgnoreCase("1");
+
+                if (isCompensatory) {
+                    updateCompasatory(isCompensatory);
+                }
+
+
+            }
+
+        },Integer.parseInt(date[2]), Integer.parseInt(date[1])-1,
+                Integer.parseInt(date[0]));
+        return datePickerDialog;
+    }
+
+    public DatePickerDialog pickDateFromCalenderToDate(Context mContext, final TextView dobTextView, final TextView dayTV, String dateFormat) {
+        Calendar newCalendar = Calendar.getInstance();
+        String dateStr=null;
+        if(dobTextView.getText().toString().equalsIgnoreCase("") || dobTextView.getText().toString().equalsIgnoreCase("--/--/----")){
+            dateStr= DateTimeUtil.currentDate(AppsConstant.DATE_FORMATE);
+        }else{
+            dateStr=dobTextView.getText().toString();
+        }
+        String date[] =dateStr.split("/");
+        /*if(!predefinedDate.getText().toString().equalsIgnoreCase("")){
+            String date[] =predefinedDate.getText().toString().split("/");
+        }*/
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat, Locale.US);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                Calendar calendar = Calendar.getInstance();
+                toDate = calendar;
+
+                calendar.set(year, monthOfYear, dayOfMonth);
+
+                dayTV.setText(String.format("%1$tA", calendar));
+                String formatedData = String.format("%1$td/%1$tm/%1$tY", calendar);
+
+                dobTextView.setText(formatedData);
+                endDate1 = formatedData;
+
+                if (leaveTypeModel == null)
+                    return;
+                if (!startDate1.equalsIgnoreCase("") && !endDate1.equalsIgnoreCase("")) {
+                    if (leaveTypeModel != null) {
+                        daysCount();
+                    }
+                }
+                updateLeaveDayType(leaveTypeModel);
+                boolean isCompensatory = leaveTypeModel.getLeaveId().equalsIgnoreCase("E008001000") && leaveTypeModel.getProcessStep().equalsIgnoreCase("1");
+                if (isCompensatory) {
+                    updateCompasatory(isCompensatory);
+                }
+
+
+            }
+
+        }, Integer.parseInt(date[2]), Integer.parseInt(date[1])-1,
+                Integer.parseInt(date[0]));
+        return datePickerDialog;
+    }
+
+
 
 }

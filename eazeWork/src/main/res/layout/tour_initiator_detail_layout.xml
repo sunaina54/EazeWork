@@ -310,7 +310,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="1">
+                android:weightSum="1"
+                android:id="@+id/viewTravelFromLl">
 
                 <TextView
                     android:layout_width="0dp"
@@ -344,7 +345,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="1">
+            android:weightSum="1"
+                android:id="@+id/viewTravelToLl">
 
             <TextView
                 android:layout_width="0dp"

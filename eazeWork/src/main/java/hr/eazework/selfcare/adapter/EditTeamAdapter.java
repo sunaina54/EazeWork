@@ -1,7 +1,11 @@
 package hr.eazework.selfcare.adapter;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
@@ -11,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,9 +24,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import hr.calender.caldroid.CaldroidFragment;
 import hr.calender.caldroid.CaldroidListener;
@@ -32,6 +39,9 @@ import hr.eazework.com.model.TypeWiseListModel;
 import hr.eazework.com.model.MemberReqInputModel;
 import hr.eazework.com.ui.customview.CustomBuilder;
 import hr.eazework.com.ui.interfaces.OnImageClickListner;
+import hr.eazework.com.ui.util.AppsConstant;
+import hr.eazework.com.ui.util.CalenderUtils;
+import hr.eazework.com.ui.util.DateTimeUtil;
 import hr.eazework.com.ui.util.ImageUtil;
 import hr.eazework.com.ui.util.Preferences;
 import hr.eazework.com.ui.util.Utility;
@@ -53,11 +63,13 @@ public class EditTeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int TYPE_LIST = 5;
     private static final int TYPE_SINGLE_ATTACHMENT = 66;
     private static final int TYPE_PROFILE = 99;
-
+    private Context context;
+    private DatePickerDialog datePickerDialog1;
 
     private CaldroidFragment dialogCaldroidFragment;
     public Activity mContext;
     private OnImageClickListner listner;
+    private DatePickerDialog datePickerDialog;
 
 
     public void refresh(ArrayList<MemberReqInputModel> memberRequestInputFields) {
@@ -308,9 +320,63 @@ public class EditTeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     vh2.textView.setText(model.getmFieldValue());
                 }
                 vh2.textView.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onClick(View v) {
-                        dialogCaldroidFragment = new CaldroidFragment();
+                       final Calendar newCalendar = Calendar.getInstance();
+
+                         datePickerDialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                                  int dayOfMonth) {
+                               // Calendar calendar = Calendar.getInstance();
+
+                                // if (calendar.compareTo(calendarCurrent) >= 0) {
+                                Calendar calendar = Calendar.getInstance();
+
+                                calendar.set(year, monthOfYear, dayOfMonth);
+                                vh2.textView.setText(String.format("%1$td/%1$tm/%1$tY",
+                                        calendar));
+                                getItem(position).setmFieldValue(String.format("%1$td/%1$tm/%1$tY",
+                                        calendar));
+                                datePickerDialog.dismiss();
+                            }
+
+                        },newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH),
+                                 newCalendar.get(Calendar.DAY_OF_MONTH));
+
+                        datePickerDialog.show();
+
+                        /*final DatePickerDialog datePickerDialog=new DatePickerDialog(context);
+                        datePickerDialog.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                Calendar calendar = Calendar.getInstance();
+                                // if (calendar.compareTo(calendarCurrent) >= 0) {
+
+                                vh2.textView.setText(String.format("%1$td/%1$tm/%1$tY",
+                                        calendar));
+                                getItem(position).setmFieldValue(String.format("%1$td/%1$tm/%1$tY",
+                                        calendar));
+                                datePickerDialog.dismiss();
+                            }
+                        });*/
+                     /*  DatePickerDialog datePickerDialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                                  int dayOfMonth) {
+
+
+                            }
+
+                        },Calendar.YEAR, Calendar.MONTH,
+                                Calendar.DAY_OF_MONTH);
+
+                        datePickerDialog.show();*/
+
+                       /* dialogCaldroidFragment = new CaldroidFragment();
                         dialogCaldroidFragment.setCaldroidListener(new CaldroidListener() {
                             @Override
                             public void onSelectDate(Date date, View view) {
@@ -343,7 +409,7 @@ public class EditTeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             // Setup dialogTitle
                             dialogCaldroidFragment.setArguments(bundle);
                         }
-                        dialogCaldroidFragment.show(((MainActivity)mContext).getTopFragment().getChildFragmentManager(),dialogTag);
+                        dialogCaldroidFragment.show(((MainActivity)mContext).getTopFragment().getChildFragmentManager(),dialogTag);*/
                     }
                 });
                 break;
@@ -444,6 +510,37 @@ public class EditTeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    public static DatePickerDialog pickDateFromCalender(Context mContext, final TextView dobTextView, String dateFormat) {
+        Calendar newCalendar = Calendar.getInstance();
+        String dateStr=null;
+        if(dobTextView.getText().toString().equalsIgnoreCase("") || dobTextView.getText().toString().equalsIgnoreCase("--/--/----")){
+            dateStr= DateTimeUtil.currentDate(AppsConstant.DATE_FORMATE);
+        }else{
+            dateStr=dobTextView.getText().toString();
+        }
+        String date[] =dateStr.split("/");
+        Log.d("TAG","Date array"+ date+"   "+dateStr);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat, Locale.US);
+        DatePickerDialog datePickerDialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                Calendar calendar = Calendar.getInstance();
+
+                calendar.set(year, monthOfYear, dayOfMonth);
+
+              //  dayTV.setText(String.format("%1$tA", calendar));
+                String formatedData = String.format("%1$td/%1$tm/%1$tY", calendar);
+                dobTextView.setText(formatedData);
+            }
+
+        },Integer.parseInt(date[2]), Integer.parseInt(date[1])-1,
+                Integer.parseInt(date[0]));
+
+        return datePickerDialog;
+    }
 
 
     private void removeItem(ArrayList<MemberReqInputModel> list,int position){

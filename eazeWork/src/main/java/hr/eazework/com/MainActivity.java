@@ -376,7 +376,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
             case IAction.EXPENSE_APPROVAL:
 
-                if (isFragmentExistsInBackStack(PendingActivityFragment.TAG)) {
+                if (isFragmentExistsInBackStack(ExpenseApprovalFragment.TAG)) {
                     if (getTopFragment() instanceof ExpenseApprovalFragment)
                         return;
                     popBackStack(ExpenseApprovalFragment.TAG, 0);
@@ -387,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 break;
             case IAction.ADVANCE_APPROVAL:
 
-                if (isFragmentExistsInBackStack(PendingActivityFragment.TAG)) {
+                if (isFragmentExistsInBackStack(AdvanceApprovalFragment.TAG)) {
                     if (getTopFragment() instanceof AdvanceApprovalFragment)
                         return;
                     popBackStack(AdvanceApprovalFragment.TAG, 0);
@@ -398,7 +398,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 break;
             case IAction.ATTENDANCE:
 
-                if (isFragmentExistsInBackStack(PendingActivityFragment.TAG)) {
+                if (isFragmentExistsInBackStack(AttendanceApprovalFragment.TAG)) {
                     if (getTopFragment() instanceof AttendanceApprovalFragment)
                         return;
                     popBackStack(AttendanceApprovalFragment.TAG, 0);

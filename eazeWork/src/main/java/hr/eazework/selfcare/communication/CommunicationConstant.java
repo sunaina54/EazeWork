@@ -123,6 +123,7 @@ public class CommunicationConstant {
 	public static final String API_KEY_GET_HOLIDAY_LIST="CommonService.svc/GetHolidayList";
 	public static final String API_KEY_LOGIN_USER_WITH_GOOGLE="LoginService.svc/LoginUserWithGoogle";
 	public static final String API_KEY_UPLOAD_PROFILE_PIC="EmployeeService.svc/UploadProfilePic";
+	public static final String API_KEY_GET_EMP_ATTENDANCE_DETAIL="AttendanceService.svc/GetEmpAttendanceDetail";
 
 
 	public static final int API_LOGIN_USER = 0;
@@ -219,6 +220,7 @@ public class CommunicationConstant {
 	public static final int API_GET_HOLIDAY_LIST=91;
 	public static final int API_LOGIN_USER_WITH_GOOGLE=92;
 	public static final int API_UPLOAD_PROFILE_PIC=93;
+	public static final int API_GET_EMP_ATTENDANCE_DETAIL=94;
 
 	public static String ADD_EXPENSE_RESPONSE="addExpense";
 

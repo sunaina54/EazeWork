@@ -73,7 +73,7 @@ public class ViewTourSummaryFragment extends BaseFragment {
     private ImageView plus_create_newIV;
     private RecyclerView documentRV, remarksRV;
     private Button withdrawBTN;
-    private LinearLayout wfhSummaryLl,tourSummaryLl,odSummaryLl,docLl;
+    private LinearLayout wfhSummaryLl,tourSummaryLl,odSummaryLl,docLl,viewTravelToLl,viewTravelFromLl;
     private GetEmpWFHResponseItem getEmpWFHResponseItem;
     private TourCustomListResponse tourCustomListResponse;
     private ArrayList<CustomFieldsModel> customFieldsModel;
@@ -138,6 +138,10 @@ public class ViewTourSummaryFragment extends BaseFragment {
         startDateTV = (TextView) rootView.findViewById(R.id.tourStartDateTV);
         endDateTV = (TextView) rootView.findViewById(R.id.tourEndDateTV);
         daysTV = (TextView) rootView.findViewById(R.id.tourDaysTV);
+        viewTravelToLl= (LinearLayout) rootView.findViewById(R.id.viewTravelToLl);
+        viewTravelFromLl= (LinearLayout) rootView.findViewById(R.id.viewTravelFromLl);
+        viewTravelFromLl.setVisibility(View.GONE);
+        viewTravelToLl.setVisibility(View.GONE);
         travelFromTV = (TextView) rootView.findViewById(R.id.travelFromTV);
         travelToTV = (TextView) rootView.findViewById(R.id.travelToTV);
         reasonTV = (TextView) rootView.findViewById(R.id.reasonTV);
@@ -238,8 +242,18 @@ public class ViewTourSummaryFragment extends BaseFragment {
         startDateTV.setText(item.getStartDate());
         endDateTV.setText(item.getEndDate());
         daysTV.setText(item.getTotalDays() +" "+ "day(s)");
-        travelFromTV.setText(item.getTravelFrom());
-        travelToTV.setText(item.getTravelTo());
+        if(item.getTravelFrom()!=null && !item.getTravelFrom().equalsIgnoreCase("")){
+            viewTravelFromLl.setVisibility(View.VISIBLE);
+
+            travelFromTV.setText(item.getTravelFrom());
+        }
+
+        if(item.getTravelTo()!=null && !item.getTravelTo().equalsIgnoreCase("")){
+            viewTravelToLl.setVisibility(View.VISIBLE);
+            travelToTV.setText(item.getTravelTo());
+        }
+
+
         reasonTV.setText(item.getTourReason().getReason());
         if (item.getAccomodationYN() != null && item.getAccomodationYN().equalsIgnoreCase("Y")) {
             accommodationTV.setText(getResources().getString(R.string.yes));

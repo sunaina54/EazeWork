@@ -200,7 +200,7 @@ public class PendingActivityFragment extends BaseFragment {
                                                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                                                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                                                 fragmentTransaction.replace(R.id.view_advance_expense, requestFragment);
-                                                fragmentTransaction.addToBackStack(null);
+                                                fragmentTransaction.addToBackStack(PendingActivityFragment.TAG);
                                                 fragmentTransaction.commit();
                                             }
 
@@ -578,7 +578,7 @@ public class PendingActivityFragment extends BaseFragment {
                 CommunicationConstant.API_APPROVE_LEAVE_REQUEST, true);
     }
 
-    @Override
+ /*   @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         showLog(PendingActivityFragment.class,"ResultCode "+ resultCode+"" + data);
@@ -592,6 +592,6 @@ public class PendingActivityFragment extends BaseFragment {
             new AlertCustomDialog(getActivity(), getString(R.string.msg_internet_connection));
         }
 
-    }
+    }*/
 
 }

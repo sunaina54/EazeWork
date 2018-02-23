@@ -41,6 +41,8 @@ import hr.eazework.com.model.AttendanceRejectItem;
 import hr.eazework.com.model.AttendanceRejectRequestModel;
 import hr.eazework.com.model.AttendanceRejectResponseModel;
 import hr.eazework.com.model.AttendanceReqDetail;
+import hr.eazework.com.model.EmpAttendanceDetailResponseModel;
+import hr.eazework.com.model.EmpAttendanceRequestModel;
 import hr.eazework.com.model.EmployeeLeaveModel;
 import hr.eazework.com.model.GetTimeModificationRequestDetail;
 import hr.eazework.com.model.LoginUserModel;
@@ -200,6 +202,7 @@ public class TimeModificationActivity extends BaseActivity {
         });
 
         if (attandanceCalenderStatusItem != null) {
+            sendEmpAttendanceRequest();
             updateUI();
         }
         if (employeeLeaveModel != null && employeeLeaveModel.getReqID() != null
@@ -300,10 +303,37 @@ public class TimeModificationActivity extends BaseActivity {
                 CommunicationConstant.API_GET_ATTENDANCE_DETAIL, true);
     }
 
+    private void sendEmpAttendanceRequest() {
+        EmpAttendanceRequestModel empAttendanceRequestModel = new EmpAttendanceRequestModel();
+        empAttendanceRequestModel.setAttendID(attandanceCalenderStatusItem.getAttendID());
+        empAttendanceRequestModel.setForEmpID(empId);
+        empAttendanceRequestModel.setMarkDate(attandanceCalenderStatusItem.getMarkDate());
+        CommunicationManager.getInstance().sendPostRequest(this,
+                AppRequestJSONString.empAttendanceDetail(empAttendanceRequestModel),
+                CommunicationConstant.API_GET_EMP_ATTENDANCE_DETAIL, true);
+    }
+
     @Override
     public void validateResponse(ResponseData response) {
         Log.d("TAG", "response data " + response.isSuccess());
         switch (response.getRequestData().getReqApiId()) {
+            case CommunicationConstant.API_GET_EMP_ATTENDANCE_DETAIL:
+                String responseData1 = response.getResponseData();
+                Log.d("TAG", "time modification response : " + responseData1);
+                EmpAttendanceDetailResponseModel empAttendanceDetailResponseModel = EmpAttendanceDetailResponseModel.create(responseData1);
+                if (empAttendanceDetailResponseModel != null && empAttendanceDetailResponseModel.getGetEmpAttendanceDetailResult() != null
+                        && empAttendanceDetailResponseModel.getGetEmpAttendanceDetailResult()
+                        .getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS) && empAttendanceDetailResponseModel.getGetEmpAttendanceDetailResult().getAttendanceCalStatus()!=null) {
+
+                    tv_in_time.setText(empAttendanceDetailResponseModel.getGetEmpAttendanceDetailResult().getAttendanceCalStatus().getTimeIn());
+                    inTime = tv_in_time.getText().toString();
+
+                    tv_out_time.setText(empAttendanceDetailResponseModel.getGetEmpAttendanceDetailResult().getAttendanceCalStatus().getTimeOut());
+                    outTime = tv_out_time.getText().toString();
+                } else {
+                    new AlertCustomDialog(context, timeModificationResponseModel.getBackDateAttendanceResult().getErrorMessage());
+                }
+                break;
             case CommunicationConstant.API_TIME_MODIFICATION_REQUEST:
                 String responseData = response.getResponseData();
                 Log.d("TAG", "time modification response : " + responseData);
@@ -370,12 +400,10 @@ public class TimeModificationActivity extends BaseActivity {
         inDate = attandanceCalenderStatusItem.getInDate();
         tv_out_date.setText(attandanceCalenderStatusItem.getOutDate());
         outDate = attandanceCalenderStatusItem.getOutDate();
-        tv_in_time.setText(attandanceCalenderStatusItem.getTimeIn());
-        inTime = attandanceCalenderStatusItem.getTimeIn();
-        tv_out_time.setText(attandanceCalenderStatusItem.getTimeOut());
-        outTime = attandanceCalenderStatusItem.getTimeOut();
-        markedInTimeTV.setText(inTime);
-        markedOutTimeTV.setText(outTime);
+        String markedInTime = attandanceCalenderStatusItem.getTimeIn();
+        String markedOutTime = attandanceCalenderStatusItem.getTimeOut();
+        markedInTimeTV.setText(markedInTime);
+        markedOutTimeTV.setText(markedOutTime);
         dateTV.setText(attandanceCalenderStatusItem.getMarkDate());
         statusTV.setText(attandanceCalenderStatusItem.getStatusDesc());
         datePickerDialog1 = CalenderUtils.pickDateFromCalender(context, tv_in_date, tv_in_day, AppsConstant.DATE_FORMATE);

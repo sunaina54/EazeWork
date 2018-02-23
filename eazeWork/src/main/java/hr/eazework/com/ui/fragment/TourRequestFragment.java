@@ -1324,7 +1324,7 @@ public class TourRequestFragment extends BaseFragment {
                 holder.editTextLayoutEt.setEnabled(true);
                 holder.ll_photography.setEnabled(true);
             }
-            if (item.getFieldCode().equalsIgnoreCase(AppsConstant.STUDENT_SPECIAL)) {
+            if (item.getFieldTypeID().equalsIgnoreCase(AppsConstant.TOUR_DROPDOWN)) {
                 holder.radiotextLayout.setVisibility(View.VISIBLE);
                 holder.radioTV.setText(item.getFieldLabel());
                 if (reqId.equalsIgnoreCase("0")) {
@@ -1368,7 +1368,7 @@ public class TourRequestFragment extends BaseFragment {
                 });
 
 
-            } else if (item.getFieldCode().equalsIgnoreCase(AppsConstant.PHOTOGRAPHY)) {
+            } else if (item.getFieldTypeID().equalsIgnoreCase(AppsConstant.TOUR_DATE)) {
                 holder.photographyLayout.setVisibility(View.VISIBLE);
                 holder.photographyTV.setText(item.getFieldLabel());
                 if (item.getFieldValue() != null && !item.getFieldValue().equalsIgnoreCase("")) {

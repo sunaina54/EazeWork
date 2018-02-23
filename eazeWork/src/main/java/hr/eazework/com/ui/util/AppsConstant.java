@@ -91,6 +91,12 @@ public class AppsConstant {
     public static String RELIGIOUS_TRAVEL="C017000029" ;
     public static String PHOTOGRAPHY="C017000030";
 
+    public static String TOUR_TEXT = "1";
+    public static String TOUR_NUMBER="2";
+    public static String TOUR_DATE="3";
+    public static String TOUR_DROPDOWN="4";
+
+
     public static String OD="OD";
     public static String WFH="Work from home" ;
     public static String TOUR="Tour";

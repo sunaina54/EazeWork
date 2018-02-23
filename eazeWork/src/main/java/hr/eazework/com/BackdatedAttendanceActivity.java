@@ -45,6 +45,8 @@ import hr.eazework.com.model.AttendanceRejectItem;
 import hr.eazework.com.model.AttendanceRejectRequestModel;
 import hr.eazework.com.model.AttendanceRejectResponseModel;
 import hr.eazework.com.model.AttendanceReqDetail;
+import hr.eazework.com.model.EmpAttendanceDetailResponseModel;
+import hr.eazework.com.model.EmpAttendanceRequestModel;
 import hr.eazework.com.model.EmployeeLeaveModel;
 import hr.eazework.com.model.GetTimeModificationRequestDetail;
 import hr.eazework.com.model.LoginUserModel;
@@ -132,7 +134,7 @@ public class BackdatedAttendanceActivity extends BaseActivity {
                 doSubmitOperation();
             }
         });
-        markedTimeLl= (LinearLayout) findViewById(R.id.markedTimeLl);
+        markedTimeLl = (LinearLayout) findViewById(R.id.markedTimeLl);
         markedTimeLl.setVisibility(View.GONE);
         empNameTV = (TextView) findViewById(R.id.empNameTV);
         LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
@@ -190,6 +192,7 @@ public class BackdatedAttendanceActivity extends BaseActivity {
         remarksRV = (RecyclerView) findViewById(R.id.remarksRV);
 
         if (attandanceCalenderStatusItem != null) {
+            sendEmpAttendanceRequest();
             updateUI();
         }
 
@@ -226,6 +229,16 @@ public class BackdatedAttendanceActivity extends BaseActivity {
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.timeModificationSummaryDetails(getTimeModificationRequestDetail),
                 CommunicationConstant.API_GET_ATTENDANCE_DETAIL, true);
+    }
+
+    private void sendEmpAttendanceRequest() {
+        EmpAttendanceRequestModel empAttendanceRequestModel = new EmpAttendanceRequestModel();
+        empAttendanceRequestModel.setAttendID(attandanceCalenderStatusItem.getAttendID());
+        empAttendanceRequestModel.setForEmpID(empId);
+        empAttendanceRequestModel.setMarkDate(attandanceCalenderStatusItem.getMarkDate());
+        CommunicationManager.getInstance().sendPostRequest(this,
+                AppRequestJSONString.empAttendanceDetail(empAttendanceRequestModel),
+                CommunicationConstant.API_GET_EMP_ATTENDANCE_DETAIL, true);
     }
 
     private void doSubmitOperation() {
@@ -294,6 +307,23 @@ public class BackdatedAttendanceActivity extends BaseActivity {
     public void validateResponse(ResponseData response) {
         Log.d("TAG", "response data " + response.isSuccess());
         switch (response.getRequestData().getReqApiId()) {
+            case CommunicationConstant.API_GET_EMP_ATTENDANCE_DETAIL:
+                String responseData1 = response.getResponseData();
+                Log.d("TAG", "time modification response : " + responseData1);
+                EmpAttendanceDetailResponseModel empAttendanceDetailResponseModel = EmpAttendanceDetailResponseModel.create(responseData1);
+                if (empAttendanceDetailResponseModel != null && empAttendanceDetailResponseModel.getGetEmpAttendanceDetailResult() != null
+                        && empAttendanceDetailResponseModel.getGetEmpAttendanceDetailResult()
+                        .getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS) && empAttendanceDetailResponseModel.getGetEmpAttendanceDetailResult().getAttendanceCalStatus()!=null) {
+
+                    tv_in_time.setText(empAttendanceDetailResponseModel.getGetEmpAttendanceDetailResult().getAttendanceCalStatus().getTimeIn());
+                    outTime = tv_in_time.getText().toString();
+
+                    tv_out_time.setText(empAttendanceDetailResponseModel.getGetEmpAttendanceDetailResult().getAttendanceCalStatus().getTimeOut());
+                    outTime = tv_out_time.getText().toString();
+                } else {
+                    new AlertCustomDialog(context, timeModificationResponseModel.getBackDateAttendanceResult().getErrorMessage());
+                }
+                break;
             case CommunicationConstant.API_BACKDATED_ATTENDANCE_REQUEST:
                 String responseData = response.getResponseData();
                 Log.d("TAG", "time modification response : " + responseData);
@@ -327,7 +357,7 @@ public class BackdatedAttendanceActivity extends BaseActivity {
                 if (attendanceRejectResponseModel != null && attendanceRejectResponseModel.getRejectRequestResult() != null
                         && attendanceRejectResponseModel.getRejectRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
                     //CustomDialog.alertOkWithFinishFragment(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
-                   // CustomDialog.alertOkWithFinish(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage());
+                    // CustomDialog.alertOkWithFinish(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage());
                     CustomDialog.alertOkWithFinishActivity(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage(), BackdatedAttendanceActivity.this, true);
 
                 } else {
@@ -369,13 +399,13 @@ public class BackdatedAttendanceActivity extends BaseActivity {
             tv_in_time.setText(attandanceCalenderStatusItem.getTimeIn());
             inTime = tv_in_time.getText().toString();
         }
-        if (attandanceCalenderStatusItem.getTimeIn().equalsIgnoreCase("null")) {
+      /*  if (attandanceCalenderStatusItem.getTimeIn().equalsIgnoreCase("null")) {
             tv_out_time.setText("--:-- AM");
             outTime = tv_out_time.getText().toString();
         } else {
             tv_out_time.setText(attandanceCalenderStatusItem.getTimeOut());
             outTime = tv_out_time.getText().toString();
-        }
+        }*/
         datePickerDialog1 = CalenderUtils.pickDateFromCalender(context, tv_in_date, tv_in_day, AppsConstant.DATE_FORMATE);
         datePickerDialog2 = CalenderUtils.pickDateFromCalender(context, tv_out_date, tv_out_day, AppsConstant.DATE_FORMATE);
         dateTV.setText(attandanceCalenderStatusItem.getMarkDate());
@@ -404,7 +434,7 @@ public class BackdatedAttendanceActivity extends BaseActivity {
         outDate = outTimeDate[0];
         if (outTimeDate.length == 3) {
             outTime = outTimeDate[1] + " " + outTimeDate[2];
-        }else {
+        } else {
             outTime = outTimeDate[1];
         }
         tv_out_date.setText(outDate);
