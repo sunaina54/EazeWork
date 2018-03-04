@@ -23,8 +23,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -57,7 +57,6 @@ import hr.eazework.com.model.AttendanceItem;
 import hr.eazework.com.model.CorpEmpParamListItem;
 import hr.eazework.com.model.CustomFieldsModel;
 import hr.eazework.com.model.EmployItem;
-import hr.eazework.com.model.EmployeeLeaveModel;
 import hr.eazework.com.model.GetCorpEmpParamResultResponse;
 import hr.eazework.com.model.GetDetailsOnEmpChangeRequestModel;
 import hr.eazework.com.model.GetDetailsOnEmpChangeResponseModel;
@@ -103,7 +102,7 @@ import static hr.eazework.com.ui.util.ImageUtil.rotateImage;
 public class TourRequestFragment extends BaseFragment {
     private Context context;
     public static final String TAG = "TourRequestFragment";
-    private String screenName = "TourRequestFragment";
+    private String screenName = null;
     private Button saveDraftBTN, deleteBTN, submitBTN, rejectBTN, approvalBTN;
     private Preferences preferences;
     private TextView empNameTV, empCodeTV, tv_to_day, tv_to_date, tv_from_date, tv_from_day, reasonTV;
@@ -142,12 +141,15 @@ public class TourRequestFragment extends BaseFragment {
     private ArrayList<CustomFieldsModel> customFields;
     private RecyclerView customFieldsRV;
     private CustomFieldsAdapter adapter;
+
     private TourResponseModel tourResponseModel;
     private LinearLayout remarksLinearLayout, remarksDataLl;
     private RecyclerView remarksRV;
     private AttendanceItem employeeLeaveModel;
     private TourSummaryResponse tourSummaryResponse;
     private LoginUserModel loginUserModel;
+    private DocumentUploadAdapter docAdapter;
+    private View progressbar;
 
     public String getScreenName() {
         return screenName;
@@ -162,6 +164,7 @@ public class TourRequestFragment extends BaseFragment {
     }
 
     public void setEmployeeLeaveModel(AttendanceItem employeeLeaveModel) {
+        Log.d("TAG","Tour Request : "+employeeLeaveModel);
         this.employeeLeaveModel = employeeLeaveModel;
     }
 
@@ -177,8 +180,16 @@ public class TourRequestFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        this.setShowPlusMenu(false);
-        this.setShowEditTeamButtons(true);
+
+        if(screenName!=null && screenName.equalsIgnoreCase(AttendanceApprovalFragment.screenName)){
+            this.setShowPlusMenu(false);
+            this.setShowEditTeamButtons(false);
+
+            // getActivity().getSupportActionBar().setTitle(mTitle);
+        }else{
+            this.setShowPlusMenu(false);
+            this.setShowEditTeamButtons(true);
+        }
         super.onCreate(savedInstanceState);
 
     }
@@ -188,6 +199,7 @@ public class TourRequestFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_tour_request, container, false);
         context = getContext();
+        Log.d("TAG","TourRequest : "+employeeLeaveModel);
         setupScreen();
         return rootView;
     }
@@ -251,6 +263,7 @@ public class TourRequestFragment extends BaseFragment {
                 photographyDatePickerDialog.show();
             }
         });*/
+        progressbar =(LinearLayout)rootView.findViewById(R.id.ll_progress_container);
 
         empNameTV = (TextView) rootView.findViewById(R.id.empNameTV);
         empCodeTV = (TextView) rootView.findViewById(R.id.empCodeTV);
@@ -522,7 +535,8 @@ public class TourRequestFragment extends BaseFragment {
         }
 
      /*   sendTourRequestCustomFieldList();
-        sendAdvanceRequestData();*/
+       */
+        sendAdvanceRequestData();
 
     }
 
@@ -548,7 +562,6 @@ public class TourRequestFragment extends BaseFragment {
         rootView.findViewById(R.id.ll_from_date).setEnabled(false);
         rootView.findViewById(R.id.ll_to_date).setEnabled(false);
         plus_create_newIV.setVisibility(View.GONE);
-
 
     }
 
@@ -754,6 +767,7 @@ public class TourRequestFragment extends BaseFragment {
                 }
             }
             final Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.image_preview_expense);
             final TextView filenameET = (TextView) dialog.findViewById(R.id.filenameET);
             ImageView imageView = (ImageView) dialog.findViewById(R.id.img_preview);
@@ -764,7 +778,7 @@ public class TourRequestFragment extends BaseFragment {
             tv_header_text.setTextColor(textColor);
             tv_header_text.setText("Supporting Documents");
             int bgColor = Utility.getBgColorCode(context, preferences);
-            FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
+            RelativeLayout fl_actionBarContainer = (RelativeLayout) dialog.findViewById(R.id.fl_actionBarContainer);
             fl_actionBarContainer.setBackgroundColor(bgColor);
 
             (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
@@ -821,9 +835,9 @@ public class TourRequestFragment extends BaseFragment {
         if (uploadFileList != null && uploadFileList.size() > 0) {
             errorLinearLayout.setVisibility(View.GONE);
             expenseRecyclerView.setVisibility(View.VISIBLE);
-            DocumentUploadAdapter adapter = new DocumentUploadAdapter(uploadFileList, context, AppsConstant.EDIT, errorLinearLayout, getActivity());
-            expenseRecyclerView.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
+            docAdapter = new DocumentUploadAdapter(uploadFileList, context, AppsConstant.EDIT, errorLinearLayout, getActivity());
+            expenseRecyclerView.setAdapter(docAdapter);
+            docAdapter.notifyDataSetChanged();
         } else {
             errorLinearLayout.setVisibility(View.VISIBLE);
             expenseRecyclerView.setVisibility(View.GONE);
@@ -831,7 +845,11 @@ public class TourRequestFragment extends BaseFragment {
     }
 
     private void setTravelAndReasonData() {
-        showHideProgressView(true);
+
+    //    showHideProgressView(true);
+       /* Utility.showHidePregress(progressbar,true);
+        MainActivity.isAnimationLoaded = false;
+        ((MainActivity) getActivity()).showHideProgress(true);*/
         empChangeRequestModel = new GetDetailsOnEmpChangeRequestModel();
         empChangeRequestModel.setForEmpID(empId);
         CommunicationManager.getInstance().sendPostRequest(this,
@@ -841,7 +859,9 @@ public class TourRequestFragment extends BaseFragment {
     }
 
     private void sendTourRequestCustomFieldList() {
-        showHideProgressView(true);
+       /* Utility.showHidePregress(progressbar,true);
+        MainActivity.isAnimationLoaded = false;
+        ((MainActivity) getActivity()).showHideProgress(true);*/
         requestDetail = new GetWFHRequestDetail();
         requestDetail.setReqID(reqId);
         CommunicationManager.getInstance().sendPostRequest(this,
@@ -850,7 +870,9 @@ public class TourRequestFragment extends BaseFragment {
     }
 
     public void sendAdvanceRequestData() {
-        showHideProgressView(true);
+       /* Utility.showHidePregress(progressbar,true);
+        MainActivity.isAnimationLoaded = false;
+        ((MainActivity) getActivity()).showHideProgress(true);*/
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.getAdvanceSummaryData(),
                 CommunicationConstant.API_GET_ADVANCE_PAGE_INIT, true);
@@ -859,8 +881,10 @@ public class TourRequestFragment extends BaseFragment {
     @Override
     public void validateResponse(ResponseData response) {
         MainActivity.isAnimationLoaded = true;
-        ((MainActivity) getActivity()).showHideProgress(false);
+       // ((MainActivity) getActivity()).showHideProgress(false);
         Log.d("TAG", "response data " + response.isSuccess());
+        Utility.showHidePregress(progressbar,false);
+      //  ((MainActivity) getActivity()).showHideProgress(false);
         switch (response.getRequestData().getReqApiId()) {
             case CommunicationConstant.API_GET_ADVANCE_PAGE_INIT:
                 String str1 = response.getResponseData();
@@ -881,7 +905,7 @@ public class TourRequestFragment extends BaseFragment {
                 empChangeResponseModel = GetDetailsOnEmpChangeResponseModel.create(responseData);
                 if (empChangeResponseModel != null && empChangeResponseModel.getGetDetailsOnEmpChangeResult() != null
                         && empChangeResponseModel.getGetDetailsOnEmpChangeResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    if (!getScreenName().equalsIgnoreCase(AppsConstant.PENDING_APPROVAL)) {
+                  //  if (screenName!=null && !screenName.equalsIgnoreCase(AppsConstant.PENDING_APPROVAL)) {
                         if (empChangeResponseModel.getGetDetailsOnEmpChangeResult().getShowTravelYN().equalsIgnoreCase(AppsConstant.YES)) {
                             travelFromLl.setVisibility(View.VISIBLE);
                             travelToLl.setVisibility(View.VISIBLE);
@@ -890,7 +914,7 @@ public class TourRequestFragment extends BaseFragment {
                             reasonLl.setVisibility(View.VISIBLE);
                         }
                         sendTourRequestCustomFieldList();
-                    }
+                    //}
                 } else {
                     new AlertCustomDialog(getActivity(), empChangeResponseModel.getGetDetailsOnEmpChangeResult().getErrorMessage());
                 }
@@ -978,7 +1002,11 @@ public class TourRequestFragment extends BaseFragment {
                 tourResponseModel = TourResponseModel.create(tourResponse);
                 if (tourResponseModel != null && tourResponseModel.getSaveTourReqResult() != null
                         && tourResponseModel.getSaveTourReqResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, tourResponseModel.getSaveTourReqResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    if(screenName!=null&& screenName.equalsIgnoreCase(AttendanceApprovalFragment.screenName)){
+                        CustomDialog.alertOkWithFinishFragment1(context, tourResponseModel.getSaveTourReqResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    }else{
+                        CustomDialog.alertOkWithFinishFragment(context, tourResponseModel.getSaveTourReqResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    }
                 } else {
                     new AlertCustomDialog(getActivity(), tourResponseModel.getSaveTourReqResult().getErrorMessage());
                 }
@@ -989,7 +1017,7 @@ public class TourRequestFragment extends BaseFragment {
                 LeaveRejectResponseModel rejectTourResponse = LeaveRejectResponseModel.create(respData);
                 if (rejectTourResponse != null && rejectTourResponse.getRejectTourRequestResult() != null
                         && rejectTourResponse.getRejectTourRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, rejectTourResponse.getRejectTourRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
+                    CustomDialog.alertOkWithFinishFragment1(context, rejectTourResponse.getRejectTourRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
                 } else {
                     new AlertCustomDialog(getActivity(), rejectTourResponse.getRejectTourRequestResult().getErrorMessage());
                 }
@@ -1000,7 +1028,7 @@ public class TourRequestFragment extends BaseFragment {
                 TourResponseModel tourResponseModel = TourResponseModel.create(tourResp);
                 if (tourResponseModel != null && tourResponseModel.getApproveTourRequestResult() != null
                         && tourResponseModel.getApproveTourRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, tourResponseModel.getApproveTourRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
+                    CustomDialog.alertOkWithFinishFragment1(context, tourResponseModel.getApproveTourRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
                 } else {
                     new AlertCustomDialog(getActivity(), tourResponseModel.getApproveTourRequestResult().getErrorMessage());
                 }
@@ -1012,7 +1040,9 @@ public class TourRequestFragment extends BaseFragment {
     }
 
     private void getSearchEmployeeData() {
-        showHideProgressView(true);
+       /* Utility.showHidePregress(progressbar,true);
+        MainActivity.isAnimationLoaded = false;
+        ((MainActivity) getActivity()).showHideProgress(true);*/
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.GetCorpEmpParam(), CommunicationConstant.API_GET_CORPEMP_PARAM,
                 true);
@@ -1026,28 +1056,30 @@ public class TourRequestFragment extends BaseFragment {
         startDate = tv_from_date.getText().toString();
         endDate = tv_to_date.getText().toString();
         if (fromButton.equalsIgnoreCase(AppsConstant.SUBMIT)) {
-            for (CustomFieldsModel item : customFieldsModel) {
-                if (item.getFieldCode().equalsIgnoreCase(AppsConstant.CLASSICAL_TOUR) && item.getMandatoryYN().equalsIgnoreCase(AppsConstant.YES)
-                        && classicToursEt.getText().toString().equalsIgnoreCase("")) {
-                    new AlertCustomDialog(context, getResources().getString(R.string.enter_classical_tour));
-                    return;
+            if(customFieldsModel!=null) {
+                for (CustomFieldsModel item : customFieldsModel) {
+                    if (item.getFieldCode().equalsIgnoreCase(AppsConstant.CLASSICAL_TOUR) && item.getMandatoryYN().equalsIgnoreCase(AppsConstant.YES)
+                            && classicToursEt.getText().toString().equalsIgnoreCase("")) {
+                        new AlertCustomDialog(context, getResources().getString(R.string.enter_classical_tour));
+                        return;
 
-                } else if (item.getFieldCode().equalsIgnoreCase(AppsConstant.ADVENTURE) && item.getMandatoryYN().equalsIgnoreCase(AppsConstant.YES)
-                        && adventureET.getText().toString().equalsIgnoreCase("")) {
-                    new AlertCustomDialog(context, getResources().getString(R.string.enter_adventure));
-                    return;
-                } else if (item.getFieldCode().equalsIgnoreCase(AppsConstant.FAMILY_PACKAGE) && item.getMandatoryYN().equalsIgnoreCase(AppsConstant.YES)
-                        && familyPackageET.getText().toString().equalsIgnoreCase("")) {
-                    new AlertCustomDialog(context, getResources().getString(R.string.enter_family_package));
-                    return;
-                } else if (item.getFieldCode().equalsIgnoreCase(AppsConstant.RELIGIOUS_TRAVEL) && item.getMandatoryYN().equalsIgnoreCase(AppsConstant.YES)
-                        && religiousTravelET.getText().toString().equalsIgnoreCase("")) {
-                    new AlertCustomDialog(context, getResources().getString(R.string.enter_religious_travel));
-                    return;
-                } else if (item.getFieldCode().equalsIgnoreCase(AppsConstant.PHOTOGRAPHY) && item.getMandatoryYN().equalsIgnoreCase(AppsConstant.YES)
-                        && photographyDate.equalsIgnoreCase("")) {
-                    new AlertCustomDialog(context, getResources().getString(R.string.enter_photography_date));
-                    return;
+                    } else if (item.getFieldCode().equalsIgnoreCase(AppsConstant.ADVENTURE) && item.getMandatoryYN().equalsIgnoreCase(AppsConstant.YES)
+                            && adventureET.getText().toString().equalsIgnoreCase("")) {
+                        new AlertCustomDialog(context, getResources().getString(R.string.enter_adventure));
+                        return;
+                    } else if (item.getFieldCode().equalsIgnoreCase(AppsConstant.FAMILY_PACKAGE) && item.getMandatoryYN().equalsIgnoreCase(AppsConstant.YES)
+                            && familyPackageET.getText().toString().equalsIgnoreCase("")) {
+                        new AlertCustomDialog(context, getResources().getString(R.string.enter_family_package));
+                        return;
+                    } else if (item.getFieldCode().equalsIgnoreCase(AppsConstant.RELIGIOUS_TRAVEL) && item.getMandatoryYN().equalsIgnoreCase(AppsConstant.YES)
+                            && religiousTravelET.getText().toString().equalsIgnoreCase("")) {
+                        new AlertCustomDialog(context, getResources().getString(R.string.enter_religious_travel));
+                        return;
+                    } else if (item.getFieldCode().equalsIgnoreCase(AppsConstant.PHOTOGRAPHY) && item.getMandatoryYN().equalsIgnoreCase(AppsConstant.YES)
+                            && photographyDate.equalsIgnoreCase("")) {
+                        new AlertCustomDialog(context, getResources().getString(R.string.enter_photography_date));
+                        return;
+                    }
                 }
             }
 
@@ -1099,7 +1131,7 @@ public class TourRequestFragment extends BaseFragment {
             reasonListModel.setReasonCode(reasonCode);
             tourReqDetail.setTourReason(reasonListModel);
 
-            if (adapter.dataSet != null) {
+            if (adapter!=null && adapter.dataSet != null) {
                 tourReqDetail.setCustomFields(adapter.dataSet);
             }
 
@@ -1113,6 +1145,7 @@ public class TourRequestFragment extends BaseFragment {
 
             tourReqDetail.setAttachments(uploadFileList);
             tourRequestModel.setTourReqDetail(tourReqDetail);
+            Utility.showHidePregress(progressbar,true);
             MainActivity.isAnimationLoaded = false;
             ((MainActivity) getActivity()).showHideProgress(true);
             CommunicationManager.getInstance().sendPostRequest(this,
@@ -1158,7 +1191,7 @@ public class TourRequestFragment extends BaseFragment {
             tourReqDetail.setTourReason(reasonListModel);
 
 
-            if (adapter.dataSet != null) {
+            if (adapter!=null && adapter.dataSet != null) {
                 tourReqDetail.setCustomFields(adapter.dataSet);
             } else {
                 ArrayList<CustomFieldsModel> customFieldsModels = new ArrayList<>();
@@ -1172,7 +1205,9 @@ public class TourRequestFragment extends BaseFragment {
                     uploadFileList.set(i, model);
                 }
             }
-
+            Utility.showHidePregress(progressbar,true);
+            MainActivity.isAnimationLoaded = false;
+            ((MainActivity) getActivity()).showHideProgress(true);
             tourReqDetail.setAttachments(uploadFileList);
             tourRequestModel.setTourReqDetail(tourReqDetail);
             CommunicationManager.getInstance().sendPostRequest(this,
@@ -1187,7 +1222,7 @@ public class TourRequestFragment extends BaseFragment {
                 new AlertCustomDialog(context, getResources().getString(R.string.select_user));
                 return;
             }
-            if (getScreenName().equalsIgnoreCase(AppsConstant.PENDING_APPROVAL)) {
+            if (screenName!=null && screenName.equalsIgnoreCase(AppsConstant.PENDING_APPROVAL)) {
                 if (tourSummaryResponse != null && tourSummaryResponse.getGetTourRequestDetailResult() != null
                         && tourSummaryResponse.getGetTourRequestDetailResult().getTourRequestDetail() != null
                         && tourSummaryResponse.getGetTourRequestDetailResult().getTourRequestDetail().getApprovalLevel() != null) {
@@ -1209,7 +1244,7 @@ public class TourRequestFragment extends BaseFragment {
             reasonListModel.setReasonCode(reasonCode);
             tourReqDetail.setTourReason(reasonListModel);
 
-            if (adapter.dataSet != null) {
+            if (adapter!=null && adapter.dataSet != null) {
                 tourReqDetail.setCustomFields(adapter.dataSet);
             } else {
                 ArrayList<CustomFieldsModel> customFieldsModels = new ArrayList<>();
@@ -1223,10 +1258,12 @@ public class TourRequestFragment extends BaseFragment {
                     uploadFileList.set(i, model);
                 }
             }
-
+            Utility.showHidePregress(progressbar,true);
+            MainActivity.isAnimationLoaded = false;
+            ((MainActivity) getActivity()).showHideProgress(true);
             tourReqDetail.setAttachments(uploadFileList);
             tourRequestModel.setTourReqDetail(tourReqDetail);
-            if (getScreenName().equalsIgnoreCase(AppsConstant.PENDING_APPROVAL)) {
+            if (screenName!=null && screenName.equalsIgnoreCase(AppsConstant.PENDING_APPROVAL)) {
                 CommunicationManager.getInstance().sendPostRequest(this,
                         AppRequestJSONString.tourRequest(tourRequestModel),
                         CommunicationConstant.API_APPROVE_TOUR_REQUEST, true);
@@ -1314,7 +1351,7 @@ public class TourRequestFragment extends BaseFragment {
             holder.radiotextLayout.setVisibility(View.GONE);
             holder.photographyLayout.setVisibility(View.GONE);
 
-            if (getScreenName().equalsIgnoreCase(AppsConstant.PENDING_APPROVAL)) {
+            if (screenName!=null && screenName.equalsIgnoreCase(AppsConstant.PENDING_APPROVAL)) {
                 RadioButton radio = (RadioButton) holder.studentRG.findViewById(R.id.yesStudentRB);
                 radio.setEnabled(true);
 
@@ -1324,7 +1361,7 @@ public class TourRequestFragment extends BaseFragment {
                 holder.editTextLayoutEt.setEnabled(true);
                 holder.ll_photography.setEnabled(true);
             }
-            if (item.getFieldTypeID().equalsIgnoreCase(AppsConstant.TOUR_DROPDOWN)) {
+            if (item.getFieldCode().equalsIgnoreCase(AppsConstant.STUDENT_SPECIAL)) {
                 holder.radiotextLayout.setVisibility(View.VISIBLE);
                 holder.radioTV.setText(item.getFieldLabel());
                 if (reqId.equalsIgnoreCase("0")) {
@@ -1368,7 +1405,7 @@ public class TourRequestFragment extends BaseFragment {
                 });
 
 
-            } else if (item.getFieldTypeID().equalsIgnoreCase(AppsConstant.TOUR_DATE)) {
+            } else if (item.getFieldCode().equalsIgnoreCase(AppsConstant.PHOTOGRAPHY)) {
                 holder.photographyLayout.setVisibility(View.VISIBLE);
                 holder.photographyTV.setText(item.getFieldLabel());
                 if (item.getFieldValue() != null && !item.getFieldValue().equalsIgnoreCase("")) {
@@ -1499,6 +1536,9 @@ public class TourRequestFragment extends BaseFragment {
     }
 
     private void sendViewTourRequestSummaryData() {
+        Utility.showHidePregress(progressbar,true);
+        MainActivity.isAnimationLoaded = false;
+        ((MainActivity) getActivity()).showHideProgress(true);
         requestDetail = new GetWFHRequestDetail();
         requestDetail.setReqID(employeeLeaveModel.getReqID());
         requestDetail.setAction(AppsConstant.EDIT_ACTION);
@@ -1596,7 +1636,7 @@ public class TourRequestFragment extends BaseFragment {
                     deleteBTN.setVisibility(View.VISIBLE);
                 }
                 if (button.equalsIgnoreCase(AppsConstant.SUBMIT)) {
-                    submitBTN.setVisibility(View.VISIBLE);
+                    submitBTN.setVisibility(View.GONE);
                 }
                 if (button.equalsIgnoreCase(AppsConstant.DRAFT)) {
                     saveDraftBTN.setVisibility(View.VISIBLE);

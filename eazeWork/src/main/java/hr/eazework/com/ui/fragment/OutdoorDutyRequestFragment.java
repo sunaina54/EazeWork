@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -150,8 +151,14 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        this.setShowPlusMenu(false);
-        this.setShowEditTeamButtons(true);
+        if(screenName!=null && screenName.equalsIgnoreCase(AttendanceApprovalFragment.screenName)){
+            this.setShowPlusMenu(false);
+            this.setShowEditTeamButtons(false);
+            // getActivity().getSupportActionBar().setTitle(mTitle);
+        }else{
+            this.setShowPlusMenu(false);
+            this.setShowEditTeamButtons(true);
+        }
         super.onCreate(savedInstanceState);
 
     }
@@ -583,6 +590,8 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
                 }
             }
             final Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
             dialog.setContentView(R.layout.image_preview_expense);
             final TextView filenameET = (TextView) dialog.findViewById(R.id.filenameET);
             ImageView imageView = (ImageView) dialog.findViewById(R.id.img_preview);
@@ -593,7 +602,7 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
             tv_header_text.setTextColor(textColor);
             tv_header_text.setText("Supporting Documents");
             int bgColor = Utility.getBgColorCode(context, preferences);
-            FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
+            RelativeLayout fl_actionBarContainer = (RelativeLayout) dialog.findViewById(R.id.fl_actionBarContainer);
             fl_actionBarContainer.setBackgroundColor(bgColor);
 
             (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
@@ -861,7 +870,12 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
                 odResponseModel = ODResponseModel.create(responseData);
                 if (odResponseModel != null && odResponseModel.getSaveODReqResult() != null
                         && odResponseModel.getSaveODReqResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, odResponseModel.getSaveODReqResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    if(screenName!=null&& screenName.equalsIgnoreCase(AttendanceApprovalFragment.screenName)){
+                        CustomDialog.alertOkWithFinishFragment1(context,  odResponseModel.getSaveODReqResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
+                    }else{
+                        CustomDialog.alertOkWithFinishFragment(context,  odResponseModel.getSaveODReqResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    }
+                   // CustomDialog.alertOkWithFinishFragment(context, odResponseModel.getSaveODReqResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
                 } else {
                     new AlertCustomDialog(getActivity(), odResponseModel.getSaveODReqResult().getErrorMessage());
                 }
@@ -931,7 +945,12 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
                 ODResponseModel odResponseModel = ODResponseModel.create(odresponseData);
                 if (odResponseModel != null && odResponseModel.getApproveODRequestResult() != null
                         && odResponseModel.getApproveODRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, odResponseModel.getApproveODRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
+
+                    if(screenName!=null&& screenName.equalsIgnoreCase(AttendanceApprovalFragment.screenName)){
+                        CustomDialog.alertOkWithFinishFragment1(context,  odResponseModel.getApproveODRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
+                    }else{
+                        CustomDialog.alertOkWithFinishFragment(context,  odResponseModel.getApproveODRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    }
                 } else {
                     new AlertCustomDialog(getActivity(), odResponseModel.getApproveODRequestResult().getErrorMessage());
                 }
@@ -943,7 +962,12 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
                 LeaveRejectResponseModel rejectODResponse = LeaveRejectResponseModel.create(data);
                 if (rejectODResponse != null && rejectODResponse.getRejectODRequestResult() != null
                         && rejectODResponse.getRejectODRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, rejectODResponse.getRejectODRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
+                    if(screenName!=null&& screenName.equalsIgnoreCase(AttendanceApprovalFragment.screenName)){
+                        CustomDialog.alertOkWithFinishFragment1(context, rejectODResponse.getRejectODRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
+                    }else{
+                        CustomDialog.alertOkWithFinishFragment(context, rejectODResponse.getRejectODRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    }
+                  //  CustomDialog.alertOkWithFinishFragment(context, rejectODResponse.getRejectODRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
                 } else {
                     new AlertCustomDialog(getActivity(), rejectODResponse.getRejectODRequestResult().getErrorMessage());
                 }
@@ -984,7 +1008,7 @@ public class OutdoorDutyRequestFragment extends BaseFragment {
                     deleteBTN.setVisibility(View.VISIBLE);
                 }
                 if (button.equalsIgnoreCase(AppsConstant.SUBMIT)) {
-                    submitBTN.setVisibility(View.VISIBLE);
+                    submitBTN.setVisibility(View.GONE);
                 }
                 if (button.equalsIgnoreCase(AppsConstant.DRAFT)) {
                     saveDraftBTN.setVisibility(View.VISIBLE);

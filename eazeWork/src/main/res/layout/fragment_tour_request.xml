@@ -1,23 +1,17 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/fragment_bg"
     tools:context="hr.eazework.com.ui.fragment.TourRequestFragment">
-
+    <include layout="@layout/progress_root_container"></include>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:background="@color/fragment_bg">
-
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="@dimen/margin_40"
-            android:layout_height="@dimen/margin_40"
-            android:layout_centerInParent="true"
-            android:visibility="gone" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -817,4 +811,4 @@
     </RelativeLayout>
 
     <include layout="@layout/progress_root_container" />
-</LinearLayout>
+</RelativeLayout>

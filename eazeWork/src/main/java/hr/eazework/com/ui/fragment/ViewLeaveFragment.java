@@ -210,7 +210,14 @@ public class ViewLeaveFragment extends BaseFragment {
         statusTV.setText(item.getStatusDesc());
         startDateTV.setText(item.getStartDate());
         endDateTV.setText(item.getEndDate());
-        daysTV.setText(item.getTotalDays());
+        String duration=item.getTotalDays();
+        if(item.getHalfDayFS()!=null && item.getHalfDayFS().equalsIgnoreCase("F")){
+            duration=duration+" (First Half)";
+        }else if(item.getHalfDayFS()!=null && item.getHalfDayFS().equalsIgnoreCase("S")){
+            duration=duration+" (Second Half)";
+        }
+        daysTV.setText(duration);
+
         setupButtons(item);
     }
 

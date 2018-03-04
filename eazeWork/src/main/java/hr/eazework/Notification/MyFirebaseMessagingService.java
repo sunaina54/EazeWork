@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
 import android.util.Log;
 
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
@@ -179,8 +180,9 @@ private Context context;
         notificationBuilder .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),
                 R.drawable.ic_stat_ic_launcher_new));
         notificationBuilder.setContentTitle("EazeWork");
-        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody.getNotification().getBody()));
-        notificationBuilder.setContentText(messageBody.getNotification().getBody());
+        notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().
+                bigText(Html.fromHtml(messageBody.getNotification().getBody())));
+        notificationBuilder.setContentText(Html.fromHtml(messageBody.getNotification().getBody()));
         notificationBuilder.setAutoCancel(true);
         notificationBuilder.setSound(defaultSoundUri);
         notificationBuilder.setContentIntent(pendingIntent);

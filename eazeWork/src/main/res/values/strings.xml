@@ -3,6 +3,8 @@
 
     <string name="msg_internet_connection">Please check your internet connection</string>
     <string name="app_name">EazeWork</string>
+    <string name="valid_image">Please upload valid image</string>
+
     <string name="app_empty_string"></string>
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
@@ -201,6 +203,7 @@
     <string name="religious_travel">Religious Travel</string>
     <string name="photography">Photography</string>
     <string name="tour">Tour Request</string>
+    <string name="edit_expense_claim">Edit Expense</string>
     <string name="work_from_home">Work From Home</string>
     <string name="outdoor_duty">Outdoor Duty</string>
     <string name="request_id_label">Request ID</string>
@@ -264,8 +267,8 @@
     <string name="date_attendance">Date - </string>
     <string name="day_status">Day\'s Status - </string>
     <string name="day_status_attendance">Day\'s Status : </string>
-    <string name="Time_Modification_Request">Time Modification Request</string>
-    <string name="Attendance_Request">Attendance Request</string>
+    <string name="Time_Modification_Request">Time Modification</string>
+    <string name="Attendance_Request">Backdated Attendance</string>
     <string name="enter_out_date">Please Enter Out Date</string>
     <string name="enter_in_date">Please Enter In Date</string>
     <string name="enter_in_time">Please Enter In Time</string>

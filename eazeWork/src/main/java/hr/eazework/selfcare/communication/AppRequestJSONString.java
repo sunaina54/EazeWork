@@ -464,6 +464,7 @@ public class AppRequestJSONString {
         loginData.setDeviceID(MyApplication.getDeviceId());
         loginData.setSessionID(SharedPreference.getSessionId());
         item.setLoginData(loginData);
+
         String request=item.serialize();
         Log.d("TAG","Upload Profile Request : "+request);
         return request;
@@ -623,6 +624,21 @@ public class AppRequestJSONString {
         adjustmentExpenseItem.setCurrencyCode(currency);
         adjustmentExpenseItem.setForEmpID(empId);
         AdvanceAdjustmentRequestModel advanceAdjustmentRequestModel= new AdvanceAdjustmentRequestModel();
+        advanceAdjustmentRequestModel.setLoginData(loginData);
+        advanceAdjustmentRequestModel.setExpense(adjustmentExpenseItem);
+        String expenseInitData=advanceAdjustmentRequestModel.serialize();
+        return expenseInitData;
+    }
+
+    public static String getAdvanceAdjustmentDataRequest(String currency,String empId,ArrayList<AdvanceListItemModel> advanceListItemModels) {
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        AdjustmentExpenseItem adjustmentExpenseItem=new AdjustmentExpenseItem();
+        adjustmentExpenseItem.setCurrencyCode(currency);
+        adjustmentExpenseItem.setForEmpID(empId);
+        AdvanceAdjustmentRequestModel advanceAdjustmentRequestModel= new AdvanceAdjustmentRequestModel();
+        advanceAdjustmentRequestModel.setAdvanceList(advanceListItemModels);
         advanceAdjustmentRequestModel.setLoginData(loginData);
         advanceAdjustmentRequestModel.setExpense(adjustmentExpenseItem);
         String expenseInitData=advanceAdjustmentRequestModel.serialize();

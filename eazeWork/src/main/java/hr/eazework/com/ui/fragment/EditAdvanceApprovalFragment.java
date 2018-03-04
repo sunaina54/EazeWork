@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -82,6 +83,7 @@ import static hr.eazework.com.ui.util.ImageUtil.rotateImage;
 
 public class EditAdvanceApprovalFragment extends BaseFragment {
     private Context context;
+    public static  String TAG="EditAdvanceApprovalFragment";
     private String screenName = "EditAdvanceRequestFragment";
     private TextView reasonTV, currencyTV;
     private EditText remarksET, amountET;
@@ -113,6 +115,9 @@ public class EditAdvanceApprovalFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        this.setShowPlusMenu(false);
+        this.setShowEditTeamButtons(false);
+
         super.onCreate(savedInstanceState);
     }
 
@@ -309,7 +314,7 @@ public class EditAdvanceApprovalFragment extends BaseFragment {
                         && advanceDataResponseModel.getSaveAdvanceResult().getErrorCode().equalsIgnoreCase("0")) {
                     progressBar.setVisibility(View.GONE);
                     getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                    CustomDialog.alertOkWithFinishFragment(context, advanceDataResponseModel.getSaveAdvanceResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    CustomDialog.alertOkWithFinishFragment1(context, advanceDataResponseModel.getSaveAdvanceResult().getErrorMessage(), mUserActionListener, IAction.ADVANCE_APPROVAL, true);
                 }else {
                     progressBar.setVisibility(View.GONE);
                     getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
@@ -577,6 +582,8 @@ public class EditAdvanceApprovalFragment extends BaseFragment {
                 }
             }
             final Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
             dialog.setContentView(R.layout.image_preview_expense);
             final TextView filenameET = (TextView) dialog.findViewById(R.id.filenameET);
             ImageView imageView = (ImageView) dialog.findViewById(R.id.img_preview);
@@ -587,7 +594,7 @@ public class EditAdvanceApprovalFragment extends BaseFragment {
             tv_header_text.setTextColor(textColor);
             tv_header_text.setText("Supporting Documents");
             int bgColor = Utility.getBgColorCode(context, preferences);
-            FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
+            RelativeLayout fl_actionBarContainer = (RelativeLayout) dialog.findViewById(R.id.fl_actionBarContainer);
             fl_actionBarContainer.setBackgroundColor(bgColor);
 
             (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
@@ -838,11 +845,13 @@ public class EditAdvanceApprovalFragment extends BaseFragment {
                             public void onClick(CustomBuilder builder, Object selectedObject) {
                                 if (selectedObject.toString().equalsIgnoreCase("Edit")) {
                                     final Dialog dialog = new Dialog(context);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     dialog.setContentView(R.layout.filename_advance_expense);
+
                                     preferences = new Preferences(getContext());
                                     int textColor = Utility.getTextColorCode(preferences);
                                     int bgColor = Utility.getBgColorCode(context, preferences);
-                                    FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
+                                    RelativeLayout fl_actionBarContainer = (RelativeLayout) dialog.findViewById(R.id.fl_actionBarContainer);
                                     fl_actionBarContainer.setBackgroundColor(bgColor);
                                     TextView tv_header_text = (TextView) dialog.findViewById(R.id.tv_header_text);
                                     tv_header_text.setTextColor(textColor);

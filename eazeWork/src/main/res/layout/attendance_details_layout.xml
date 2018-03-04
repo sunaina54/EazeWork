@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/fragment_bg"
     android:orientation="vertical">
+    <include layout="@layout/progress_root_container"></include>
+<LinearLayout
+    android:orientation="vertical"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
 
     <include layout="@layout/header_layout"></include>
     <ScrollView
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical">
@@ -471,8 +479,7 @@
         android:id="@+id/remarksLl">
         <include layout="@layout/remarks_layout"></include>
     </LinearLayout>
-
-            <LinearLayout
+    <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_13"
@@ -487,3 +494,4 @@
 </LinearLayout>
 </ScrollView>
 </LinearLayout>
+</RelativeLayout>

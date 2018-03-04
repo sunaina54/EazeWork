@@ -85,12 +85,12 @@ import hr.eazework.com.ui.fragment.StoreListFragment;
 import hr.eazework.com.ui.fragment.TeamMemberHistory;
 import hr.eazework.com.ui.fragment.TeamMemberList;
 import hr.eazework.com.ui.fragment.TeamMemberProfile;
+import hr.eazework.com.ui.fragment.TimeAndAttendanceSummaryFragment;
 import hr.eazework.com.ui.fragment.TourRequestFragment;
 import hr.eazework.com.ui.fragment.UserProfile;
 import hr.eazework.com.ui.fragment.ViewDataBase;
 import hr.eazework.com.ui.fragment.ViewPaySlipFragment;
 import hr.eazework.com.ui.fragment.WorkFromHomeRequestFragment;
-import hr.eazework.com.ui.fragment.TimeAndAttendanceSummaryFragment;
 import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.interfaces.UserActionListner;
 import hr.eazework.com.ui.util.AppsConstant;
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
         mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-        mTitle = "";// getTitle();
+        mTitle = "";//getTitle();
         headerImage = (ImageView) findViewById(R.id.img_company_logo);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         ibRight = (ImageView) findViewById(R.id.ibRight);
@@ -371,12 +371,11 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 } else {
                     addFragment(R.id.content_frame, new PendingActivityFragment(),
                             PendingActivityFragment.TAG);
-                }
-                break;
-
+               }
+               break;
             case IAction.EXPENSE_APPROVAL:
 
-                if (isFragmentExistsInBackStack(ExpenseApprovalFragment.TAG)) {
+                if (isFragmentExistsInBackStack(PendingActivityFragment.TAG)) {
                     if (getTopFragment() instanceof ExpenseApprovalFragment)
                         return;
                     popBackStack(ExpenseApprovalFragment.TAG, 0);
@@ -387,7 +386,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 break;
             case IAction.ADVANCE_APPROVAL:
 
-                if (isFragmentExistsInBackStack(AdvanceApprovalFragment.TAG)) {
+                if (isFragmentExistsInBackStack(PendingActivityFragment.TAG)) {
                     if (getTopFragment() instanceof AdvanceApprovalFragment)
                         return;
                     popBackStack(AdvanceApprovalFragment.TAG, 0);
@@ -552,7 +551,10 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 if (isFragmentExistsInBackStack(CreateNewLeaveFragment.TAG)) {
                     if (getTopFragment() instanceof CreateNewLeaveFragment)
                         return;
-                    popBackStack(CreateNewLeaveFragment.TAG, 0);
+
+                    popBackStack(CreateNewLeaveFragment.TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    addFragment(R.id.content_frame, new CreateNewLeaveFragment(),
+                            CreateNewLeaveFragment.TAG);
                 } else {
                     addFragment(R.id.content_frame, new CreateNewLeaveFragment(),
                             CreateNewLeaveFragment.TAG);
@@ -821,6 +823,120 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 break;
         }
 
+    }
+
+    @Override
+    public void performUserActionFragment(int pActionType, Fragment pView, Object pData) {
+        switch (pActionType) {
+
+            case IAction.CREATE_NEW_LEAVE:
+                if (isFragmentExistsInBackStack(CreateNewLeaveFragment.TAG)) {
+                    if (getTopFragment() instanceof CreateNewLeaveFragment)
+                        return;
+                    popBackStack(CreateNewLeaveFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, pView, CreateNewLeaveFragment.TAG);
+                }
+                break;
+            case IAction.PENDING_APPROVAL:
+                if (isFragmentExistsInBackStack(PendingActivityFragment.TAG)) {
+                    if (getTopFragment() instanceof PendingActivityFragment)
+                        return;
+                    popBackStack(PendingActivityFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, pView, PendingActivityFragment.TAG);
+                }
+                break;
+            case IAction.TOUR:
+                if (isFragmentExistsInBackStack(TourRequestFragment.TAG)) {
+                    if (getTopFragment() instanceof TourRequestFragment)
+                        return;
+                    popBackStack(TourRequestFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, pView,
+                            TourRequestFragment.TAG);
+                }
+                break;
+            case IAction.ATTENDANCE:
+                if (isFragmentExistsInBackStack(AttendanceApprovalFragment.TAG)) {
+                    if (getTopFragment() instanceof AttendanceApprovalFragment)
+                        return;
+                    popBackStack(AttendanceApprovalFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, pView,
+                            AttendanceApprovalFragment.TAG);
+                }
+                break;
+            case IAction.OUTDOOR_DUTY:
+                if (isFragmentExistsInBackStack(OutdoorDutyRequestFragment.TAG)) {
+                    if (getTopFragment() instanceof OutdoorDutyRequestFragment)
+                        return;
+                    popBackStack(OutdoorDutyRequestFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, pView,
+                            OutdoorDutyRequestFragment.TAG);
+                }
+                break;
+            case IAction.WORK_FROM_HOME:
+                if (isFragmentExistsInBackStack(WorkFromHomeRequestFragment.TAG)) {
+                    if (getTopFragment() instanceof WorkFromHomeRequestFragment)
+                        return;
+                    popBackStack(WorkFromHomeRequestFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, pView,
+                            WorkFromHomeRequestFragment.TAG);
+                }
+                break;
+
+            case IAction.EDIT_EXPENSE_APPROVAL:
+                if (isFragmentExistsInBackStack(EditExpenseApprovalFragment.TAG)) {
+                    if (getTopFragment() instanceof EditExpenseApprovalFragment)
+                        return;
+                    popBackStack(EditExpenseApprovalFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, pView,
+                            EditExpenseApprovalFragment.TAG);
+                }
+                break;
+            case IAction.EXPENSE_APPROVAL:
+                if (isFragmentExistsInBackStack(ExpenseApprovalFragment.TAG)) {
+                    if (getTopFragment() instanceof ExpenseApprovalFragment)
+                        return;
+                    popBackStack(ExpenseApprovalFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, pView,
+                            ExpenseApprovalFragment.TAG);
+                }
+                break;
+            case IAction.ADVANCE_APPROVAL:
+                if (isFragmentExistsInBackStack(AdvanceApprovalFragment.TAG)) {
+                    if (getTopFragment() instanceof AdvanceApprovalFragment)
+                        return;
+                    popBackStack(AdvanceApprovalFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, pView, AdvanceApprovalFragment.TAG);
+                }
+                break;
+            case IAction.EDIT_ADVANCE_APPROVAL:
+                if (isFragmentExistsInBackStack(EditAdvanceApprovalFragment.TAG)) {
+                    if (getTopFragment() instanceof EditAdvanceApprovalFragment)
+                        return;
+                    popBackStack(EditAdvanceApprovalFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, pView, EditAdvanceApprovalFragment.TAG);
+                }
+                break;
+            case IAction.EDITVIEWEXPENSECLAIM:
+                if (isFragmentExistsInBackStack(EditViewExpenseClaimFragment.TAG)) {
+                    if (getTopFragment() instanceof EditViewExpenseClaimFragment)
+                        return;
+                    popBackStack(EditViewExpenseClaimFragment.TAG, 0);
+                } else {
+                    addFragment(R.id.content_frame, pView, EditViewExpenseClaimFragment.TAG);
+                }
+                break;
+
+        }
     }
 
     /**
@@ -1107,7 +1223,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             getSupportActionBar().setTitle(mTitle);
         }
 
-
         final View.OnClickListener originalToolbarListener = mNavigationDrawerFragment.getDrawableToggle().getToolbarNavigationClickListener();
         menuPlus = (ImageView) findViewById(R.id.plus_create_new);
         if (((BaseFragment) getTopFragment()).isShowPlusMenu()) {
@@ -1122,12 +1237,14 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         }
 
         if (((BaseFragment) getTopFragment()).isShowEditTeamButtons()) {
+            getSupportActionBar().setTitle("");
             findViewById(R.id.rl_edit_team_member).setVisibility(View.VISIBLE);
         } else {
             findViewById(R.id.rl_edit_team_member).setVisibility(View.GONE);
         }
 
         if (((BaseFragment) getTopFragment()).isShowEditTeam()) {
+
             MenuItemModel itemModel = ModelManager.getInstance().getMenuItemModel();
             if (itemModel != null) {
                 MenuItemModel menuItemModel = itemModel.getItemModel(MenuItemModel.EDIT_PROFILE_KEY);
@@ -1138,8 +1255,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                 }
             }
 
-
         } else {
+
             findViewById(R.id.tv_edit).setVisibility(View.GONE);
         }
 
@@ -1235,6 +1352,20 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             return "Time & Attendance";
         }else if (fragment instanceof AttendanceApprovalFragment) {
             return "Attendance Approval";
+        }else if (fragment instanceof OutdoorDutyRequestFragment) {
+            return "Outdoor Duty";
+        }else if (fragment instanceof WorkFromHomeRequestFragment) {
+            return "Work From Home";
+        }else if (fragment instanceof TourRequestFragment) {
+            return "Tour";
+        }else if (fragment instanceof CreateNewLeaveFragment) {
+            return "Leave";
+        }else if (fragment instanceof EditAdvanceApprovalFragment) {
+            return "Advance Approval";
+        }else if (fragment instanceof EditExpenseApprovalFragment) {
+            return "Expense Approval";
+        }else if (fragment instanceof EditViewExpenseClaimFragment) {
+            return "Edit Expense";
         }else {
             return "";
         }
@@ -1381,6 +1512,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
     public void showHideProgress(boolean isShow) {
         View view = findViewById(R.id.ll_progress_container);
+        view.bringToFront();
         Log.d(MainActivity.TAG, "View found in show progress for activity: " + view);
         if (view != null) {
             view.setVisibility(isShow ? View.VISIBLE : View.GONE);
@@ -1401,7 +1533,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
                     (fragment instanceof AdvanceRequestFragment) || (fragment instanceof EditAdvanceApprovalFragment) ||
                     (fragment instanceof AdvanceApprovalFragment) || (fragment instanceof EditViewExpenseClaimFragment)
                     || (fragment instanceof EditExpenseApprovalFragment) || (fragment instanceof TeamMemberProfile)||
-                    (fragment instanceof OutdoorDutyRequestFragment)) {
+                    (fragment instanceof OutdoorDutyRequestFragment) || (fragment instanceof CreateNewLeaveFragment) || (fragment instanceof PendingActivityFragment)) {
                 fragment.onActivityResult(requestCode, resultCode, data);
             }
         }

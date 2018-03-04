@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -136,6 +137,7 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
     private LinearLayout remarksLinearLayout, remarksDataLl;
     private RecyclerView remarksRV;
     private LoginUserModel loginUserModel;
+    private View progressbar;
 
     public String getScreenName() {
         return screenName;
@@ -167,15 +169,23 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        this.setShowPlusMenu(false);
-        this.setShowEditTeamButtons(true);
+       // showHideProgressView(true);
         super.onCreate(savedInstanceState);
 
+        if(screenName!=null && screenName.equalsIgnoreCase(AttendanceApprovalFragment.screenName)){
+            this.setShowPlusMenu(false);
+            this.setShowEditTeamButtons(false);
+           // getActivity().getSupportActionBar().setTitle(mTitle);
+        }else{
+            this.setShowPlusMenu(false);
+            this.setShowEditTeamButtons(true);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        MainActivity.isAnimationLoaded = false;
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_work_from_home_request, container, false);
         context = getContext();
         preferences = new Preferences(getContext());
@@ -188,7 +198,7 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
         remarksDataLl = (LinearLayout) rootView.findViewById(R.id.remarksDataLl);
         remarksDataLl.setVisibility(View.GONE);
 
-
+        progressbar =(LinearLayout)rootView.findViewById(R.id.ll_progress_container);
         remarksLinearLayout = (LinearLayout) rootView.findViewById(R.id.remarksLinearLayout);
         remarksRV = (RecyclerView) rootView.findViewById(R.id.remarksRV);
         int textColor = Utility.getTextColorCode(preferences);
@@ -625,6 +635,8 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
                 }
             }
             final Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
             dialog.setContentView(R.layout.image_preview_expense);
             final TextView filenameET = (TextView) dialog.findViewById(R.id.filenameET);
             ImageView imageView = (ImageView) dialog.findViewById(R.id.img_preview);
@@ -635,7 +647,7 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
             tv_header_text.setTextColor(textColor);
             tv_header_text.setText("Supporting Documents");
             int bgColor = Utility.getBgColorCode(context, preferences);
-            FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
+            RelativeLayout fl_actionBarContainer = (RelativeLayout) dialog.findViewById(R.id.fl_actionBarContainer);
             fl_actionBarContainer.setBackgroundColor(bgColor);
 
             (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
@@ -821,6 +833,9 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
                         uploadFileList.set(i, model);
                     }
                 }
+                Utility.showHidePregress(progressbar,true);
+                MainActivity.isAnimationLoaded = false;
+                ((MainActivity) getActivity()).showHideProgress(true);
                 wfhRequestDetailModel.setAttachments(uploadFileList);
                 WFHRequestModel wfhRequestModel = new WFHRequestModel();
                 wfhRequestModel.setWfhRequestDetail(wfhRequestDetailModel);
@@ -869,7 +884,9 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
                 wfhRequestDetailModel.setAttachments(uploadFileList);
                 WFHRequestModel wfhRequestModel = new WFHRequestModel();
                 wfhRequestModel.setWfhRequestDetail(wfhRequestDetailModel);
-
+                Utility.showHidePregress(progressbar,true);
+                MainActivity.isAnimationLoaded = false;
+                ((MainActivity) getActivity()).showHideProgress(true);
                 CommunicationManager.getInstance().sendPostRequest(this,
                         AppRequestJSONString.WFHRequest(wfhRequestModel),
                         CommunicationConstant.API_APPROVE_WFH_REQUEST, true);
@@ -913,6 +930,9 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
             WFHRequestModel wfhRequestModel = new WFHRequestModel();
             wfhRequestModel.setWfhRequestDetail(wfhRequestDetailModel);
 
+             Utility.showHidePregress(progressbar,true);
+             MainActivity.isAnimationLoaded = false;
+            ((MainActivity) getActivity()).showHideProgress(true);
             if (getScreenName().equalsIgnoreCase(AppsConstant.PENDING_APPROVAL)) {
                 CommunicationManager.getInstance().sendPostRequest(this,
                         AppRequestJSONString.WFHRequest(wfhRequestModel),
@@ -929,7 +949,10 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
     @Override
     public void validateResponse(ResponseData response) {
         Log.d("TAG", "response data " + response.isSuccess());
-
+        MainActivity.isAnimationLoaded = true;
+        // ((MainActivity) getActivity()).showHideProgress(false);
+        Log.d("TAG", "response data " + response.isSuccess());
+        Utility.showHidePregress(progressbar,false); showHideProgressView(false);
         switch (response.getRequestData().getReqApiId()) {
             case CommunicationConstant.API_GET_ADVANCE_PAGE_INIT:
                 String str1 = response.getResponseData();
@@ -975,7 +998,13 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
                 wfhResponseModel = WFHResponseModel.create(responseData);
                 if (wfhResponseModel != null && wfhResponseModel.getSaveWFHReqResult() != null
                         && wfhResponseModel.getSaveWFHReqResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, wfhResponseModel.getSaveWFHReqResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    if(screenName!=null&& screenName.equalsIgnoreCase(AttendanceApprovalFragment.screenName)){
+                        CustomDialog.alertOkWithFinishFragment1(context,  wfhResponseModel.getSaveWFHReqResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
+                    }else{
+                        CustomDialog.alertOkWithFinishFragment(context,  wfhResponseModel.getSaveWFHReqResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    }
+                    //CustomDialog.alertOkWithFinishFragment(context, wfhResponseModel.getSaveWFHReqResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+
                 } else {
                     new AlertCustomDialog(getActivity(), wfhResponseModel.getSaveWFHReqResult().getErrorMessage());
                 }
@@ -1045,7 +1074,12 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
                 WFHResponseModel wfhResponseModel = WFHResponseModel.create(res);
                 if (wfhResponseModel != null && wfhResponseModel.getApproveWFHRequestResult() != null
                         && wfhResponseModel.getApproveWFHRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, wfhResponseModel.getApproveWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
+                  //  CustomDialog.alertOkWithFinishFragment(context, wfhResponseModel.getApproveWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
+                    if(screenName!=null&& screenName.equalsIgnoreCase(AttendanceApprovalFragment.screenName)){
+                        CustomDialog.alertOkWithFinishFragment1(context,  wfhResponseModel.getApproveWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
+                    }else{
+                        CustomDialog.alertOkWithFinishFragment(context,  wfhResponseModel.getApproveWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    }
                 } else {
                     new AlertCustomDialog(getActivity(), wfhResponseModel.getApproveWFHRequestResult().getErrorMessage());
                 }
@@ -1056,7 +1090,12 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
                 LeaveRejectResponseModel leaveRejectResponse = LeaveRejectResponseModel.create(rejectResponse);
                 if (leaveRejectResponse != null && leaveRejectResponse.getRejectWFHRequestResult() != null
                         && leaveRejectResponse.getRejectWFHRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, leaveRejectResponse.getRejectWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
+                  //  CustomDialog.alertOkWithFinishFragment(context, leaveRejectResponse.getRejectWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
+                    if(screenName!=null&& screenName.equalsIgnoreCase(AttendanceApprovalFragment.screenName)){
+                        CustomDialog.alertOkWithFinishFragment1(context,  leaveRejectResponse.getRejectWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.ATTENDANCE, true);
+                    }else{
+                        CustomDialog.alertOkWithFinishFragment(context,  leaveRejectResponse.getRejectWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    }
                 } else {
                     new AlertCustomDialog(getActivity(), leaveRejectResponse.getRejectWFHRequestResult().getErrorMessage());
                 }
@@ -1137,7 +1176,7 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
                     deleteBTN.setVisibility(View.VISIBLE);
                 }
                 if (button.equalsIgnoreCase(AppsConstant.SUBMIT)) {
-                    submitBTN.setVisibility(View.VISIBLE);
+                    submitBTN.setVisibility(View.GONE);
                 }
                 if (button.equalsIgnoreCase(AppsConstant.DRAFT)) {
                     saveDraftBTN.setVisibility(View.VISIBLE);
@@ -1187,6 +1226,9 @@ public class WorkFromHomeRequestFragment extends BaseFragment {
         WFHRejectRequestModel rejectRequestModel = new WFHRejectRequestModel();
         rejectRequestModel.setReqID(reqId);
         rejectRequestModel.setComments(remarksET.getText().toString());
+        Utility.showHidePregress(progressbar,true);
+        MainActivity.isAnimationLoaded = false;
+        ((MainActivity) getActivity()).showHideProgress(true);
         CommunicationManager.getInstance().sendPostRequest(this,
                 AppRequestJSONString.rejectRequest(rejectRequestModel),
                 CommunicationConstant.API_REJECT_WFH_REQUEST, true);

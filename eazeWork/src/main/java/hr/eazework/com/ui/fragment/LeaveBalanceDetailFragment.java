@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -539,11 +540,14 @@ public class LeaveBalanceDetailFragment extends BaseFragment {
                     if(item.getStatusDesc()!=null && item.getStatusDesc().equalsIgnoreCase(AppsConstant.DRAFT)){
                         CreateNewLeaveFragment requestFragment = new CreateNewLeaveFragment();
                         requestFragment.setLeaveReqsItem(dataSet.get(listPosition));
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        Fragment fragment=requestFragment;
+
+                        mUserActionListener.performUserActionFragment(IAction.CREATE_NEW_LEAVE,fragment,null);
+                        /*FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.view_advance_expense, requestFragment);
                         fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
+                        fragmentTransaction.commit();*/
                     }
 
                     if(item.getStatusDesc()!=null && !item.getStatusDesc().equalsIgnoreCase(AppsConstant.DRAFT)){

@@ -2,6 +2,7 @@ package hr.eazework.com.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +33,7 @@ import hr.eazework.com.model.GetAdvanceApprovalRoleResult;
 import hr.eazework.com.model.GetAdvanceDetailResultModel;
 import hr.eazework.com.model.RoleListItem;
 import hr.eazework.com.ui.customview.CustomBuilder;
+import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.mframe.communication.ResponseData;
 import hr.eazework.selfcare.communication.AppRequestJSONString;
 import hr.eazework.selfcare.communication.CommunicationConstant;
@@ -379,11 +381,13 @@ public class AdvanceApprovalFragment extends BaseFragment {
                 public void onClick(View v) {
                     EditAdvanceApprovalFragment advanceRequestFragment = new EditAdvanceApprovalFragment();
                     advanceRequestFragment.setAdvanceListModel(dataSet.get(listPosition));
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.expense_approval, advanceRequestFragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
+                    Fragment fragment=advanceRequestFragment;
+                                               /* FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                                fragmentTransaction.replace(R.id.view_advance_expense, requestFragment);*/
+                    //fragmentTransaction.addToBackStack(PendingActivityFragment.TAG);
+                    mUserActionListener.performUserActionFragment(IAction.EDIT_EXPENSE_APPROVAL,fragment,null);
+
 
                 }
             });

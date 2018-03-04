@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -106,6 +107,7 @@ import static hr.eazework.com.ui.util.ImageUtil.rotateImage;
 
 
 public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedChangeListener {
+    private View rootView;
     public static final String TAG = "CreateNewLeaveFragment";
     private String screenName = "CreateNewLeaveFragment";
     private CaldroidFragment dialogCaldroidFragment;
@@ -179,8 +181,14 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        this.setShowPlusMenu(false);
-        this.setShowEditTeamButtons(true);
+
+        if(screenName!=null && screenName.equalsIgnoreCase(AttendanceApprovalFragment.screenName)){
+            this.setShowPlusMenu(false);
+            this.setShowEditTeamButtons(false);
+        }else{
+            this.setShowPlusMenu(false);
+            this.setShowEditTeamButtons(true);
+        }
         super.onCreate(savedInstanceState);
     }
 
@@ -229,6 +237,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         remarksRV = (RecyclerView) rootView.findViewById(R.id.remarksRV);
 
         etRemark = (EditText) rootView.findViewById(R.id.et_remark);
+        etRemark.setText("");
         daysTV = (TextView) rootView.findViewById(R.id.daysTV);
         daysTV.setText("");
         rootView.findViewById(R.id.tv_select_leave_type).setOnClickListener(this);
@@ -1612,7 +1621,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                     ((CheckBox) rootView.findViewById(R.id.rb_25_day)).setChecked(false);
                     ((CheckBox) rootView.findViewById(R.id.rb_full_day)).setChecked(false);
                     ((CheckBox) rootView.findViewById(R.id.rb_75_day)).setChecked(false);
-                    daysTV.setText("0.5");
+                    daysTV.setText("0.50F");
                     halfLl.setVisibility(View.VISIBLE);
                     halfDayFS = "F";
                     Log.d("TAG", "Half day " + halfDayFS);
@@ -1634,11 +1643,13 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                 case R.id.firstHalfCB:
                     secondHalfCB.setChecked(false);
                     halfDayFS = "F";
+                    daysTV.setText("0.50F");
                     Log.d("TAG", "Half day " + halfDayFS);
                     break;
                 case R.id.secondHalfCB:
                     firstHalfCB.setChecked(false);
                     halfDayFS = "S";
+                    daysTV.setText("0.50S");
                     Log.d("TAG", "Half day " + halfDayFS);
                     break;
                 default:
@@ -1867,7 +1878,9 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                 }
             }
             final Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.image_preview_expense);
+
             final TextView filenameET = (TextView) dialog.findViewById(R.id.filenameET);
             ImageView imageView = (ImageView) dialog.findViewById(R.id.img_preview);
             imageView.setImageBitmap(bitmap);
@@ -1877,7 +1890,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
             tv_header_text.setTextColor(textColor);
             tv_header_text.setText("Supporting Documents");
             int bgColor = Utility.getBgColorCode(context, preferences);
-            FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
+            RelativeLayout fl_actionBarContainer = (RelativeLayout) dialog.findViewById(R.id.fl_actionBarContainer);
             fl_actionBarContainer.setBackgroundColor(bgColor);
 
             (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
@@ -2067,7 +2080,7 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
                     deleteBTN.setVisibility(View.VISIBLE);
                 }
                 if (button.equalsIgnoreCase(AppsConstant.SUBMIT)) {
-                    submitBTN.setVisibility(View.VISIBLE);
+                    submitBTN.setVisibility(View.GONE);
                 }
             }
         }
@@ -2215,6 +2228,9 @@ public class CreateNewLeaveFragment extends BaseFragment implements OnCheckedCha
         return datePickerDialog;
     }
 
-
-
+    @Override
+    public void onDestroyView() {
+        rootView.destroyDrawingCache();
+        super.onDestroyView();
+    }
 }

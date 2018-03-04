@@ -3,6 +3,7 @@ package hr.eazework.com.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +28,7 @@ import hr.eazework.com.R;
 import hr.eazework.com.model.ExpenseApprovalList;
 import hr.eazework.com.model.ExpenseApprovalResponseModel;
 import hr.eazework.com.ui.customview.CustomBuilder;
+import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.mframe.communication.ResponseData;
 import hr.eazework.selfcare.communication.AppRequestJSONString;
 import hr.eazework.selfcare.communication.CommunicationConstant;
@@ -338,13 +340,22 @@ public class ExpenseApprovalFragment extends BaseFragment {
             holder.actionBTN.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     EditExpenseApprovalFragment advanceRequestFragment = new EditExpenseApprovalFragment();
                     advanceRequestFragment.setExpenseApprovalList(dataSet.get(listPosition));
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                 /*   FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                     fragmentTransaction.replace(R.id.expense_approval, advanceRequestFragment);
                     fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
+                    fragmentTransaction.commit()*/;
+
+                    Fragment fragment=advanceRequestFragment;
+                                               /* FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                                fragmentTransaction.replace(R.id.view_advance_expense, requestFragment);*/
+                    //fragmentTransaction.addToBackStack(PendingActivityFragment.TAG);
+                    mUserActionListener.performUserActionFragment(IAction.EDIT_EXPENSE_APPROVAL,fragment,null);
+
                 }
             });
 

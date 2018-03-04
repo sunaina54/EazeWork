@@ -3,6 +3,7 @@ package hr.eazework.com.model;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Created by Dell3 on 26-09-2017.
@@ -11,6 +12,15 @@ import java.io.Serializable;
 public class AdvanceAdjustmentRequestModel implements Serializable {
     private AdvanceLoginDataRequestModel loginData;
     private AdjustmentExpenseItem expense;
+    private ArrayList<AdvanceListItemModel> advanceList;
+
+    public ArrayList<AdvanceListItemModel> getAdvanceList() {
+        return advanceList;
+    }
+
+    public void setAdvanceList(ArrayList<AdvanceListItemModel> advanceList) {
+        this.advanceList = advanceList;
+    }
 
     public AdvanceLoginDataRequestModel getLoginData() {
         return loginData;

@@ -108,12 +108,15 @@ public class TimeModificationActivity extends BaseActivity {
     private AttendanceReqDetail reqDetail;
     private TextView markedInTimeTV, markedOutTimeTV, inTimeTMTV, outTimeTMTV;
     private String markedInTime, markedOutTime;
+    private View progressbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.attendance_details_layout);
+        progressbar =(LinearLayout)findViewById(R.id.ll_progress_container);
+        progressbar.bringToFront();
         preferences = new Preferences(context);
         int textColor = Utility.getTextColorCode(preferences);
         int bgColor = Utility.getBgColorCode(context, preferences);
@@ -268,6 +271,7 @@ public class TimeModificationActivity extends BaseActivity {
 
                 TimeModificationRequestModel timeModificationRequestModel = new TimeModificationRequestModel();
                 timeModificationRequestModel.setRequest(timeModificationItem);
+                Utility.showHidePregress(progressbar,true);
                 CommunicationManager.getInstance().sendPostRequest(this,
                         AppRequestJSONString.timeModificationRequest(timeModificationRequestModel),
                         CommunicationConstant.API_APPROVE_ATTENDANCE_REQUEST, true);
@@ -286,6 +290,7 @@ public class TimeModificationActivity extends BaseActivity {
 
                 TimeModificationRequestModel timeModificationRequestModel = new TimeModificationRequestModel();
                 timeModificationRequestModel.setRequest(timeModificationItem);
+                Utility.showHidePregress(progressbar,true);
                 CommunicationManager.getInstance().sendPostRequest(this,
                         AppRequestJSONString.timeModificationRequest(timeModificationRequestModel),
                         CommunicationConstant.API_TIME_MODIFICATION_REQUEST, true);
@@ -316,6 +321,7 @@ public class TimeModificationActivity extends BaseActivity {
     @Override
     public void validateResponse(ResponseData response) {
         Log.d("TAG", "response data " + response.isSuccess());
+        Utility.showHidePregress(progressbar,false);
         switch (response.getRequestData().getReqApiId()) {
             case CommunicationConstant.API_GET_EMP_ATTENDANCE_DETAIL:
                 String responseData1 = response.getResponseData();
@@ -487,6 +493,7 @@ public class TimeModificationActivity extends BaseActivity {
                 new AlertCustomDialog(context, context.getResources().getString(R.string.enter_remarks));
                 return;
             }
+
             AttendanceRejectRequestModel rejectRequestModel = new AttendanceRejectRequestModel();
             AttendanceRejectItem attendanceRejectItem = new AttendanceRejectItem();
             attendanceRejectItem.setReqID(reqDetail.getReqID());
@@ -494,6 +501,7 @@ public class TimeModificationActivity extends BaseActivity {
             attendanceRejectItem.setApprovalLevel(reqDetail.getApprovalLevel());
             attendanceRejectItem.setStatus(reqDetail.getStatus());
             rejectRequestModel.setRequest(attendanceRejectItem);
+            Utility.showHidePregress(progressbar,true);
             CommunicationManager.getInstance().sendPostRequest(this,
                     AppRequestJSONString.rejectAttendanceRequest(rejectRequestModel),
                     CommunicationConstant.API_REJECT_ATTENDANCE_REQUEST, true);

@@ -68,6 +68,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -540,7 +541,7 @@ public class Utility {
         tv_header_text.setTextColor(textColor);
         tv_header_text.setText("Policy details for -" + itemsModel.getHeadDesc());
         int bgColor = Utility.getBgColorCode(context, preferences);
-        FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
+        RelativeLayout fl_actionBarContainer = (RelativeLayout) dialog.findViewById(R.id.fl_actionBarContainer);
         fl_actionBarContainer.setBackgroundColor(bgColor);
 
         unitTV=(TextView) dialog.findViewById(R.id.unitTV);
@@ -683,7 +684,7 @@ public class Utility {
 
                                 int textColor = Utility.getTextColorCode(preferences);
                                 int bgColor = Utility.getBgColorCode(context, preferences);
-                                FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
+                                RelativeLayout fl_actionBarContainer = (RelativeLayout) dialog.findViewById(R.id.fl_actionBarContainer);
                                 fl_actionBarContainer.setBackgroundColor(bgColor);
                                 TextView tv_header_text = (TextView) dialog.findViewById(R.id.tv_header_text);
                                 tv_header_text.setTextColor(textColor);
@@ -809,6 +810,14 @@ public class Utility {
         String formatedDate = cal.get(Calendar.DATE) + "/" + (cal.get(Calendar.MONTH) + 1) + "/" + cal.get(Calendar.YEAR);
         System.out.println("formatedDate : " + formatedDate);
         return formatedDate;
+    }
+    public static void showHidePregress(View view ,boolean isShow){
+       if(isShow) {
+           view.setVisibility(View.VISIBLE);
+       }else{
+           view.setVisibility(View.INVISIBLE);
+       }
+
     }
 }
 

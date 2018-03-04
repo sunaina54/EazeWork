@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -142,8 +143,9 @@ public abstract class BaseFragment extends Fragment implements OnClickListener,I
         Log.d(MainActivity.TAG,"View(rootView) found in show progress for activity : "+ rootView);
         if(rootView==null)
 			return;
+
 		if(rootView.findViewById(R.id.ll_progress_container)!=null){
-			rootView.findViewById(R.id.ll_progress_container).setVisibility(isShow?View.VISIBLE:View.GONE);
+            rootView.findViewById(R.id.ll_progress_container).setVisibility(isShow?View.VISIBLE:View.GONE);
 		}
 	}
 	public void showHideNetworkErrorView(boolean isShow){

@@ -156,6 +156,29 @@ public class CustomDialog extends Dialog
 		openDialog.show();
 	}
 
+	public static void alertOkWithFinishFragment1(final Context mContext, String msg, final UserActionListner mUserActionListener, final int action,boolean isMaterial) {
+		ContextThemeWrapper ctw = new ContextThemeWrapper(mContext,
+				isMaterial ? R.style.MyDialogTheme
+						: R.style.MyDialogThemeTransparent);
+		final Dialog openDialog = new Dialog(ctw);
+		openDialog.setCancelable(false);
+		openDialog.setContentView(R.layout.material_dialog_layout);
+		TextView tv_message = (TextView)openDialog.findViewById(R.id.tv_message);
+		TextView tv_title = (TextView) openDialog.findViewById(R.id.tv_title);
+		tv_title.setText("Confirmation");
+		tv_message.setText(msg);
+		TextView tv_cancel = (TextView) openDialog.findViewById(R.id.tv_cancel);
+		tv_cancel.setVisibility(View.GONE);
+		TextView tv_ok = (TextView) openDialog.findViewById(R.id.tv_ok);
+		tv_ok.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mUserActionListener.performUserActionFragment(action, null, null);
+				openDialog.dismiss();
+			}
+		});
+		openDialog.show();
+	}
 
 
 	public static void alertWithOk(Context mContext, String msg) {

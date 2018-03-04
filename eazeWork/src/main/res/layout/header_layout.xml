@@ -6,11 +6,10 @@
    android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/fl_actionBarContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/margin_60">
-
         <LinearLayout
             android:id="@+id/rl_edit_team_member"
             android:layout_width="match_parent"
@@ -44,19 +43,18 @@
             </RelativeLayout>
 
             <TextView
-                android:gravity="center_horizontal"
+                android:gravity="center"
                 android:id="@+id/tv_header_text"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/margin_20"
                 android:layout_toRightOf="@id/ibWrong"
                 android:layout_weight=".6"
-                android:padding="@dimen/margin_10"
                 android:text=""
                 android:textColor="@color/white"
-                android:textSize="@dimen/text_16"
+                android:textSize="@dimen/font_16"
                 android:textStyle="bold" />
 
             <RelativeLayout
@@ -78,5 +76,5 @@
 
         </LinearLayout>
 
-    </FrameLayout>
+    </RelativeLayout>
 </LinearLayout>

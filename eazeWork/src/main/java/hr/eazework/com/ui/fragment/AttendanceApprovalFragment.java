@@ -4,13 +4,13 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,23 +26,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hr.eazework.com.BackdatedAttendanceActivity;
+import hr.eazework.com.MainActivity;
 import hr.eazework.com.R;
 import hr.eazework.com.TimeModificationActivity;
 import hr.eazework.com.model.AttendanceApprovalResponse;
 import hr.eazework.com.model.AttendanceItem;
 import hr.eazework.com.model.AttendanceRejectItem;
 import hr.eazework.com.model.AttendanceRejectRequestModel;
-import hr.eazework.com.model.AttendanceItem;
 import hr.eazework.com.model.AttendanceRejectResponseModel;
 import hr.eazework.com.model.AttendanceReqDetail;
-import hr.eazework.com.model.EmployeeLeaveModel;
 import hr.eazework.com.model.ExpenseApprovalList;
 import hr.eazework.com.model.GetODRequestDetail;
 import hr.eazework.com.model.GetTimeModificationRequestDetail;
 import hr.eazework.com.model.GetWFHRequestDetail;
-import hr.eazework.com.model.LeaveDetailResponseModel;
 import hr.eazework.com.model.LeaveRejectResponseModel;
-import hr.eazework.com.model.LeaveResponseModel;
 import hr.eazework.com.model.ODRequestDetail;
 import hr.eazework.com.model.ODRequestModel;
 import hr.eazework.com.model.ODResponseModel;
@@ -69,6 +66,7 @@ import hr.eazework.com.ui.customview.CustomBuilder;
 import hr.eazework.com.ui.customview.CustomDialog;
 import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.util.AppsConstant;
+import hr.eazework.com.ui.util.Utility;
 import hr.eazework.com.ui.util.custom.AlertCustomDialog;
 import hr.eazework.mframe.communication.ResponseData;
 import hr.eazework.selfcare.communication.AppRequestJSONString;
@@ -152,7 +150,9 @@ public class AttendanceApprovalFragment extends BaseFragment {
                 LeaveRejectResponseModel leaveRejectResponse = LeaveRejectResponseModel.create(responseData);
                 if (leaveRejectResponse != null && leaveRejectResponse.getRejectWFHRequestResult() != null
                         && leaveRejectResponse.getRejectWFHRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, leaveRejectResponse.getRejectWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    alertOkWithFinishFragment(context,leaveRejectResponse.getRejectWFHRequestResult().getErrorMessage(),true);
+
+                    //CustomDialog.alertOkWithFinishFragment(context, leaveRejectResponse.getRejectWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
                 } else {
                     new AlertCustomDialog(getActivity(), leaveRejectResponse.getRejectWFHRequestResult().getErrorMessage());
                 }
@@ -163,7 +163,8 @@ public class AttendanceApprovalFragment extends BaseFragment {
                 LeaveRejectResponseModel rejectODResponse = LeaveRejectResponseModel.create(data);
                 if (rejectODResponse != null && rejectODResponse.getRejectODRequestResult() != null
                         && rejectODResponse.getRejectODRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, rejectODResponse.getRejectODRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    alertOkWithFinishFragment(context,rejectODResponse.getRejectODRequestResult().getErrorMessage(),true);
+                   // CustomDialog.alertOkWithFinishFragment(context, rejectODResponse.getRejectODRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
                 } else {
                     new AlertCustomDialog(getActivity(), rejectODResponse.getRejectODRequestResult().getErrorMessage());
                 }
@@ -174,7 +175,8 @@ public class AttendanceApprovalFragment extends BaseFragment {
                 LeaveRejectResponseModel rejectTourResponse = LeaveRejectResponseModel.create(respData);
                 if (rejectTourResponse != null && rejectTourResponse.getRejectTourRequestResult() != null
                         && rejectTourResponse.getRejectTourRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, rejectTourResponse.getRejectTourRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    alertOkWithFinishFragment(context,rejectTourResponse.getRejectTourRequestResult().getErrorMessage(),true);
+                    /// /  CustomDialog.alertOkWithFinishFragment(context, rejectTourResponse.getRejectTourRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
                 } else {
                     new AlertCustomDialog(getActivity(), rejectTourResponse.getRejectTourRequestResult().getErrorMessage());
                 }
@@ -199,7 +201,8 @@ public class AttendanceApprovalFragment extends BaseFragment {
                 WFHResponseModel wfhResponseModel = WFHResponseModel.create(resp);
                 if (wfhResponseModel != null && wfhResponseModel.getApproveWFHRequestResult() != null
                         && wfhResponseModel.getApproveWFHRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, wfhResponseModel.getApproveWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                   // CustomDialog.alertOkWithFinishFragment(context, wfhResponseModel.getApproveWFHRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    alertOkWithFinishFragment(context,wfhResponseModel.getApproveWFHRequestResult().getErrorMessage(),true);
                 } else {
                     new AlertCustomDialog(getActivity(), wfhResponseModel.getApproveWFHRequestResult().getErrorMessage());
                 }
@@ -222,7 +225,8 @@ public class AttendanceApprovalFragment extends BaseFragment {
                 ODResponseModel odResponseModel = ODResponseModel.create(odresponseData);
                 if (odResponseModel != null && odResponseModel.getApproveODRequestResult() != null
                         && odResponseModel.getApproveODRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, odResponseModel.getApproveODRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    //CustomDialog.alertOkWithFinishFragment(context, odResponseModel.getApproveODRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    alertOkWithFinishFragment(context,odResponseModel.getApproveODRequestResult().getErrorMessage(),true);
                 } else {
                     new AlertCustomDialog(getActivity(), odResponseModel.getApproveODRequestResult().getErrorMessage());
                 }
@@ -244,7 +248,8 @@ public class AttendanceApprovalFragment extends BaseFragment {
                 TourResponseModel tourResponseModel = TourResponseModel.create(tourResp);
                 if (tourResponseModel != null && tourResponseModel.getApproveTourRequestResult() != null
                         && tourResponseModel.getApproveTourRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, tourResponseModel.getApproveTourRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                   // CustomDialog.alertOkWithFinishFragment(context, tourResponseModel.getApproveTourRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    alertOkWithFinishFragment(context,tourResponseModel.getApproveTourRequestResult().getErrorMessage(),true);
                 } else {
                     new AlertCustomDialog(getActivity(), tourResponseModel.getApproveTourRequestResult().getErrorMessage());
                 }
@@ -256,7 +261,8 @@ public class AttendanceApprovalFragment extends BaseFragment {
                 AttendanceRejectResponseModel attendanceRejectResponseModel = AttendanceRejectResponseModel.create(respDataAttendance);
                 if (attendanceRejectResponseModel != null && attendanceRejectResponseModel.getRejectRequestResult() != null
                         && attendanceRejectResponseModel.getRejectRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                   // CustomDialog.alertOkWithFinishFragment(context, attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+                    alertOkWithFinishFragment(context,attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage(),true);
                 } else {
                     new AlertCustomDialog(getActivity(), attendanceRejectResponseModel.getRejectRequestResult().getErrorMessage());
                 }
@@ -267,7 +273,9 @@ public class AttendanceApprovalFragment extends BaseFragment {
                 AttendanceRejectResponseModel attendanceApproveResponseModel = AttendanceRejectResponseModel.create(respDataAttend);
                 if (attendanceApproveResponseModel != null && attendanceApproveResponseModel.getApproveRequestResult() != null
                         && attendanceApproveResponseModel.getApproveRequestResult().getErrorCode().equalsIgnoreCase(AppsConstant.SUCCESS)) {
-                    CustomDialog.alertOkWithFinishFragment(context, attendanceApproveResponseModel.getApproveRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
+
+                    alertOkWithFinishFragment(context,attendanceApproveResponseModel.getApproveRequestResult().getErrorMessage(),true);
+                   // CustomDialog.alertOkWithFinishFragment(context, attendanceApproveResponseModel.getApproveRequestResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
                 } else {
                     new AlertCustomDialog(getActivity(), attendanceApproveResponseModel.getApproveRequestResult().getErrorMessage());
                 }
@@ -300,6 +308,31 @@ public class AttendanceApprovalFragment extends BaseFragment {
         }
     }
 
+    void alertOkWithFinishFragment(final Context mContext, String msg, boolean isMaterial) {
+        ContextThemeWrapper ctw = new ContextThemeWrapper(mContext,
+                isMaterial ? R.style.MyDialogTheme
+                        : R.style.MyDialogThemeTransparent);
+        final Dialog openDialog = new Dialog(ctw);
+        openDialog.setCancelable(false);
+        openDialog.setContentView(R.layout.material_dialog_layout);
+        TextView tv_message = (TextView)openDialog.findViewById(R.id.tv_message);
+        TextView tv_title = (TextView) openDialog.findViewById(R.id.tv_title);
+        tv_title.setText("Confirmation");
+        tv_message.setText(msg);
+        TextView tv_cancel = (TextView) openDialog.findViewById(R.id.tv_cancel);
+        tv_cancel.setVisibility(View.GONE);
+        TextView tv_ok = (TextView) openDialog.findViewById(R.id.tv_ok);
+        tv_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // mUserActionListener.performUserActionFragment(action, null, null);
+                sendRequestSummaryData();
+
+                openDialog.dismiss();
+            }
+        });
+        openDialog.show();
+    }
     private class AttendanceApprovalAdapter extends
             RecyclerView.Adapter<AttendanceApprovalAdapter.MyViewHolder> {
         private ArrayList<AttendanceItem> dataSet;
@@ -412,11 +445,8 @@ public class AttendanceApprovalFragment extends BaseFragment {
                                         WorkFromHomeRequestFragment requestFragment = new WorkFromHomeRequestFragment();
                                         requestFragment.setEmployeeLeaveModel(item);
                                         requestFragment.setScreenName(screenName);
-                                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                        fragmentTransaction.replace(R.id.view_advance_expense, requestFragment);
-                                        fragmentTransaction.addToBackStack(null);
-                                        fragmentTransaction.commit();
+                                        Fragment fragment=requestFragment;
+                                        mUserActionListener.performUserActionFragment(IAction.WORK_FROM_HOME,fragment,null);
                                     }
 
 
@@ -424,22 +454,21 @@ public class AttendanceApprovalFragment extends BaseFragment {
                                         OutdoorDutyRequestFragment outdoorDutyRequestFragment = new OutdoorDutyRequestFragment();
                                         outdoorDutyRequestFragment.setEmployeeLeaveModel(item);
                                         outdoorDutyRequestFragment.setScreenName(screenName);
-                                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                        fragmentTransaction.replace(R.id.view_advance_expense, outdoorDutyRequestFragment);
-                                        fragmentTransaction.addToBackStack(null);
-                                        fragmentTransaction.commit();
+                                        Fragment fragment=outdoorDutyRequestFragment;
+                                        mUserActionListener.performUserActionFragment(IAction.OUTDOOR_DUTY,fragment,null);
                                     }
 
                                     if (item.getReqCode() != null && item.getReqCode().startsWith("TR")) {
                                         TourRequestFragment tourRequestFragment = new TourRequestFragment();
                                         tourRequestFragment.setEmployeeLeaveModel(item);
                                         tourRequestFragment.setScreenName(screenName);
-                                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                        Fragment fragment=tourRequestFragment;
+                                        mUserActionListener.performUserActionFragment(IAction.TOUR,fragment,null);
+                                       /* FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                        fragmentTransaction.replace(R.id.view_advance_expense, tourRequestFragment);
+                                        fragmentTransaction.replace(R.id.view_advance_expense, fragment);
                                         fragmentTransaction.addToBackStack(null);
-                                        fragmentTransaction.commit();
+                                        fragmentTransaction.commit();*/
                                     }
 
                                     if (item.getReqCode() != null && item.getReqCode().startsWith("BA")) {
@@ -456,34 +485,46 @@ public class AttendanceApprovalFragment extends BaseFragment {
                                     }
 
                                     if (item.getReqCode() != null && item.getReqCode().startsWith("HW")) {
+                                      /*  WorkFromHomeRequestFragment requestFragment = new WorkFromHomeRequestFragment();
+                                        requestFragment.setEmployeeLeaveModel(item);
+                                        requestFragment.setScreenName(screenName);*/
                                         WorkFromHomeRequestFragment requestFragment = new WorkFromHomeRequestFragment();
                                         requestFragment.setEmployeeLeaveModel(item);
                                         requestFragment.setScreenName(screenName);
-                                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                        fragmentTransaction.replace(R.id.view_advance_expense, requestFragment);
-                                        fragmentTransaction.addToBackStack(null);
-                                        fragmentTransaction.commit();
+                                        Fragment fragment=requestFragment;
+                                        mUserActionListener.performUserActionFragment(IAction.WORK_FROM_HOME,fragment,null);
                                     }
                                     if (item.getReqCode() != null && item.getReqCode().startsWith("OW")) {
-                                        OutdoorDutyRequestFragment outdoorDutyRequestFragment = new OutdoorDutyRequestFragment();
+                                       /* OutdoorDutyRequestFragment outdoorDutyRequestFragment = new OutdoorDutyRequestFragment();
                                         outdoorDutyRequestFragment.setEmployeeLeaveModel(item);
                                         outdoorDutyRequestFragment.setScreenName(screenName);
                                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                                         fragmentTransaction.replace(R.id.view_advance_expense, outdoorDutyRequestFragment);
                                         fragmentTransaction.addToBackStack(null);
-                                        fragmentTransaction.commit();
+                                        fragmentTransaction.commit();*/
+
+                                        OutdoorDutyRequestFragment outdoorDutyRequestFragment = new OutdoorDutyRequestFragment();
+                                        outdoorDutyRequestFragment.setEmployeeLeaveModel(item);
+                                        outdoorDutyRequestFragment.setScreenName(screenName);
+                                        Fragment fragment=outdoorDutyRequestFragment;
+                                        mUserActionListener.performUserActionFragment(IAction.OUTDOOR_DUTY,fragment,null);
                                     }
                                     if (item.getReqCode() != null && item.getReqCode().startsWith("TW")) {
-                                        TourRequestFragment tourRequestFragment = new TourRequestFragment();
+                                        /*TourRequestFragment tourRequestFragment = new TourRequestFragment();
                                         tourRequestFragment.setEmployeeLeaveModel(item);
                                         tourRequestFragment.setScreenName(screenName);
                                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                                         fragmentTransaction.replace(R.id.view_advance_expense, tourRequestFragment);
                                         fragmentTransaction.addToBackStack(null);
-                                        fragmentTransaction.commit();
+                                        fragmentTransaction.commit();*/
+
+                                        TourRequestFragment tourRequestFragment = new TourRequestFragment();
+                                        tourRequestFragment.setEmployeeLeaveModel(item);
+                                        tourRequestFragment.setScreenName(screenName);
+                                        Fragment fragment=tourRequestFragment;
+                                        mUserActionListener.performUserActionFragment(IAction.TOUR,fragment,null);
                                     }
 
                                 }/* else if (selectedObject.toString().equalsIgnoreCase("View")) {

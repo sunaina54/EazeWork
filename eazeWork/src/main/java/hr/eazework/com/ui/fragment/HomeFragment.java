@@ -177,8 +177,8 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                                     }
                                     if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext())) {
                                         Utility.openCamera(getActivity(), HomeFragment.this, AppsConstant.FRONT_CAMREA_OPEN, "ForPhoto", screenName);
-
                                     }
+                                    customBuilder.dismiss();
                                 } else if (selectedObject.toString().equalsIgnoreCase("Gallery")) {
                                     galleryIntent();
                                     customBuilder.dismiss();
@@ -187,7 +187,6 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                         }
                 );
                 customBuilder.show();
-
             }
         });
         listView = (ListView) rootView.findViewById(R.id.list_profile_items);
@@ -1038,14 +1037,12 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                 Log.d("TAG", "RAR Base 64 :" + encodeFileToBase64Binary);
 
 
-                if (!filename.contains(".jpg") || !filename.contains(".jpeg")) {
-                    CustomDialog.alertWithOk(context,"Please Upload .jpg and .jpeg image only.");
-                    return;
-                }
 
 
-                if (filename.contains(".jpg") || filename.contains(".jpeg")) {
+                if (filename.contains(".jpg") || filename.contains(".jpeg") || filename.contains(".JPEG") || filename.contains(".JPG") || filename.contains(".png") || filename.contains(".PNG")  ) {
 
+
+                    // if (filename.contains(".jpg") || filename.contains(".jpeg")) {
                     bitmap = null;
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
@@ -1074,24 +1071,28 @@ public class HomeFragment extends BaseFragment implements OnItemClickListener, O
                             }
                         }
                     }
-                }
+                    // }
 
-                if (Utility.calcBase64SizeInKBytes(encodeFileToBase64Binary) > Utility.maxLimit) {
-                    CustomDialog.alertWithOk(context, Utility.sizeMsg);
+                    if (Utility.calcBase64SizeInKBytes(encodeFileToBase64Binary) > Utility.maxLimit) {
+                        CustomDialog.alertWithOk(context, Utility.sizeMsg);
+                        return;
+                    }
+
+                    UploadProfilePicModel uploadProfilePicModel = new UploadProfilePicModel();
+                    FileInfo fileInfo = new FileInfo();
+                    fileInfo.setBase64Data(encodeFileToBase64Binary);
+                    fileInfo.setExtension(".jpg");
+                    fileInfo.setLength("0");
+                    fileInfo.setName("MyPhoto");
+                    uploadProfilePicModel.setFileInfo(fileInfo);
+
+                    CommunicationManager.getInstance().sendPostRequest(this,
+                            AppRequestJSONString.uploadProfileRequest(uploadProfilePicModel),
+                            CommunicationConstant.API_UPLOAD_PROFILE_PIC, true);
+                }else{
+                    CustomDialog.alertWithOk(context,getResources().getString(R.string.valid_image));
                     return;
                 }
-
-                UploadProfilePicModel uploadProfilePicModel = new UploadProfilePicModel();
-                FileInfo fileInfo = new FileInfo();
-                fileInfo.setBase64Data(encodeFileToBase64Binary);
-                fileInfo.setExtension(".jpg");
-                fileInfo.setLength("0");
-                fileInfo.setName("MyPhoto");
-                uploadProfilePicModel.setFileInfo(fileInfo);
-
-                CommunicationManager.getInstance().sendPostRequest(this,
-                        AppRequestJSONString.uploadProfileRequest(uploadProfilePicModel),
-                        CommunicationConstant.API_UPLOAD_PROFILE_PIC, true);
             }
         }
 

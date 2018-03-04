@@ -11,6 +11,15 @@ import java.io.Serializable;
 public class UploadProfilePicModel implements Serializable {
     private FileInfo FileInfo;
     private AdvanceLoginDataRequestModel loginData;
+    private String forEmpID;
+
+    public String getForEmpID() {
+        return forEmpID;
+    }
+
+    public void setForEmpID(String forEmpID) {
+        this.forEmpID = forEmpID;
+    }
 
     public hr.eazework.com.model.FileInfo getFileInfo() {
         return FileInfo;

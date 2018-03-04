@@ -103,12 +103,15 @@ public class BackdatedAttendanceActivity extends BaseActivity {
     private String fromButton;
     private LinearLayout markedTimeLl;
     private TimeModificationSummaryResponseModel summaryResponseModel;
+    private View progressbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
         setContentView(R.layout.attendance_details_layout);
+        progressbar =(LinearLayout)findViewById(R.id.ll_progress_container);
+        progressbar.bringToFront();
         preferences = new Preferences(context);
         int textColor = Utility.getTextColorCode(preferences);
         int bgColor = Utility.getBgColorCode(context, preferences);
@@ -275,6 +278,8 @@ public class BackdatedAttendanceActivity extends BaseActivity {
 
                 TimeModificationRequestModel timeModificationRequestModel = new TimeModificationRequestModel();
                 timeModificationRequestModel.setRequest(timeModificationItem);
+                Utility.showHidePregress(progressbar,true);
+
                 CommunicationManager.getInstance().sendPostRequest(this,
                         AppRequestJSONString.timeModificationRequest(timeModificationRequestModel),
                         CommunicationConstant.API_BACKDATED_ATTENDANCE_REQUEST, true);
@@ -295,6 +300,7 @@ public class BackdatedAttendanceActivity extends BaseActivity {
 
                 TimeModificationRequestModel timeModificationRequestModel = new TimeModificationRequestModel();
                 timeModificationRequestModel.setRequest(timeModificationItem);
+                Utility.showHidePregress(progressbar,true);
                 CommunicationManager.getInstance().sendPostRequest(this,
                         AppRequestJSONString.timeModificationRequest(timeModificationRequestModel),
                         CommunicationConstant.API_APPROVE_ATTENDANCE_REQUEST, true);
@@ -306,6 +312,8 @@ public class BackdatedAttendanceActivity extends BaseActivity {
     @Override
     public void validateResponse(ResponseData response) {
         Log.d("TAG", "response data " + response.isSuccess());
+        Utility.showHidePregress(progressbar,false);
+
         switch (response.getRequestData().getReqApiId()) {
             case CommunicationConstant.API_GET_EMP_ATTENDANCE_DETAIL:
                 String responseData1 = response.getResponseData();

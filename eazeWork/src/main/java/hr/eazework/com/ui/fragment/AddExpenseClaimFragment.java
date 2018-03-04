@@ -31,6 +31,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -148,7 +149,7 @@ public class AddExpenseClaimFragment extends BaseFragment {
     private String currencyValue = "", requestCode, reasonCode, amount;
     private double totalAmountTobeAdjusted;
     private String fromButton;
-    private ProgressBar progressBar;
+    //private ProgressBar progressBar;
     private String approverID = "", approverName = "";
     private ClaimTypeListModel claimTypeListModel;
     private Button saveDraftBTN;
@@ -158,6 +159,7 @@ public class AddExpenseClaimFragment extends BaseFragment {
     private String reqStatus="1";
     private TextView totalTV;
     private LinearLayout advance_adjustment_Ll;
+    private View progressbar;
 
     public SaveExpenseRequestModel getSaveExpenseRequestModel() {
         return saveExpenseRequestModel;
@@ -179,14 +181,16 @@ public class AddExpenseClaimFragment extends BaseFragment {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.add_expense_claim_fragment, container, false);
         context = getContext();
         preferences = new Preferences(getContext());
+        progressbar =(LinearLayout)rootView.findViewById(R.id.ll_progress_container);
+        progressbar.bringToFront();
         LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
         loginEmpId = loginUserModel.getUserModel().getEmpId();
         advance_expenseRecyclerView = (RecyclerView) rootView.findViewById(R.id.advance_expenseRecyclerView);
         advance_expenseRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
+       /* progressBar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
         progressBar.bringToFront();
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);*/
 
         advance_adjustment_Ll= (LinearLayout) rootView.findViewById(R.id.advance_adjustment_Ll);
         advance_adjustment_Ll.setVisibility(View.GONE);
@@ -586,25 +590,25 @@ public class AddExpenseClaimFragment extends BaseFragment {
 
         if(fromButton.equalsIgnoreCase("Submit")) {
 
-            progressBar.setVisibility(View.VISIBLE);
+          //  progressBar.setVisibility(View.VISIBLE);
             getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             if (claimTypeListItems == null && expensePageInitResponseModel.getGetExpensePageInitResult().getClaimTypeYN().equalsIgnoreCase("Y")) {
-                progressBar.setVisibility(View.GONE);
+              //  progressBar.setVisibility(View.GONE);
                 getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 isClickedSubmit=false;
                 new AlertCustomDialog(context, "Please Select Claim Type");
                 return;
 
             } else if (currencyListModel == null) {
-                progressBar.setVisibility(View.GONE);
+               // progressBar.setVisibility(View.GONE);
                 getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 isClickedSubmit=false;
                 new AlertCustomDialog(context, "Please Select Currency");
                 return;
 
             } else if (description.equalsIgnoreCase("")) {
-                progressBar.setVisibility(View.GONE);
+              //  progressBar.setVisibility(View.GONE);
                 getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 isClickedSubmit=false;
                 new AlertCustomDialog(context, "Please Enter Description");
@@ -638,10 +642,14 @@ public class AddExpenseClaimFragment extends BaseFragment {
                             }
                         }
 
-
+                        Utility.showHidePregress(progressbar,true);
+                        MainActivity.isAnimationLoaded = false;
+                        ((MainActivity) getActivity()).showHideProgress(true);
 
                         String[] monthList = sendPeriodicMonthData();
+
                         if (monthList != null && monthList.length > 0) {
+
                             CommunicationManager.getInstance().sendPostRequest(this,
                                     AppRequestJSONString.getPeriodicMonthData(empId, 0, monthList),
                                     CommunicationConstant.API_GET_MONTH_LIST, true);
@@ -681,7 +689,7 @@ public class AddExpenseClaimFragment extends BaseFragment {
                         }
                     }
                 } else {
-                    progressBar.setVisibility(View.GONE);
+                   // progressBar.setVisibility(View.GONE);
                     getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     isClickedSubmit=false;
                     new AlertCustomDialog(context, "Add Expense Detail");
@@ -691,7 +699,7 @@ public class AddExpenseClaimFragment extends BaseFragment {
         }
 
         if(fromButton.equalsIgnoreCase("Save")){
-            progressBar.setVisibility(View.VISIBLE);
+          //  progressBar.setVisibility(View.VISIBLE);
             getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                     WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
             if (projectListItem != null && !projectListItem.getProjectID().equalsIgnoreCase("0")) {
@@ -721,7 +729,9 @@ public class AddExpenseClaimFragment extends BaseFragment {
                         }
                     }
 
-
+                    Utility.showHidePregress(progressbar,true);
+                    MainActivity.isAnimationLoaded = false;
+                    ((MainActivity) getActivity()).showHideProgress(true);
                     String[] monthList = sendPeriodicMonthData();
                     if (monthList != null && monthList.length > 0) {
                         CommunicationManager.getInstance().sendPostRequest(this,
@@ -755,7 +765,9 @@ public class AddExpenseClaimFragment extends BaseFragment {
                             uploadFileList.set(i, model);
                         }
                     }
-
+                    Utility.showHidePregress(progressbar,true);
+                    MainActivity.isAnimationLoaded = false;
+                    ((MainActivity) getActivity()).showHideProgress(true);
                     String[] monthList = sendPeriodicMonthData();
                     if (monthList!=null && monthList.length > 0) {
                         CommunicationManager.getInstance().sendPostRequest(this,
@@ -794,6 +806,9 @@ public class AddExpenseClaimFragment extends BaseFragment {
 
     @Override
     public void validateResponse(ResponseData response) {
+        Utility.showHidePregress(progressbar,false);
+        MainActivity.isAnimationLoaded = false;
+        ((MainActivity) getActivity()).showHideProgress(false);
         switch (response.getRequestData().getReqApiId()) {
             case CommunicationConstant.API_GET_EXPENSE_PAGE_INIT:
                 String str = response.getResponseData();
@@ -926,15 +941,18 @@ public class AddExpenseClaimFragment extends BaseFragment {
                 periodicExpenseResponseModel = PeriodicExpenseResponseModel.create(responseData1);
                 if (periodicExpenseResponseModel != null && periodicExpenseResponseModel.getValidateMonthListForPeriodicExpenseResult()!=null
                         && !periodicExpenseResponseModel.getValidateMonthListForPeriodicExpenseResult().getErrorCode().equalsIgnoreCase("0")) {
-                    progressBar.setVisibility(View.GONE);
+                   // progressBar.setVisibility(View.GONE);
                     getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     new AlertCustomDialog(getActivity(), periodicExpenseResponseModel.getValidateMonthListForPeriodicExpenseResult().getErrorMessage());
                 return;
                 }else {
-
+                    Utility.showHidePregress(progressbar,true);
+                    MainActivity.isAnimationLoaded = false;
+                    ((MainActivity) getActivity()).showHideProgress(true);
                     if (expensePageInitResponseModel != null && expensePageInitResponseModel.getGetExpensePageInitResult() != null &&
                             expensePageInitResponseModel.getGetExpensePageInitResult().getOnBehalfOfYN() != null &&
                             expensePageInitResponseModel.getGetExpensePageInitResult().getOnBehalfOfYN().equalsIgnoreCase("Y")) {
+
                         CommunicationManager.getInstance().sendPostRequest(this,
                                 AppRequestJSONString.getExpenseClaimData(fromButton, approverName, approverID, "0", saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems(),
                                         advanceList, description, remarks, currency, claimTypeID, projectId, uploadFileList, String.valueOf(empId),reqStatus),
@@ -956,11 +974,9 @@ public class AddExpenseClaimFragment extends BaseFragment {
                 expenseClaimResponseModel = ExpenseClaimResponseModel.create(responseData);
                 if (expenseClaimResponseModel != null && expenseClaimResponseModel.getSaveExpenseResult() != null &&
                         expenseClaimResponseModel.getSaveExpenseResult().getErrorCode().equalsIgnoreCase("0")) {
-                    progressBar.setVisibility(View.GONE);
                     getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     CustomDialog.alertOkWithFinishFragment(context, expenseClaimResponseModel.getSaveExpenseResult().getErrorMessage(), mUserActionListener, IAction.HOME_VIEW, true);
                 } else {
-                    progressBar.setVisibility(View.GONE);
                     getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     new AlertCustomDialog(getActivity(), expenseClaimResponseModel.getSaveExpenseResult().getErrorMessage());
                 }
@@ -1681,6 +1697,7 @@ public class AddExpenseClaimFragment extends BaseFragment {
                 }
             }
             final Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.image_preview_expense);
             final TextView filenameET = (TextView) dialog.findViewById(R.id.filenameET);
             ImageView imageView = (ImageView) dialog.findViewById(R.id.img_preview);
@@ -1691,7 +1708,7 @@ public class AddExpenseClaimFragment extends BaseFragment {
             tv_header_text.setTextColor(textColor);
             tv_header_text.setText("Supporting Documents");
             int bgColor = Utility.getBgColorCode(context, preferences);
-            FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
+            RelativeLayout fl_actionBarContainer = (RelativeLayout) dialog.findViewById(R.id.fl_actionBarContainer);
             fl_actionBarContainer.setBackgroundColor(bgColor);
 
             (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
@@ -1877,11 +1894,12 @@ public class AddExpenseClaimFragment extends BaseFragment {
                         public void onClick(CustomBuilder builder, Object selectedObject) {
                             if (selectedObject.toString().equalsIgnoreCase("Edit")) {
                                 final Dialog dialog = new Dialog(context);
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                 dialog.setContentView(R.layout.filename_advance_expense);
                                 preferences = new Preferences(getContext());
                                 int textColor = Utility.getTextColorCode(preferences);
                                 int bgColor = Utility.getBgColorCode(context, preferences);
-                                FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
+                                RelativeLayout fl_actionBarContainer = (RelativeLayout) dialog.findViewById(R.id.fl_actionBarContainer);
                                 fl_actionBarContainer.setBackgroundColor(bgColor);
                                 TextView tv_header_text = (TextView) dialog.findViewById(R.id.tv_header_text);
                                 tv_header_text.setTextColor(textColor);

@@ -27,6 +27,7 @@ import hr.eazework.com.R;
 import hr.eazework.com.model.ExpenseClaimSummaryResponseModel;
 import hr.eazework.com.model.ExpenseItemListModel;
 import hr.eazework.com.ui.customview.CustomBuilder;
+import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.util.Utility;
 import hr.eazework.mframe.communication.ResponseData;
 import hr.eazework.selfcare.communication.AppRequestJSONString;
@@ -62,8 +63,6 @@ public class ExpenseClaimSummaryFragment extends BaseFragment {
         f.setArguments(args);
         return f;
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -383,11 +382,17 @@ public class ExpenseClaimSummaryFragment extends BaseFragment {
                     public void onClick(View v) {
                         EditViewExpenseClaimFragment viewExpenseSummary = new EditViewExpenseClaimFragment();
                         viewExpenseSummary.setExpenseItemListModel(dataSet.get(listPosition));
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        /*FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.view_expense, viewExpenseSummary);
                         fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
+                        fragmentTransaction.commit();*/
+                        Fragment fragment=viewExpenseSummary;
+                                               /* FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                                fragmentTransaction.replace(R.id.view_advance_expense, requestFragment);*/
+                        //fragmentTransaction.addToBackStack(PendingActivityFragment.TAG);
+                        mUserActionListener.performUserActionFragment(IAction.EDITVIEWEXPENSECLAIM,fragment,null);
 
 
                     }

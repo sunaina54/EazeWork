@@ -24,6 +24,7 @@ import hr.eazework.com.R;
 import hr.eazework.com.model.GetEmpWFHRequestsModel;
 import hr.eazework.com.model.GetEmpWFHResponseItem;
 import hr.eazework.com.model.GetEmpWFHResponseModel;
+import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.com.ui.util.AppsConstant;
 import hr.eazework.mframe.communication.ResponseData;
 import hr.eazework.selfcare.communication.AppRequestJSONString;
@@ -221,7 +222,9 @@ public class TimeAndAttendanceSummaryFragment extends BaseFragment {
             holder.viewBTN.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                if(item.getRequestTypeDesc()!=null && item.getRequestTypeDesc().equalsIgnoreCase(AppsConstant.WFH) && item.getStatusDesc()!=null && !item.getStatusDesc().equalsIgnoreCase(AppsConstant.DRAFT)  ) {
+                if(item.getRequestTypeDesc()!=null && item.getRequestTypeDesc().equalsIgnoreCase(AppsConstant.WFH) &&
+                        item.getStatusDesc()!=null &&
+                        !item.getStatusDesc().equalsIgnoreCase(AppsConstant.DRAFT)  ) {
                     ViewWFHSummaryFragment viewWFHSummaryFragment = new ViewWFHSummaryFragment();
                     viewWFHSummaryFragment.setGetEmpWFHResponseItem(dataSet.get(listPosition));
                     FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -231,14 +234,19 @@ public class TimeAndAttendanceSummaryFragment extends BaseFragment {
                     fragmentTransaction.commit();
                 }
 
-                    if(item.getRequestTypeDesc()!=null && item.getRequestTypeDesc().equalsIgnoreCase(AppsConstant.WFH) && item.getStatusDesc()!=null && item.getStatusDesc().equalsIgnoreCase(AppsConstant.DRAFT)) {
+                    if(item.getRequestTypeDesc()!=null && item.getRequestTypeDesc().equalsIgnoreCase(AppsConstant.WFH)
+                            && item.getStatusDesc()!=null &&
+                            item.getStatusDesc().equalsIgnoreCase(AppsConstant.DRAFT)) {
                         WorkFromHomeRequestFragment requestFragment = new WorkFromHomeRequestFragment();
                         requestFragment.setGetEmpWFHResponseItem(dataSet.get(listPosition));
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        Fragment fragment=requestFragment;
+                        mUserActionListener.performUserActionFragment(IAction.WORK_FROM_HOME,fragment,null);
+
+                      /*  FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.view_advance_expense, requestFragment);
                         fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
+                        fragmentTransaction.commit();*/
                     }
 
                     if(item.getRequestTypeDesc()!=null && item.getRequestTypeDesc().equalsIgnoreCase(AppsConstant.OD) && item.getStatusDesc()!=null &&
@@ -252,19 +260,24 @@ public class TimeAndAttendanceSummaryFragment extends BaseFragment {
                         fragmentTransaction.commit();
                     }
 
-                    if(item.getRequestTypeDesc()!=null && item.getRequestTypeDesc().equalsIgnoreCase(AppsConstant.OD) && item.getStatusDesc()!=null &&
+                    if(item.getRequestTypeDesc()!=null &&
+                            item.getRequestTypeDesc().equalsIgnoreCase(AppsConstant.OD) && item.getStatusDesc()!=null &&
                             item.getStatusDesc().equalsIgnoreCase(AppsConstant.DRAFT)){
                         OutdoorDutyRequestFragment outdoorDutyRequestFragment = new OutdoorDutyRequestFragment();
                         outdoorDutyRequestFragment.setGetEmpWFHResponseItem(dataSet.get(listPosition));
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        Fragment fragment=outdoorDutyRequestFragment;
+                        mUserActionListener.performUserActionFragment(IAction.OUTDOOR_DUTY,fragment,null);
+                        /*FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.view_advance_expense, outdoorDutyRequestFragment);
                         fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
+                        fragmentTransaction.commit();*/
                     }
 
 
-                    if(item.getRequestTypeDesc()!=null && item.getRequestTypeDesc().equalsIgnoreCase(AppsConstant.TOUR)&& item.getStatusDesc()!=null &&
+                    if(item.getRequestTypeDesc()!=null &&
+                            item.getRequestTypeDesc().equalsIgnoreCase(AppsConstant.TOUR)&&
+                            item.getStatusDesc()!=null &&
                             !item.getStatusDesc().equalsIgnoreCase(AppsConstant.DRAFT)){
                         ViewTourSummaryFragment viewTourSummaryFragment = new ViewTourSummaryFragment();
                         viewTourSummaryFragment.setGetEmpWFHResponseItem(dataSet.get(listPosition));
@@ -275,15 +288,19 @@ public class TimeAndAttendanceSummaryFragment extends BaseFragment {
                         fragmentTransaction.commit();
                     }
 
-                    if(item.getRequestTypeDesc()!=null && item.getRequestTypeDesc().equalsIgnoreCase(AppsConstant.TOUR)&& item.getStatusDesc()!=null &&
+                    if(item.getRequestTypeDesc()!=null &&
+                            item.getRequestTypeDesc().equalsIgnoreCase(AppsConstant.TOUR)&&
+                            item.getStatusDesc()!=null &&
                             item.getStatusDesc().equalsIgnoreCase(AppsConstant.DRAFT)){
                         TourRequestFragment tourRequestFragment = new TourRequestFragment();
                         tourRequestFragment.setGetEmpWFHResponseItem(dataSet.get(listPosition));
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        Fragment fragment=tourRequestFragment;
+                        mUserActionListener.performUserActionFragment(IAction.TOUR,fragment,null);
+                        /*FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.view_advance_expense, tourRequestFragment);
                         fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
+                        fragmentTransaction.commit();*/
                     }
 
                     if(item.getRequestTypeDesc()!=null &&
@@ -297,9 +314,6 @@ public class TimeAndAttendanceSummaryFragment extends BaseFragment {
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                     }
-
-
-
                 }
             });
         }
