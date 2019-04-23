@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:id="@+id/view_advance_expense">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -66,11 +67,53 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:background="@color/fragment_bg"
                 android:padding="@dimen/padding_default" >
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
     <include layout="@layout/progress_root_container"/>
+
+    <LinearLayout
+        android:id="@+id/errorLinearLayout"
+        style="@style/blueBorderEditText"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/expense_error_msg"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_14"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/margin_40"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:id="@+id/expenseApprovalRecyclerView">
+
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/tv_apply_leave"
         android:layout_width="wrap_content"

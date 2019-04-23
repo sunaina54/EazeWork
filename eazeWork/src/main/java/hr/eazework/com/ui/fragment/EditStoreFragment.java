@@ -223,9 +223,6 @@ public class EditStoreFragment extends ManageStore implements GoogleApiClient.Co
     }
 
     private void submitLocationData() {
-        //   getOfficeType();
-
-
         if (model != null && isSubmitClicked) {
             setModelForSubmission();
             isSubmitClicked = false;

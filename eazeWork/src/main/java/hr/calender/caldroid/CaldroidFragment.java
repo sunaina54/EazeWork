@@ -1007,6 +1007,7 @@ public class CaldroidFragment extends DialogFragment {
 	 */
 	public void setCaldroidListener(CaldroidListener caldroidListener) {
 		this.caldroidListener = caldroidListener;
+
 	}
 
 	/**

@@ -3,6 +3,8 @@
 
     <string name="msg_internet_connection">Please check your internet connection</string>
     <string name="app_name">EazeWork</string>
+    <string name="valid_image">Please upload valid image</string>
+
     <string name="app_empty_string"></string>
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
@@ -40,10 +42,12 @@
     <string name="msg_confirm_password">Confirm Password</string>
     <string name="msg_department">Department : </string>
     <string name="msg_role">Designation : </string>
-    <string name="msg_employee_id">Employee Id : </string>
+    <string name="msg_employee_id">Employee Code : </string>
+
     <string name="msg_sign_in">SIGN IN</string>
     <string name="lost_your_password">Lost your password?</string>
     <string name="dont_have_account">Do not have an account - Register for a demo</string>
+    <string name="forgot_credentials">Forgot Login Credentials?</string>
     <string name="msg_attandance">Attendance</string>
     <string name="msg_view_profile">View Profile</string>
     <string name="msg_attendance_detail">Attendance Details</string>
@@ -55,6 +59,7 @@
     <string name="msg_map_screen">Mark Attendance</string>
     <string name="msg_history">Attendance History</string>
     <string name="msg_leaves">Leave</string>
+    <string name="leave_attendance">Leave &amp; Attendance</string>
     <string name="msg_location">Location</string>
     <string name="msg_employee">Employee</string>
     <string name="msg_approval">Approval</string>
@@ -65,8 +70,8 @@
     <string name="msg_today_in_time">Today\'s In-Time</string>
     <string name="msg_today_out_time">Today\'s Out-Time</string>
     <string name="msg_leave_balance">Leave Balance</string>
-    <string name="msg_in_time">In Time</string>
-    <string name="msg_out_time">Out Time</string>
+    <string name="msg_in_time">In Time : </string>
+    <string name="msg_out_time">Out Time : </string>
     <string name="msg_last_pay_slip">Last Payslip</string>
     <string name="msg_download">Download</string>
     <string name="msg_manager">Manager</string>
@@ -97,6 +102,7 @@
     <string name="leave_from_to_format">From : %1$s  To : %2$s</string>
     <string name="requested_date">Requested On : %1$s </string>
     <string name="request_id">Request ID : </string>
+    <string name="request_id_leave">Request ID </string>
     <string name="requested_by">Requested By : </string>
     <string name="leave_work_off_format">Date Worked : %1$s  Compensatory Off Date : %2$s</string>
     <string name="time_in_out_message">Time In/Out Done For Today</string>
@@ -153,16 +159,19 @@
     <string name="details">Details</string>
     <string name="mode">Mode</string>
     <string name="advance_error_msg">There is no advance request pending for your approval.</string>
-    <string name="advance_summary_error_msg">There are no in process advance requests</string>
-    <string name="expense_summary_error_msg">There are no in process expense requests</string>
+    <string name="advance_summary_error_msg">There is no in process advance requests</string>
+    <string name="leave_summary_error_msg">There is no in process of any leave type requests</string>
+    <string name="leave_approval_error_msg">There is no leave request pending for your approval</string>
+    <string name="expense_summary_error_msg">There is no in process expense requests</string>
     <string name="expense_error_msg">There is no expense request pending for your approval.</string>
+    <string name="attendance_error_msg">There is no attendance request pending for your approval.</string>
     <string name="delete_btn">Delete</string>
     <string name="units">Units</string>
     <string name="limit">Limit</string>
     <string name="policy_amount">Amount As Per Policy</string>
     <string name="claim_amount">Claim Amount</string>
     <string name="status_policy">Status</string>
-    <string name="request_id_voucher">Request Id</string>
+    <string name="request_id_voucher">Request ID</string>
     <string name="approved_amount">Approved Amount</string>
 
     <string name="emp_id">Emp Id</string>
@@ -170,8 +179,108 @@
     <string name="emp_name">Emp Name</string>
     <string name="search_hint">Enter user name</string>
     <string name="no_record">No Data Found</string>
+    <string name="network_error">No internet connection. Please try again later</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 
+    <string name="employee_name">Employee</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="from_date">From Date</string>
+    <string name="to_date">To Date</string>
+    <string name="employee_code">Employee Code</string>
+    <string name="submitted_by">Submitted By</string>
+    <string name="remarks">Remarks</string>
+    <string name="place_to_visit">Place(s) To Visit</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    <string name="cancel">Cancel</string>
+    <string name="travel_from">Travel From</string>
+    <string name="travel_to">Travel To</string>
+    <string name="classic_tours">Classic Tours</string>
+    <string name="adventure">Adventure</string>
+    <string name="family_package">Family Package</string>
+    <string name="students_special">Students Special</string>
+    <string name="religious_travel">Religious Travel</string>
+    <string name="photography">Photography</string>
+    <string name="tour">Tour Request</string>
+    <string name="edit_expense_claim">Edit Expense</string>
+    <string name="work_from_home">Work From Home</string>
+    <string name="outdoor_duty">Outdoor Duty</string>
+    <string name="request_id_label">Request ID</string>
+    <string name="accommodation_needed">Accommodation Needed</string>
+    <string name="accommodation_details">Accommodation Details</string>
+    <string name="tickets_needed">Tickets Needed</string>
+    <string name="ticket_details">Ticket Details</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="mark_attendance_btn">Mark Attendance</string>
+    <string name="time_modification_btn">Time Modification</string>
+    <string name="holiday">Holiday</string>
+    <string name="change_image">Change Image</string>
+
+
+    <string name="initiator_detail">Initiator Detail</string>
+    <string name="req_initiator">Request Initiator</string>
+    <string name="req_date">Request Date</string>
+    <string name="days">Days</string>
+    <string name="day">Day</string>
+    <string name="type">Type</string>
+    <string name="total_days">Total Days</string>
+    <string name="duration">Duration</string>
+    <string name="final_approver">Final Level Approver Details</string>
+    <string name="approver">Approver</string>
+    <string name="approval_date">Approval Date</string>
+    <string name="view_tour_summary">View Tour Summary</string>
+    <string name="approved_request_details">Approved Request Details of</string>
+    <string name="attendance_status">Attendance Status :</string>
+    <string name="in_time">In-Time</string>
+    <string name="out_time">Out-Time</string>
+    <string name="requested_in_time">Requested In Time</string>
+    <string name="requested_out_time">Requested Out Time</string>
+    <string name="attendance_details_header">Attendance details of </string>
+    <string name="marked_time">Marked Time</string>
+    <string name="requested_time">Requested Time</string>
+    <string name="time">Time</string>
+    <string name="or">OR</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="error_no_advance">No more pending advances to adjust</string>
+    <string name="full_day">Full Day</string>
+    <string name="half_day">Half Day</string>
+    <string name="enter_date">Please enter date</string>
+    <string name="enter_start_time">Please enter start time</string>
+    <string name="enter_end_time">Please enter end time</string>
+    <string name="enter_remarks">Please enter remarks</string>
+    <string name="enter_classical_tour">Please enter classical tour detail</string>
+    <string name="enter_adventure">Please enter adventure detail</string>
+    <string name="enter_family_package">Please enter family package details</string>
+    <string name="enter_religious_travel">Please enter religious travel date</string>
+    <string name="enter_photography_date">Please select photography date</string>
+    <string name="attendance_history">Attendance History</string>
+    <string name="select_reason">Please Select Reason</string>
+    <string name="enter_travel_from">Please enter Travel From</string>
+    <string name="enter_travel_to">Please enter Travel To</string>
+    <string name="request_type">Requset Type</string>
+    <string name="request_no">Request ID</string>
+    <string name="employee">Employee Name</string>
+    <string name="approve">Approve</string>
+    <string name="reject_label">Enter Rejection Remarks</string>
+    <string name="date_attendance">Date - </string>
+    <string name="day_status">Day\'s Status - </string>
+    <string name="day_status_attendance">Day\'s Status : </string>
+    <string name="Time_Modification_Request">Time Modification</string>
+    <string name="Attendance_Request">Backdated Attendance</string>
+    <string name="enter_out_date">Please Enter Out Date</string>
+    <string name="enter_in_date">Please Enter In Date</string>
+    <string name="enter_in_time">Please Enter In Time</string>
+    <string name="enter_out_time">Please Enter Out Time</string>
+    <string name="enter_mail">Please enter your email id</string>
+    <string name="select_user">Please select employee </string>
+    <string name="mail_label">To recover your url / username / password please enter your email id. We will email your credentials.</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="marked_in_time">Marked In Time : </string>
+    <string name="marked_out_time">Marked Out Time : </string>
+    <string name="mark_in_time">Marked In Time</string>
+    <string name="mark_out_time">Marked Out Time</string>
 
 </resources>

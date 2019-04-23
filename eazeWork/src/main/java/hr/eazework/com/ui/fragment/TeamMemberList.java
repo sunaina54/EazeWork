@@ -56,7 +56,6 @@ public class TeamMemberList extends BaseFragment implements AdapterView.OnItemCl
         adapter = new TeamMemberListViewAdapter(getContext(), R.layout.team_list_item, list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
-   //     TeamMember.setIsInLoop(false);
         requestAPI();
         return rootView;
     }

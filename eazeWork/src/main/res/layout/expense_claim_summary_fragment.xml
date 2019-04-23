@@ -40,61 +40,6 @@
                 android:textSize="@dimen/font_14"
                 android:visibility="visible" />
         </LinearLayout>
-        <!--<LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1"
-            android:layout_margin="10dp"
-            >
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="0.8">
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.8"
-                    android:text=""
-                    android:id="@+id/searchET"
-                    android:layout_gravity="left"
-                    android:visibility="gone"
-                    android:padding="@dimen/margin_default"
-                    android:textSize="@dimen/font_14"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="0.1"
-                android:layout_height="20dp"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="20dp"
-                    android:layout_weight="0.1"
-                    android:layout_gravity="right"
-                    android:id="@+id/searchIV"
-                    android:src="@drawable/search"/>
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="20dp"
-                    android:layout_weight="0.1"
-                    android:layout_gravity="right"
-                    android:id="@+id/searchCancelIV"
-                    android:src="@drawable/switch_search"
-                    android:visibility="gone"/>
-            </LinearLayout>
-            <ImageView
-                android:layout_width="0dp"
-                android:layout_height="20dp"
-                android:layout_gravity="right"
-                android:src="@drawable/filter"
-                android:id="@+id/filterIV"
-                android:layout_weight="0.1"/>
-
-
-        </LinearLayout>-->
-
 
         <LinearLayout
             android:layout_width="match_parent"

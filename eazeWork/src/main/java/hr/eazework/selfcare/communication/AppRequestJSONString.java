@@ -25,19 +25,32 @@ import hr.eazework.com.model.AdvanceListItemModel;
 import hr.eazework.com.model.AdvanceLoginDataRequestModel;
 import hr.eazework.com.model.AdvanceSummaryRequestModel;
 import hr.eazework.com.model.ApproverExpenseModel;
+import hr.eazework.com.model.AttendanceRejectRequestModel;
 import hr.eazework.com.model.CategoryExpenseModel;
 import hr.eazework.com.model.CategoryRequestModel;
 import hr.eazework.com.model.DocListModel;
+import hr.eazework.com.model.EmpAttendanceRequestModel;
 import hr.eazework.com.model.ExpenseRequestModel;
 import hr.eazework.com.model.FileInfoModel;
+import hr.eazework.com.model.ForgotCredentialsRequestModel;
 import hr.eazework.com.model.GetAdvanceDetailRequestModel;
 import hr.eazework.com.model.GetApproverDetailsRequestModel;
+import hr.eazework.com.model.GetDetailsOnEmpChangeRequestModel;
+import hr.eazework.com.model.GetDetailsOnInputChangeRequestModel;
+import hr.eazework.com.model.GetEmpWFHRequestsModel;
 import hr.eazework.com.model.GetHeadDetailsWithPolicyRequestModel;
+import hr.eazework.com.model.GetODRequestDetail;
+import hr.eazework.com.model.GetTimeModificationRequestDetail;
+import hr.eazework.com.model.GetWFHRequestDetail;
+import hr.eazework.com.model.HolidayRequestModel;
+import hr.eazework.com.model.LeaveReqDetailModel;
+import hr.eazework.com.model.LeaveRequestModel;
 import hr.eazework.com.model.LineItemsModel;
 import hr.eazework.com.model.LocationDetailsModel;
 import hr.eazework.com.model.MappedEmployee;
 import hr.eazework.com.model.MemberReqInputModel;
 import hr.eazework.com.model.ModelManager;
+import hr.eazework.com.model.ODRequestModel;
 import hr.eazework.com.model.PeriodicExpenseRequest;
 import hr.eazework.com.model.ProjectExpenseModel;
 import hr.eazework.com.model.ProjectRequestModel;
@@ -46,11 +59,17 @@ import hr.eazework.com.model.SaveExpenseModel;
 import hr.eazework.com.model.SaveExpenseRequestModel;
 import hr.eazework.com.model.SearchOnBehalfItem;
 import hr.eazework.com.model.SupportDocsItemModel;
+import hr.eazework.com.model.TimeModificationRequestModel;
+import hr.eazework.com.model.TourRequestModel;
+import hr.eazework.com.model.UploadProfilePicModel;
 import hr.eazework.com.model.ViewExpenseClaimRequestModel;
 import hr.eazework.com.model.VisibilityExpenseItem;
 import hr.eazework.com.model.VisibilityExpenseModel;
+import hr.eazework.com.model.WFHRejectRequestModel;
+import hr.eazework.com.model.WFHRequestModel;
 import hr.eazework.com.ui.util.CommonValues;
 import hr.eazework.com.ui.util.DeviceUtil;
+import hr.eazework.com.ui.util.Preferences;
 import hr.eazework.com.ui.util.SharedPreference;
 import hr.eazework.mframe.caching.manager.DataCacheManager;
 
@@ -70,7 +89,7 @@ public class AppRequestJSONString {
         }
         return jsonObject.toString();
     }
-    public static String getLoginData(String url, String uname, String pass) {
+    public static String getLoginData(String url, String uname, String pass,String token) {
         JSONObject jsonObject = new JSONObject();
         JSONObject subJson = new JSONObject();
         try {
@@ -83,11 +102,36 @@ public class AppRequestJSONString {
             subJson.put("DeviceMake", DeviceUtil.getDeviceMake());
             subJson.put("DeviceID", MyApplication.getDeviceId());
             subJson.put("SessionID", SharedPreference.getSessionId());
+            subJson.put("FCMToken", token);
             jsonObject.put("loginCred", subJson);
         } catch (JSONException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        Log.d("TAG","login request"+jsonObject.toString());
+        return jsonObject.toString();
+    }
+
+    public static String getLoginWithGoogle(String url,String token,String gmailToken) {
+        JSONObject jsonObject = new JSONObject();
+        JSONObject subJson = new JSONObject();
+
+        try {
+            subJson.put("CorpUrl", url);
+            subJson.put("OS", 1);
+            subJson.put("OSVersion", DeviceUtil.getOsVersion());
+            subJson.put("AppVersion", DeviceUtil.getAppVersion());
+            subJson.put("DeviceMake", DeviceUtil.getDeviceMake());
+            subJson.put("DeviceID", MyApplication.getDeviceId());
+            subJson.put("SessionID", SharedPreference.getSessionId());
+            subJson.put("FCMToken", token);
+            jsonObject.put("token",gmailToken);
+            jsonObject.put("loginCred", subJson);
+        } catch (JSONException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        Log.d("TAG","login request"+jsonObject.toString());
         return jsonObject.toString();
     }
 
@@ -353,6 +397,7 @@ public class AppRequestJSONString {
         Log.d("SummaryRequest",advanceDetailRequestModel.serialize());
         return advanceDetailRequestModel.serialize();
     }
+
     public static String getAdvanceApprovalData(String role) {
         AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
         loginData.setDeviceID(MyApplication.getDeviceId());
@@ -401,7 +446,174 @@ public class AppRequestJSONString {
         Log.d("TAG","Search On Behalf : "+request);
         return request;
 
+    }
 
+    public static String leaveWFHTypeRequest(GetDetailsOnInputChangeRequestModel item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","WFH Type Request : "+request);
+        return request;
+
+    }
+
+    public static String uploadProfileRequest(UploadProfilePicModel item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+
+        String request=item.serialize();
+        Log.d("TAG","Upload Profile Request : "+request);
+        return request;
+
+    }
+
+    public static String WFHRequest(WFHRequestModel item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","WFH Request : "+request);
+        return request;
+    }
+
+    public static String rejectRequest(WFHRejectRequestModel item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","WFH Request : "+request);
+        return request;
+    }
+
+    public static String rejectAttendanceRequest(AttendanceRejectRequestModel item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","Attendance reject Request : "+request);
+        return request;
+    }
+    public static String tourRequest(TourRequestModel item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","Tour Request : "+request);
+        return request;
+    }
+
+    public static String timeAttendanceSummary(GetEmpWFHRequestsModel item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","WFH Summary: "+request);
+        return request;
+    }
+
+    public static String WFHSummaryDetails(GetWFHRequestDetail item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","WFH Summary Request: "+request);
+        return request;
+    }
+
+    public static String holidayListRequest(){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        HolidayRequestModel item = new HolidayRequestModel();
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","WFH Summary Request: "+request);
+        return request;
+    }
+
+
+    public static String leaveRequest(LeaveRequestModel item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","Leave Request: "+request);
+        return request;
+    }
+
+    public static String ODSummaryDetails(GetODRequestDetail item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","WFH Summary Request: "+request);
+        return request;
+    }
+
+    public static String timeModificationSummaryDetails(GetTimeModificationRequestDetail item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","Time Summary Request: "+request);
+        return request;
+    }
+
+    public static String empAttendanceDetail(EmpAttendanceRequestModel item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","Attendance Request: "+request);
+        return request;
+    }
+    public static String ODRequest(ODRequestModel item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","OD Request : "+request);
+        return request;
+    }
+
+    public static String timeModificationRequest(TimeModificationRequestModel item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","Time Modification Request : "+request);
+        return request;
+    }
+
+    public static String forgotCredentialsRequest(ForgotCredentialsRequestModel item){
+        String request=item.serialize();
+        Log.d("TAG","Forgot Credentials Request : "+request);
+        return request;
+    }
+    public static String getTravelAndReasonData(GetDetailsOnEmpChangeRequestModel item){
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        item.setLoginData(loginData);
+        String request=item.serialize();
+        Log.d("TAG","Travel and Reason Request : "+request);
+        return request;
     }
 
     public static String getAdvanceAdjustmentData(String currency,String empId) {
@@ -412,6 +624,21 @@ public class AppRequestJSONString {
         adjustmentExpenseItem.setCurrencyCode(currency);
         adjustmentExpenseItem.setForEmpID(empId);
         AdvanceAdjustmentRequestModel advanceAdjustmentRequestModel= new AdvanceAdjustmentRequestModel();
+        advanceAdjustmentRequestModel.setLoginData(loginData);
+        advanceAdjustmentRequestModel.setExpense(adjustmentExpenseItem);
+        String expenseInitData=advanceAdjustmentRequestModel.serialize();
+        return expenseInitData;
+    }
+
+    public static String getAdvanceAdjustmentDataRequest(String currency,String empId,ArrayList<AdvanceListItemModel> advanceListItemModels) {
+        AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        loginData.setSessionID(SharedPreference.getSessionId());
+        AdjustmentExpenseItem adjustmentExpenseItem=new AdjustmentExpenseItem();
+        adjustmentExpenseItem.setCurrencyCode(currency);
+        adjustmentExpenseItem.setForEmpID(empId);
+        AdvanceAdjustmentRequestModel advanceAdjustmentRequestModel= new AdvanceAdjustmentRequestModel();
+        advanceAdjustmentRequestModel.setAdvanceList(advanceListItemModels);
         advanceAdjustmentRequestModel.setLoginData(loginData);
         advanceAdjustmentRequestModel.setExpense(adjustmentExpenseItem);
         String expenseInitData=advanceAdjustmentRequestModel.serialize();
@@ -496,20 +723,6 @@ public class AppRequestJSONString {
         AdvanceLoginDataRequestModel loginData = new AdvanceLoginDataRequestModel();
         loginData.setDeviceID(MyApplication.getDeviceId());
         loginData.setSessionID(SharedPreference.getSessionId());
-       /* if(lineItemsModels.size()>0){
-            for(int i=0;i<lineItemsModels.size();i++){
-                LineItemsModel model=lineItemsModels.get(i);
-                ArrayList<SupportDocsItemModel> docsItemModels=model.getDocListLineItem();
-                if(docsItemModels!=null && docsItemModels.size()>0){
-                    for(int j=0;j<docsItemModels.size();i++){
-                      SupportDocsItemModel supDoc=docsItemModels.get(j);
-                       // supDoc.set
-
-                    }
-                }
-            }
-        }*/
-
         if(supportDocsItemModels!=null && supportDocsItemModels.size()>0){
             for(int i=0; i<supportDocsItemModels.size();i++){
                 DocListModel model=supportDocsItemModels.get(i);
@@ -532,7 +745,6 @@ public class AppRequestJSONString {
         saveExpenseItem.setApproverName(approverName);
         saveExpenseItem.setProjectID(Integer.parseInt(projectId));
         saveExpenseItem.setForEmpID(Integer.parseInt(empId));
-        //saveExpenseItem.setProjectID(Integer.parseInt(projectId));
 
         SaveExpenseModel saveExpenseModel=new SaveExpenseModel();
         saveExpenseModel.setFromButton(fromButton);
@@ -726,6 +938,23 @@ public class AppRequestJSONString {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.d("TAG","Attendance Request "+ jsonObject.toString());
+        return jsonObject.toString();
+    }
+
+    public static String getEmpLeaveRequestsData(String dateFrom, String dateTo, String flag) {
+        JSONObject jsonObject = new JSONObject();
+        JSONObject subJson = new JSONObject();
+        try {
+            subJson.put("DeviceID", MyApplication.getDeviceId());
+            subJson.put("SessionID", SharedPreference.getSessionId());
+            jsonObject.put("loginData", subJson);
+            jsonObject.put("dateFrom", dateTo);
+            jsonObject.put("dateTo", dateFrom);
+            jsonObject.put("flag", flag);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return jsonObject.toString();
     }
 
@@ -745,8 +974,29 @@ public class AppRequestJSONString {
         return jsonObject.toString();
     }
 
-    public static String getSaveLeaveRequestData(String empId, String leaveId, String startDate, String endDate, String totalDays, String remark) {
-        JSONObject jsonObject = new JSONObject();
+    public static String getSaveLeaveRequestData(String empId, String leaveId, String startDate, String endDate, String totalDays, String remark,ArrayList<SupportDocsItemModel> attachments,String reqId,String halfDayFS) {
+        LeaveRequestModel leaveRequestModel=new LeaveRequestModel();
+        AdvanceLoginDataRequestModel loginData=new AdvanceLoginDataRequestModel();
+        loginData.setSessionID(SharedPreference.getSessionId());
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        LeaveReqDetailModel item=new LeaveReqDetailModel();
+        item.setForEmpID(empId);
+        item.setRemarks(remark);
+        item.setTotalDays(totalDays);
+        item.setLeaveID(leaveId);
+        item.setEndDate(endDate);
+        item.setHalfDayFS(halfDayFS);
+        item.setStartDate(startDate);
+        item.setReqID(reqId);
+        item.setAttachments(attachments);
+        leaveRequestModel.setLeaveReqDetail(item);
+        leaveRequestModel.setLoginData(loginData);
+
+        String request=leaveRequestModel.serialize();
+        Log.d("TAG","Leave Request: "+request);
+        return request;
+
+     /*   JSONObject jsonObject = new JSONObject();
         JSONObject subJson = new JSONObject();
         JSONObject leaveReq = new JSONObject();
         try {
@@ -760,11 +1010,13 @@ public class AppRequestJSONString {
             leaveReq.put("EndDate", endDate);
             leaveReq.put("TotalDays", totalDays);
             leaveReq.put("Remarks", remark);
+            leaveReq.put("Attachments",attachments);
             jsonObject.put("leaveReqDetail", leaveReq);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return jsonObject.toString();
+        Log.d("Leave :",jsonObject.toString());
+        return jsonObject.toString();*/
     }
 
     /*{
@@ -773,6 +1025,30 @@ public class AppRequestJSONString {
          "StartDate":"09/06/2015","EndDate":"10/06/2015","TotalDays":"2","Remarks":"Urgent work"}
 
     }*/
+
+    public static String getSaveAsDraftLeaveRequestData(String empId, String leaveId, String startDate, String endDate, String totalDays,
+                                                        String remark,ArrayList<SupportDocsItemModel> attachments,String button, String reqId, String halfDayFS) {
+        LeaveRequestModel leaveRequestModel=new LeaveRequestModel();
+        AdvanceLoginDataRequestModel loginData=new AdvanceLoginDataRequestModel();
+        loginData.setSessionID(SharedPreference.getSessionId());
+        loginData.setDeviceID(MyApplication.getDeviceId());
+        LeaveReqDetailModel item=new LeaveReqDetailModel();
+        item.setForEmpID(empId);
+        item.setRemarks(remark);
+        item.setReqID(reqId);
+        item.setTotalDays(totalDays);
+        item.setLeaveID(leaveId);
+        item.setEndDate(endDate);
+        item.setStartDate(startDate);
+        item.setHalfDayFS(halfDayFS);
+        item.setAttachments(attachments);
+        item.setButton(button);
+        leaveRequestModel.setLeaveReqDetail(item);
+        leaveRequestModel.setLoginData(loginData);
+        String request=leaveRequestModel.serialize();
+        Log.d("TAG","Leave Request: "+request);
+        return request;
+    }
     public static String getEmpLeaveBalancesData(String empId) {
         JSONObject jsonObject = new JSONObject();
         JSONObject subJson = new JSONObject();

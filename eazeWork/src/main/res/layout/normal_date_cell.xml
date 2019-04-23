@@ -3,14 +3,17 @@
      android:layout_width="match_parent"
     android:layout_height="match_parent">
 <hr.calender.caldroid.CellView
+
     android:id="@+id/calendar_tv"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     style="?styleCaldroidNormalCell"/>
 <View android:id="@+id/view_selected_date"
     android:layout_width="match_parent"
     android:layout_height="2dp"
     android:background="#ff2400"
+
     android:layout_gravity="bottom"/>
 
 <TextView
@@ -20,7 +23,8 @@
     android:layout_gravity="bottom|right"
     android:textSize="@dimen/font_12"
     android:padding="2dp"
-    android:text="CL" />
+    android:text="CL"
+    android:visibility="gone"/>
 
 </FrameLayout>
 

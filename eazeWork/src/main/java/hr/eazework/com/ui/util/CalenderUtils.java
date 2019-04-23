@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
@@ -282,6 +283,14 @@ public class CalenderUtils {
 
     public static DatePickerDialog pickDateFromCalender(Context mContext, final TextView dobTextView,final TextView dayTV, String dateFormat) {
         Calendar newCalendar = Calendar.getInstance();
+        String dateStr=null;
+        if(dobTextView.getText().toString().equalsIgnoreCase("") || dobTextView.getText().toString().equalsIgnoreCase("--/--/----")){
+            dateStr= DateTimeUtil.currentDate(AppsConstant.DATE_FORMATE);
+        }else{
+            dateStr=dobTextView.getText().toString();
+        }
+        String date[] =dateStr.split("/");
+        Log.d("TAG","Date array"+ date+"   "+dateStr);
         final SimpleDateFormat dateFormatter = new SimpleDateFormat(dateFormat, Locale.US);
         DatePickerDialog datePickerDialog = new DatePickerDialog(mContext, new DatePickerDialog.OnDateSetListener() {
 
@@ -292,15 +301,15 @@ public class CalenderUtils {
                 Calendar calendar = Calendar.getInstance();
 
                 calendar.set(year, monthOfYear, dayOfMonth);
-                //textView.setText(dateFormatter.format(newDate.getTime()));
 
                 dayTV.setText(String.format("%1$tA", calendar));
                 String formatedData = String.format("%1$td/%1$tm/%1$tY", calendar);
                 dobTextView.setText(formatedData);
             }
 
-        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH),
-                newCalendar.get(Calendar.DAY_OF_MONTH));
+        },Integer.parseInt(date[2]), Integer.parseInt(date[1])-1,
+                Integer.parseInt(date[0]));
+
         return datePickerDialog;
     }
     public static DatePickerDialog pickYearMonthFromCalender(Context mContext, final TextView dobTextView,final TextView dayTV, String dateFormat) {
@@ -315,8 +324,6 @@ public class CalenderUtils {
                 Calendar calendar = Calendar.getInstance();
 
                 calendar.set(year, monthOfYear, dayOfMonth);
-                //textView.setText(dateFormatter.format(newDate.getTime()));
-              //  String monthname=(String)android.text.format.DateFormat.format("MMMM", new Date());
 
                 dayTV.setText(String.format(Locale.US,"%tB",calendar));
 

@@ -21,8 +21,11 @@ public class CellView extends TextView {
     public static final int STATE_LEAVE = R.attr.state_date_leave;
     public static final int STATE_PRESENT = R.attr.state_date_present;
     public static final int STATE_ABSENT = R.attr.state_date_absent;
+    public static final int STATE_MULTIPLE_STATUS = R.attr.state_date_multiple_status;
     public static final int STATE_COMP_OFF = R.attr.state_date_comp_off;
     public static final int STATE_HALF_DAY = R.attr.state_date_half_day;
+    public static final int STATE_WFH = R.attr.state_date_wfh;
+    public static final int STATE_TOUR = R.attr.state_date_tour;
 
     private ArrayList<Integer> customStates = new ArrayList<Integer>();
 

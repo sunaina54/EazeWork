@@ -112,7 +112,30 @@
             android:text="Login"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="20sp"/>
+            android:textSize="20sp"
+            />
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/btn_gmail_sign_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_marginBottom="20dp"
+            android:layout_marginStart="@dimen/margin_20"
+            android:layout_marginEnd="@dimen/margin_20"
+            />
+
+
+        <TextView
+            android:id="@+id/forgotCredentialTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/forgot_credentials"
+            android:textColor="@color/accent"
+            android:textSize="@dimen/text_16"
+            android:visibility="visible"/>
 
         <TextView
             android:id="@+id/tv_register"
@@ -124,6 +147,7 @@
             android:textColor="@color/accent"
             android:textSize="@dimen/text_16"
             android:visibility="visible"/>
+
 
     </LinearLayout>
 

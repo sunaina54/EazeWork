@@ -55,8 +55,6 @@ public class ApproveScreen extends BaseFragment implements AdapterView.OnItemCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.user_profile_root_container, container, false);
-
-        //  MainActivity.updataProfileData(getActivity(), rootView);
         populateHomeData();
         android.widget.FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 0, 0, 0);
@@ -94,6 +92,22 @@ public class ApproveScreen extends BaseFragment implements AdapterView.OnItemCli
                 }
                 itemList.add(new MainItemModel(getString(R.string.msg_leaves), "", getString(R.string.msg_pending), "" + count, R.drawable.manager_approval));
             }
+
+            itemModel = menuItemModel.getItemModel(MenuItemModel.APPROVAL_KEY);
+            if (itemModel != null && itemModel.isAccess()) {
+                PendingCountModel model = modelManager.getPendingCountModel();
+                String count = "";
+                if (model.getPendingList() != null) {
+                    for (int i = 0; i < model.getPendingList().size(); i++) {
+                        PendingCountModel countModel = model.getPendingList().get(i);
+                        if (countModel.getmReqDesc().equalsIgnoreCase("Attendance")) {
+                            count = countModel.getmCount();
+                        }
+                    }
+                }
+                itemList.add(new MainItemModel("Attendance", "", "Pending", "" + count, R.drawable.manager_approval));
+            }
+
             itemModel = menuItemModel.getItemModel(MenuItemModel.EMPLOYEE_APPROVAL_KEY);
             if (itemModel != null && itemModel.isAccess()) {
                 PendingCountModel model = modelManager.getPendingCountModel();
@@ -150,6 +164,8 @@ public class ApproveScreen extends BaseFragment implements AdapterView.OnItemCli
             mUserActionListener.performUserAction(IAction.MEMBER_APPROVAL, null, null);
         } else if (itemList.get(position).getmLeftTitle().equalsIgnoreCase("Leave")) {
             mUserActionListener.performUserAction(IAction.PENDING_APPROVAL, null, null);
+        }else if (itemList.get(position).getmLeftTitle().equalsIgnoreCase("Attendance")) {
+            mUserActionListener.performUserAction(IAction.ATTENDANCE, null, null);
         }else if (itemList.get(position).getmLeftTitle().equalsIgnoreCase("Expense")) {
             mUserActionListener.performUserAction(IAction.EXPENSE_APPROVAL, null, null);
         }else if (itemList.get(position).getmLeftTitle().equalsIgnoreCase("Advance")) {

@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ChipsLayoutManager/ChipsLayoutManager.iml" filepath="$PROJECT_DIR$/ChipsLayoutManager/ChipsLayoutManager.iml" />
-      <module fileurl="file://$PROJECT_DIR$/eand-23-11-2017.iml" filepath="$PROJECT_DIR$/eand-23-11-2017.iml" />
+      <module fileurl="file://$PROJECT_DIR$/EazeWork.iml" filepath="$PROJECT_DIR$/EazeWork.iml" />
       <module fileurl="file://$PROJECT_DIR$/eazeWork/eazeWork.iml" filepath="$PROJECT_DIR$/eazeWork/eazeWork.iml" />
     </modules>
   </component>

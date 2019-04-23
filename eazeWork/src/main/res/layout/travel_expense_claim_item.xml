@@ -16,17 +16,27 @@
             android:id="@+id/categoryLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:weightSum="1">
 
             <TextView
                 android:id="@+id/categoryDescTV"
-                android:layout_width="fill_parent"
+                android:layout_width="0dp"
+                android:layout_weight="0.99"
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
                 android:text="Category"
                 android:textColor="@color/black"
                 android:textSize="@dimen/font_14"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:layout_weight="0.01"
+                android:id="@+id/img_menu_icon"
+                android:layout_width="@dimen/margin_15"
+                android:layout_height="@dimen/margin_15"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/squares_line" />
 
         </LinearLayout>
 
@@ -307,7 +317,7 @@
                 android:text="Action"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_12"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
         </LinearLayout>
         <LinearLayout
@@ -315,7 +325,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_10"
             android:orientation="vertical"
-            android:visibility="visible"
+            android:visibility="gone"
             android:id="@+id/statusMsgLl"
             android:layout_marginLeft="@dimen/margin_10">
             <Button
@@ -337,7 +347,7 @@
             android:layout_marginTop="@dimen/margin_10"
             android:orientation="vertical"
             android:id="@+id/viewDocLl"
-            android:visibility="visible"
+            android:visibility="gone"
             android:layout_marginLeft="@dimen/margin_10">
 
             <Button
@@ -349,6 +359,7 @@
                 android:text="Document"
                 android:textColor="@color/white"
                 android:textSize="@dimen/font_12"
+                android:visibility="gone"
                 android:padding="@dimen/margin_5"
                 />
 
@@ -362,12 +373,6 @@
             android:visibility="gone"
             android:id="@+id/lineDocumentLl">
 
-         <!--   <android.support.v7.widget.RecyclerView
-                android:id="@+id/lineDocumentRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            </android.support.v7.widget.RecyclerView>-->
 
         </LinearLayout>
         <TextView

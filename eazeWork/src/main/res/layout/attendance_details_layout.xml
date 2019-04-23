@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fragment_bg"
+    android:orientation="vertical">
+    <include layout="@layout/progress_root_container"></include>
+<LinearLayout
+    android:orientation="vertical"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <include layout="@layout/header_layout"></include>
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_13"
+        android:layout_marginRight="@dimen/margin_13"
+        android:layout_marginBottom="@dimen/margin_13"
+        android:layout_marginTop="@dimen/margin_13"
+        android:background="@color/white"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_5"
+            android:id="@+id/dateLinearLayout"
+            android:visibility="visible"
+            >
+
+            <TextView
+                style="@style/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date_attendance" />
+
+            <TextView
+                android:id="@+id/dateTV"
+                style="@style/textViewYellow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/margin_5"
+            android:id="@+id/statusLinearLayout"
+            android:visibility="visible"
+            >
+
+            <TextView
+                style="@style/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/day_status" />
+
+            <TextView
+                android:id="@+id/statusTV"
+                style="@style/textViewYellow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+               />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0.8">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_5"
+                        android:layout_marginLeft="@dimen/margin_5"
+                        android:text="@string/employee_name"
+                        android:visibility="gone"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:id="@+id/empNameTV"
+                        style="@style/editTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_default"
+                        android:background="@drawable/grey_commoborder"
+                        android:gravity="left"
+                        android:padding="@dimen/margin_10"
+                         />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/searchLayout"
+                android:layout_width="0dp"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/margin_10"
+                android:layout_weight=".2"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="@dimen/margin_25"
+                    android:layout_height="@dimen/margin_25"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:background="@drawable/search" />
+            </RelativeLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/margin_5"
+            android:id="@+id/markedTimeLl"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+               >
+
+                <TextView
+                    style="@style/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/marked_in_time"
+                    />
+
+                <TextView
+                    style="@style/textViewYellow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/markedInTimeTV"
+
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+               >
+
+                <TextView
+                    style="@style/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/marked_out_time"
+                    />
+
+                <TextView
+                    style="@style/textViewYellow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/markedOutTimeTV"
+
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/margin_10">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_10">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/margin_5">
+
+                        <TextView
+                            style="@style/textView"
+                            android:id="@+id/inTimeTMTV"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/in_time"
+                            />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/margin_5"
+                        android:weightSum="1"
+                        android:id="@+id/requestedInTimeLl">
+
+
+                        <LinearLayout
+                            android:id="@+id/inDateLl"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/margin_40"
+                            android:layout_weight="0.45"
+                            android:background="@drawable/rounded_corne_background_blue_dark"
+                            android:orientation="horizontal"
+                            android:paddingLeft="@dimen/padding_mini"
+                            android:paddingRight="@dimen/padding_default">
+
+                            <ImageView
+                                android:id="@+id/imageView1"
+                                android:layout_width="@dimen/margin_30"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="2dp"
+                                android:padding="2dp"
+                                android:src="@drawable/icon_callender" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginRight="@dimen/padding_default"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tv_in_day"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/date"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/margin_12" />
+
+                                <TextView
+                                    android:id="@+id/tv_in_date"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="--/--/----"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/margin_12" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="0.1"
+                            android:background="@android:color/transparent" />
+
+                        <LinearLayout
+                            android:id="@+id/inTimeLl"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/margin_40"
+                            android:layout_weight="0.4"
+                            android:background="@drawable/rounded_corne_background_blue_dark"
+                            android:orientation="horizontal"
+                            android:paddingLeft="@dimen/padding_mini"
+                            android:paddingRight="@dimen/padding_default">
+
+                            <ImageView
+                                android:layout_width="@dimen/margin_30"
+                                android:layout_height="@dimen/margin_35"
+                                android:layout_margin="2dp"
+                                android:padding="2dp"
+                                android:src="@drawable/clock1" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginRight="@dimen/margin_2"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/time"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/margin_12" />
+
+                                <TextView
+                                    android:id="@+id/tv_in_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="--:-- AM"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/margin_12" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_10">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/margin_5">
+
+                            <TextView
+                                style="@style/textView"
+                                android:id="@+id/outTimeTMTV"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/out_time"
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/margin_5"
+                            android:weightSum="1"
+                            android:id="@+id/requestedOutTimeLl">
+
+                            <LinearLayout
+                                android:id="@+id/outDateLl"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/margin_40"
+                                android:layout_weight="0.45"
+                                android:background="@drawable/rounded_corne_background_blue_dark"
+                                android:orientation="horizontal"
+                                android:paddingLeft="@dimen/padding_mini"
+                                android:paddingRight="@dimen/padding_default">
+
+                                <ImageView
+                                    android:layout_width="@dimen/margin_30"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="2dp"
+                                    android:padding="2dp"
+                                    android:src="@drawable/icon_callender" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginRight="@dimen/padding_default"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/tv_out_day"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/date"
+                                        android:textColor="@color/white"
+                                        android:textSize="@dimen/margin_12" />
+
+                                    <TextView
+                                        android:id="@+id/tv_out_date"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="--/--/----"
+                                        android:textColor="@color/white"
+                                        android:textSize="@dimen/margin_12" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="1dp"
+                                android:layout_weight="0.1"
+                                android:background="@android:color/transparent" />
+
+                            <LinearLayout
+                                android:id="@+id/outTimeLl"
+                                android:layout_width="0dp"
+                                android:layout_height="@dimen/margin_40"
+                                android:layout_weight="0.4"
+                                android:background="@drawable/rounded_corne_background_blue_dark"
+                                android:orientation="horizontal"
+                                android:paddingLeft="@dimen/padding_mini"
+                                android:paddingRight="@dimen/padding_default">
+
+                                <ImageView
+                                    android:layout_width="@dimen/margin_30"
+                                    android:layout_height="@dimen/margin_35"
+                                    android:layout_margin="2dp"
+                                    android:padding="2dp"
+                                    android:src="@drawable/clock1" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginRight="@dimen/margin_2"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/time"
+                                        android:textColor="@color/white"
+                                        android:textSize="@dimen/margin_12" />
+
+                                    <TextView
+                                        android:id="@+id/tv_out_time"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="--:-- AM"
+                                        android:textColor="@color/white"
+                                        android:textSize="@dimen/margin_12" />
+                                </LinearLayout>
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <include
+            android:id="@+id/remarksLinearLayout1"
+            layout="@layout/remarks_edittext_layout"></include>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginLeft="@dimen/margin_13"
+        android:layout_marginRight="@dimen/margin_13"
+        android:id="@+id/remarksLl">
+        <include layout="@layout/remarks_layout"></include>
+    </LinearLayout>
+    <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_13"
+                android:layout_marginRight="@dimen/margin_13"
+                android:visibility="gone">
+
+                <include layout="@layout/upload_document_layout"></include>
+            </LinearLayout>
+
+    <include layout="@layout/action_button_layout" android:id="@+id/buttonLinearLayout"></include>
+
+</LinearLayout>
+</ScrollView>
+</LinearLayout>
+</RelativeLayout>

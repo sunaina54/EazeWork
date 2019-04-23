@@ -3,12 +3,12 @@ package hr.eazework.com.ui.util;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import hr.eazework.com.TimeModificationActivity;
 import hr.eazework.com.MainActivity;
 import hr.eazework.com.ui.fragment.BaseFragment;
 import hr.eazework.com.ui.fragment.MyBaseFragment;
@@ -96,6 +96,26 @@ public class PermissionUtil {
     }
 
     public static void askAllPermissionCamera(BaseFragment baseFragment) {
+        if (baseFragment != null) {
+            try {
+                baseFragment.requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, REQ_PERMISSION);
+            } catch (IllegalStateException e) {
+                Crashlytics.logException(e);
+            }
+        }
+    }
+
+    public static void askAllPermissionCamera(MyBaseFragment baseFragment) {
+        if (baseFragment != null) {
+            try {
+                baseFragment.requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, REQ_PERMISSION);
+            } catch (IllegalStateException e) {
+                Crashlytics.logException(e);
+            }
+        }
+    }
+
+    public static void askAllPermissionCamera(TimeModificationActivity baseFragment) {
         if (baseFragment != null) {
             try {
                 baseFragment.requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, REQ_PERMISSION);

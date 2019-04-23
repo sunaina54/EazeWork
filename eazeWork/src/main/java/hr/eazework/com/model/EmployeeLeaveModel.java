@@ -3,6 +3,7 @@ package hr.eazework.com.model;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class EmployeeLeaveModel {
@@ -16,6 +17,7 @@ public class EmployeeLeaveModel {
 	private String mReqType;
 	private String mReqTypeDesc;
 	private String mStatus;
+	private String[] mButtons;
 	private ArrayList<EmployeeLeaveModel> mPendingLeaveList;
 	public EmployeeLeaveModel(JSONArray jsonArray) {
 		mPendingLeaveList=new ArrayList<>();
@@ -24,6 +26,22 @@ public class EmployeeLeaveModel {
 				mPendingLeaveList.add(new EmployeeLeaveModel(jsonArray.optJSONObject(i)));
 			}
 		}
+	}
+	public String[] fetchButton(JSONArray jsonArray){
+		if(jsonArray!=null){
+			mButtons=new String[jsonArray.length()];
+			for(int j=0; j<jsonArray.length();j++){
+				try {
+					String str=(String) jsonArray.get(j);
+					mButtons[j]=str;
+
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+		return mButtons;
 	}
 
 	public EmployeeLeaveModel(JSONObject jsonObject) {
@@ -37,7 +55,14 @@ public class EmployeeLeaveModel {
 		mReqType=jsonObject.optString("ReqType", "");
 		mReqTypeDesc=jsonObject.optString("ReqTypeDesc", "");
 		mStatus=jsonObject.optString("Status", "");
+		try {
+			mButtons=fetchButton(jsonObject.getJSONArray("Buttons"));
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
+
+
 
 	public String getmApprovalLevel() {
 		return mApprovalLevel;
@@ -126,5 +151,12 @@ public class EmployeeLeaveModel {
 	public void setmPendingLeaveList(ArrayList<EmployeeLeaveModel> mPendingLeaveList) {
 		this.mPendingLeaveList = mPendingLeaveList;
 	}
-	
+
+	public String[] getmButtons() {
+		return mButtons;
+	}
+
+	public void setmButtons(String[] mButtons) {
+		this.mButtons = mButtons;
+	}
 }

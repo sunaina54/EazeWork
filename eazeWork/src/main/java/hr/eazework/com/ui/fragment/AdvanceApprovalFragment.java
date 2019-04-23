@@ -2,6 +2,7 @@ package hr.eazework.com.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,6 +33,7 @@ import hr.eazework.com.model.GetAdvanceApprovalRoleResult;
 import hr.eazework.com.model.GetAdvanceDetailResultModel;
 import hr.eazework.com.model.RoleListItem;
 import hr.eazework.com.ui.customview.CustomBuilder;
+import hr.eazework.com.ui.interfaces.IAction;
 import hr.eazework.mframe.communication.ResponseData;
 import hr.eazework.selfcare.communication.AppRequestJSONString;
 import hr.eazework.selfcare.communication.CommunicationConstant;
@@ -84,7 +86,6 @@ public class AdvanceApprovalFragment extends BaseFragment {
 
     private void setupScreen(View view) {
         searchET = (EditText) view.findViewById(R.id.searchET);
-        //searchET.setVisibility(View.GONE);
         searchIV = (ImageView) view.findViewById(R.id.searchIV);
         searchIV.setOnClickListener(this);
         search_layout = (RelativeLayout) view.findViewById(R.id.search_layout);
@@ -263,7 +264,6 @@ public class AdvanceApprovalFragment extends BaseFragment {
             case CommunicationConstant.API_GET_ADVANCE_APPROVAL_ROLE:
                 String responseData = response.getResponseData();
                 Log.d("TAG", "Advance Response : " + responseData);
-             //   searchIV.setVisibility(View.GONE);
                 approvalRoleResponseModel = ApprovalRoleResponseModel.create(responseData);
                 roleFrameLayout.setVisibility(View.GONE);
                 if (approvalRoleResponseModel != null && approvalRoleResponseModel.getGetAdvanceApprovalRoleResult() != null &&
@@ -279,20 +279,6 @@ public class AdvanceApprovalFragment extends BaseFragment {
                         roleTV.setText(approvalRoleResponseModel.getGetAdvanceApprovalRoleResult().getRoleList().get(0).getRoleDesc());
                         sendAdvanceApprovalData();
                         refresh(advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult().getAdvanceList());
-                       /* for (RoleListItem item : roleListItems) {
-                            if (item.getRoleID().equalsIgnoreCase("E001000011") || item.getRoleDesc().equalsIgnoreCase("Manager")) {
-                                roleTV.setText(item.getRoleDesc());
-                                roleId = item.getRoleID();
-                                sendAdvanceApprovalData();
-                                if (advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult().getAdvanceList().get(0) != null) {
-                                   // searchIV.setVisibility(View.VISIBLE);
-                                    searchParentLayout.setVisibility(View.VISIBLE);
-                                    refresh(advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult().getAdvanceList());
-                                }
-
-                            }
-
-                        }*/
                     }
                 }
 
@@ -303,8 +289,7 @@ public class AdvanceApprovalFragment extends BaseFragment {
                 Log.d("TAG", "Advance Response : " + str);
                 advanceApprovalResponseModel = AdvanceApprovalResponseModel.create(str);
                 if (advanceApprovalResponseModel != null && advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult() != null &&
-                        advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult().getAdvanceList() != null &&
-                        advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult().getAdvanceList().size() > 0) {
+                        advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult().getAdvanceList() != null) {
                     refresh(advanceApprovalResponseModel.getGetEmpAdvanceApprovalResult().getAdvanceList());
                 }
 
@@ -396,11 +381,13 @@ public class AdvanceApprovalFragment extends BaseFragment {
                 public void onClick(View v) {
                     EditAdvanceApprovalFragment advanceRequestFragment = new EditAdvanceApprovalFragment();
                     advanceRequestFragment.setAdvanceListModel(dataSet.get(listPosition));
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.expense_approval, advanceRequestFragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
+                    Fragment fragment=advanceRequestFragment;
+                                               /* FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                                fragmentTransaction.replace(R.id.view_advance_expense, requestFragment);*/
+                    //fragmentTransaction.addToBackStack(PendingActivityFragment.TAG);
+                    mUserActionListener.performUserActionFragment(IAction.EDIT_EXPENSE_APPROVAL,fragment,null);
+
 
                 }
             });

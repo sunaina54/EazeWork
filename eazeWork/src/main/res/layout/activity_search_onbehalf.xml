@@ -39,16 +39,6 @@
             android:weightSum="2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-      <!--      <EditText
-                android:id="@+id/searchET"
-                android:paddingLeft="@dimen/margin_10"
-                android:layout_margin="@dimen/margin_10"
-                android:background="@drawable/edittext_background_gray_corner"
-                android:layout_width="0dp"
-                android:hint="@string/search_hint"
-                android:layout_weight="1.8"
-                android:textSize="@dimen/font_14"
-                android:layout_height="@dimen/margin_40" />-->
 
             <RelativeLayout
 

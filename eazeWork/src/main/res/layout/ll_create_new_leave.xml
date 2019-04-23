@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
-             android:layout_height="match_parent">
-
+             android:layout_height="match_parent"
+    android:background="@color/fragment_bg">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/margin_10"
+           >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
+        android:orientation="vertical"
+        android:background="@color/white"
+       >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,7 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/margin_default"
-                    android:text="Request For"
+                    android:text="@string/employee_name"
                     android:textColor="@color/black"/>
                 <TextView
                     android:layout_marginLeft="@dimen/margin_default"
@@ -38,7 +48,6 @@
                     android:id="@+id/empNameTV"
                     android:layout_width="match_parent"
                     android:padding="@dimen/margin_10"
-                    android:text="aaa"
                     android:textSize="@dimen/margin_14"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -196,7 +205,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/padding_default"
                     android:paddingTop="@dimen/padding_default"
-                    android:text="From Date"
+                    android:text="@string/start_date"
                     android:textColor="@color/black"/>
 
                 <LinearLayout
@@ -227,7 +236,8 @@
                             android:id="@+id/tv_from_day"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="From Date"
+                            android:text="@string/start_date"
+                            android:textSize="@dimen/margin_12"
                             android:textColor="@color/white"/>
 
                         <TextView
@@ -235,6 +245,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="--/--/----"
+                            android:textSize="@dimen/margin_12"
                             android:textColor="@color/white"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -259,7 +270,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/padding_default"
                     android:paddingTop="@dimen/padding_default"
-                    android:text="To Date"
+                    android:text="@string/end_date"
                     android:textColor="@color/black"/>
 
                 <LinearLayout
@@ -292,7 +303,8 @@
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:singleLine="true"
-                            android:text="To Date"
+                            android:textSize="@dimen/margin_12"
+                            android:text="@string/end_date"
                             android:textColor="@color/white"/>
 
                         <TextView
@@ -300,13 +312,163 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="--/--/----"
+                            android:textSize="@dimen/margin_12"
                             android:textColor="@color/white"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1">
 
         <TextView
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_default"
+            android:text="@string/days"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:layout_weight="0.7"
+            android:id="@+id/daysTV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/margin_default"
+            android:textColor="@color/black">
+
+            <requestFocus/>
+        </TextView>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/rg_leave_time_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_default"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:weightSum="4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <CheckBox
+                    android:padding="@dimen/margin_3"
+                    android:id="@+id/rb_25_day"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/checkbox_selector"
+                    android:text="Qtr Day"
+                    android:textSize="@dimen/font_11"
+                    android:visibility="visible"/>
+
+                <CheckBox
+                    android:padding="@dimen/margin_3"
+                    android:id="@+id/rb_half_day"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/checkbox_selector"
+                    android:text="Half Day"
+                    android:textSize="@dimen/font_11"
+                    android:visibility="visible"/>
+
+                <CheckBox
+                    android:textSize="@dimen/font_11"
+                    android:padding="@dimen/margin_3"
+                    android:id="@+id/rb_75_day"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/checkbox_selector"
+                    android:text="0.75 Day"
+                    android:visibility="visible"/>
+
+                <CheckBox
+                    android:textSize="@dimen/font_11"
+                    android:padding="@dimen/margin_3"
+                    android:id="@+id/rb_full_day"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/checkbox_selector"
+                    android:checked="true"
+                    android:text="Full Day"
+                    android:visibility="visible"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:id="@+id/halfLl"
+            >
+
+            <TextView
+                android:id="@+id/selectTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_default"
+                android:text="Select"
+                android:textColor="@color/black"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="@dimen/padding_default">
+
+                <CheckBox
+                    android:id="@+id/firstHalfCB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/padding_default"
+                    android:button="@drawable/checkbox_selector"
+                    android:paddingLeft="@dimen/padding_mini"
+                    android:textSize="@dimen/font_10"
+                    android:text="First Half"
+                    android:checked="true"
+                    android:visibility="visible"/>
+
+                <CheckBox
+                    android:textSize="@dimen/font_10"
+                    android:id="@+id/secondHalfCB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="@dimen/padding_mini"
+                    android:layout_marginTop="@dimen/padding_default"
+                    android:button="@drawable/checkbox_selector"
+                    android:paddingLeft="@dimen/padding_mini"
+                    android:text="Second Half"
+                    android:paddingRight="@dimen/padding_default"
+                    android:visibility="visible"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_marginTop="@dimen/margin_10"
             android:id="@+id/tv_remark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -326,73 +488,6 @@
 
             <requestFocus/>
         </EditText>
-
-        <LinearLayout
-            android:id="@+id/rg_leave_time_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/padding_default"
-            android:visibility="gone">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/rb_full_day"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/padding_mini"
-                    android:button="@drawable/checkbox_selector"
-                    android:checked="true"
-                    android:paddingLeft="@dimen/padding_mini"
-                    android:text="Full Day"
-                    android:visibility="visible"/>
-
-                <CheckBox
-                    android:id="@+id/rb_half_day"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_gravity="right|end"
-                    android:layout_marginLeft="@dimen/padding_mini"
-                    android:button="@drawable/checkbox_selector"
-                    android:paddingLeft="@dimen/padding_mini"
-                    android:text="Half Day"
-                    android:visibility="visible"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="@dimen/padding_mini">
-
-                <CheckBox
-                    android:id="@+id/rb_25_day"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/padding_default"
-                    android:button="@drawable/checkbox_selector"
-                    android:paddingLeft="@dimen/padding_mini"
-                    android:text="0.25 Day"
-                    android:visibility="visible"/>
-
-                <CheckBox
-                    android:id="@+id/rb_75_day"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="@dimen/padding_mini"
-                    android:layout_marginTop="@dimen/padding_default"
-                    android:button="@drawable/checkbox_selector"
-                    android:paddingLeft="@dimen/padding_mini"
-                    android:text="0.75 Day"
-                    android:visibility="visible"/>
-            </RelativeLayout>
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -424,8 +519,33 @@
                 android:textColor="@color/white"
                 android:visibility="gone"/>
         </LinearLayout>
-    </LinearLayout>
 
-    <include layout="@layout/progress_root_container"/>
+
+
+    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/remarksDataLl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/margin_5"
+           >
+
+            <include layout="@layout/remarks_layout"></include>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_5"
+            android:visibility="visible">
+            <include layout="@layout/upload_document_layout"></include>
+        </LinearLayout>
+
+        <include
+            android:id="@+id/buttonLinearLayout"
+            layout="@layout/action_button_layout"></include>
+        </LinearLayout>
+    </ScrollView>
+    <include layout="@layout/progress_root_container" />
 
 </FrameLayout>

@@ -39,7 +39,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.games.appcontent.AppContentUtils;
+
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -63,6 +67,7 @@ import hr.eazework.com.model.ClaimTypeListItem;
 import hr.eazework.com.model.ClaimTypeListModel;
 import hr.eazework.com.model.CurrencyListModel;
 import hr.eazework.com.model.DocListModel;
+import hr.eazework.com.model.EmployeeDetailModel;
 import hr.eazework.com.model.EmployeeListModel;
 import hr.eazework.com.model.EvtClaimTypeChangeResult;
 import hr.eazework.com.model.ExpenseApprovalList;
@@ -87,6 +92,7 @@ import hr.eazework.com.model.RequestRemarksItem;
 import hr.eazework.com.model.SaveExpenseItem;
 import hr.eazework.com.model.SaveExpenseModel;
 import hr.eazework.com.model.SaveExpenseRequestModel;
+import hr.eazework.com.model.TeamMember;
 import hr.eazework.com.model.ViewClaimSummaryResponseModel;
 import hr.eazework.com.model.ViewExpenseItemModel;
 import hr.eazework.com.ui.customview.CustomBuilder;
@@ -104,6 +110,7 @@ import hr.eazework.mframe.communication.ResponseData;
 import hr.eazework.selfcare.communication.AppRequestJSONString;
 import hr.eazework.selfcare.communication.CommunicationConstant;
 import hr.eazework.selfcare.communication.CommunicationManager;
+import hr.eazework.selfcare.communication.IBaseResponse;
 
 import static android.app.Activity.RESULT_OK;
 import static hr.eazework.com.ui.util.ImageUtil.rotateImage;
@@ -114,7 +121,9 @@ import static hr.eazework.com.ui.util.ImageUtil.rotateImage;
  */
 
 public class EditViewExpenseClaimFragment extends BaseFragment {
-    private String description = "", remarks = "", totalExpenseClaimed = "", netAmount = "", onBehalf, currency;
+    public static String TAG="EditViewExpenseClaimFragment";
+    private String description = "", remarks = "",onBehalf, currency;
+    private String screenName = "EditViewExpenseClaimFragment";
     private double totalExpenseAmt = 0;
     private double totalAdvanceAdjustInCaseExpenseSumLesser;
     private double balanceAmt = 0;
@@ -133,13 +142,10 @@ public class EditViewExpenseClaimFragment extends BaseFragment {
     private ViewExpenseClaimSummaryAdapter summaryAdapter;
     private RecyclerView expenseDetailsRecyclerView, advanceRV, documentRV,remarksRV;
     private LinearLayout expenseErrorLl, advanceErrorLinearLayout, errorLinearLayout;
-    //private DocumentViewAdapter documentViewAdapter;
-    private static ProgressDialog progress;
     private ViewClaimSummaryResponseModel viewClaimSummaryResponseModel;
     private AdjustmentDetailAdapter adjustemntDetailAdapter;
     private ExpenseClaimResponseModel expenseClaimResponseModel;
     private Preferences preferences;
-    public static final String TAG = "EditExpenseFragment";
     private ArrayList<LineItemsModel> lineItemsList = new ArrayList<LineItemsModel>();
     private double totalAmountTobeAdjusted;
     private double balanceAmount;
@@ -149,7 +155,6 @@ public class EditViewExpenseClaimFragment extends BaseFragment {
     private ArrayList<DocListModel> uploadFileList;
     private int empId = 0, claimTypeId = 0, projectId = 0, approverID;
     private String requestId = "", approverId = "";
-    private AdvanceListItemModel advanceListItemModel;
     private String requestCode, reasonCode, amount;
     private Double totalExpenseAmount;
     private SaveExpenseRequestModel saveExpenseRequestModel;
@@ -204,6 +209,8 @@ public class EditViewExpenseClaimFragment extends BaseFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        this.setShowPlusMenu(false);
+        this.setShowEditTeamButtons(true);
         super.onCreate(savedInstanceState);
     }
 
@@ -221,11 +228,9 @@ public class EditViewExpenseClaimFragment extends BaseFragment {
         if (saveExpenseRequestModel != null) {
 
         } else {
-          //  saveExpenseRequestModel=new SaveExpenseRequestModel();
             saveExpenseRequestModel = new SaveExpenseRequestModel();
             saveExpenseRequestModel.setExpense(new SaveExpenseModel());
             saveExpenseRequestModel.getExpense().setExpenseItem(new SaveExpenseItem());
-           // uploadFileList = new ArrayList<DocListModel>();
         }
 
         advance_adjustment_Ll= (LinearLayout) rootView.findViewById(R.id.advance_adjustment_Ll);
@@ -304,7 +309,21 @@ public class EditViewExpenseClaimFragment extends BaseFragment {
         requestVoucherLl = (LinearLayout) rootView.findViewById(R.id.requestVoucherLl);
         requestVoucherLl.setVisibility(View.VISIBLE);
         requestTV = (TextView) rootView.findViewById(R.id.requestTV);
+        ((TextView) ((MainActivity) getActivity()).findViewById(R.id.tv_header_text)).setText(R.string.edit_expense_claim);
+        ((MainActivity) getActivity()).findViewById(R.id.ibWrong).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mUserActionListener.performUserAction(IAction.HOME_VIEW, null, null);
+            }
+        });
 
+        ((MainActivity) getActivity()).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fromButton = "Submit";
+                sendExpenseClaimData();
+            }
+        });
         plus_create_newIV = (ImageView) rootView.findViewById(R.id.plus_create_newIV);
 
         plus_create_newIV.setOnClickListener(new View.OnClickListener() {
@@ -318,25 +337,14 @@ public class EditViewExpenseClaimFragment extends BaseFragment {
                             @Override
                             public void onClick(CustomBuilder builder, Object selectedObject) {
                                 if (selectedObject.toString().equalsIgnoreCase("Take a photo")) {
-                                    if (!PermissionUtil.checkCameraPermission(getContext()) || !PermissionUtil.checkStoragePermission(getContext()) || !PermissionUtil.checkLocationPermission(getContext())) {
-                                        PermissionUtil.askAllPermission(EditViewExpenseClaimFragment.this);
+                                    if (!PermissionUtil.checkCameraPermission(getContext()) || !PermissionUtil.checkStoragePermission(getContext())) {
+                                        PermissionUtil.askAllPermissionCamera(EditViewExpenseClaimFragment.this);
                                     }
-                                    if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext()) && PermissionUtil.checkLocationPermission(getContext())) {
-                                        if (Utility.isLocationEnabled(getContext())) {
-                                            if (Utility.isNetworkAvailable(getContext())) {
-                                                Utility.openCamera(getActivity(), EditViewExpenseClaimFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore");
-                                                customBuilder.dismiss();
-                                            } else {
-                                                Utility.showNetworkNotAvailableDialog(getContext());
-                                            }
-                                        } else {
-                                            Utility.requestToEnableGPS(getContext(), new Preferences(getContext()));
-                                        }
-                                    } else {
-                                        Utility.displayMessage(getContext(), "Please provide all permission");
+                                    if (PermissionUtil.checkCameraPermission(getContext()) && PermissionUtil.checkStoragePermission(getContext())) {
+                                        Utility.openCamera(getActivity(), EditViewExpenseClaimFragment.this, AppsConstant.BACK_CAMREA_OPEN, "ForStore", screenName);
+                                        customBuilder.dismiss();
                                     }
                                 } else if (selectedObject.toString().equalsIgnoreCase("Gallery")) {
-                                    Log.d("File Size : ", uploadFileList.size() + "");
                                     galleryIntent();
                                     customBuilder.dismiss();
                                 }
@@ -350,7 +358,7 @@ public class EditViewExpenseClaimFragment extends BaseFragment {
         add_expenseIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //setData();
+
                 if (claimTypeId == 0) {
                     if(expensePageInitResponseModel!=null && expensePageInitResponseModel.getGetExpensePageInitResult().getClaimTypeYN().equalsIgnoreCase("Y")) {
                         new AlertCustomDialog(context, "Please select claim type");
@@ -363,18 +371,9 @@ public class EditViewExpenseClaimFragment extends BaseFragment {
 
 
                 Intent theIntent=new Intent(getActivity(), AddExpenseActivity.class);
-                //theIntent.putExtra(AddExpenseActivity.SAVE_EXPENSE_REQUEST,saveExpenseRequestModel);
-                //theIntent.putExtra(AddExpenseActivity.LINE_ITEM_REQUEST,item);
+
                 AddExpenseActivity.saveExpenseRequestModel=saveExpenseRequestModel;
                 startActivityForResult(theIntent,AddExpenseActivity.REQUEST_CODE);
-
-                  /*  AddExpenseFragment addExpenseFragment = new AddExpenseFragment();
-                    addExpenseFragment.setExpenseRequestModel(saveExpenseRequestModel);
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.add(R.id.add_expense, addExpenseFragment);
-                    fragmentTransaction.addToBackStack("addExpense");
-                    fragmentTransaction.commit();*/
 
             }
         });
@@ -417,11 +416,9 @@ public class EditViewExpenseClaimFragment extends BaseFragment {
         });
 
         if (expenseItemListModel != null) {
-           // sendViewRequestSummaryData(expenseItemListModel);
             sendExpenseInitData();
         }
 
-//;
         // old with edited data
 if(saveExpenseRequestModel!=null) {
     sendExpenseInitData();
@@ -468,12 +465,11 @@ if(saveExpenseRequestModel!=null) {
                 claimTypeListItems.setClaimTypeID(saveExpenseRequestModel.getExpense().getExpenseItem().getClaimTypeID());
             }
 
-            //saveExpenseItem.setClaimTypeID(saveExpenseRequestModel.getExpense().getExpenseItem().getClaimTypeID());
         }
-        //claimTypeTV.setText(saveExpenseRequestModel.getExpense().getExpenseItem().getClaimTypeDesc());
+
         if (saveExpenseRequestModel.getExpense().getExpenseItem().getEmpName() != null) {
             onBehalfTV.setText(saveExpenseRequestModel.getExpense().getExpenseItem().getEmpName());
-            // saveExpenseItem.setForEmpID(saveExpenseRequestModel.getExpense().getExpenseItem().getForEmpID());
+
             if (employeeList != null) {
                 employeeList.setEmpID(saveExpenseRequestModel.getExpense().getExpenseItem().getForEmpID());
             } else {
@@ -485,7 +481,6 @@ if(saveExpenseRequestModel!=null) {
         }
         if (saveExpenseRequestModel.getExpense().getExpenseItem().getCurrencyCode() != null) {
             currencyTV.setText(saveExpenseRequestModel.getExpense().getExpenseItem().getCurrencyCode());
-            //  saveExpenseItem.setCurrencyCode(saveExpenseRequestModel.getExpense().getExpenseItem().getCurrencyCode());
             String[] currencyArray = new String[1];
             currencyArray[0] = saveExpenseRequestModel.getExpense().getExpenseItem().getCurrencyCode();
             if (currencyListModel != null && currencyListModel.getCurrencyList() != null) {
@@ -522,7 +517,7 @@ if(saveExpenseRequestModel!=null) {
                 projectListItem.setProjectID(String.valueOf(saveExpenseRequestModel.getExpense().getExpenseItem().getProjectID()));
             }
 
-            //sendProjectData();
+
 
         }
 
@@ -534,40 +529,12 @@ if(saveExpenseRequestModel!=null) {
                 && saveExpenseRequestModel.getExpense().getExpenseItem() != null && saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems() != null) {
             for (LineItemsModel itemsModel : saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems()) {
                 totalAmountTobeAdjusted = totalAmountTobeAdjusted + Double.parseDouble(itemsModel.getClaimAmt());
-               // totalExpenseClaimedTV.setText(totalAmountTobeAdjusted + "");
 
             }
             Utility.formatAmount(totalExpenseClaimedTV,totalAmountTobeAdjusted);
             if (advanceDropdownList != null) {
                 advanceAdjustmentResponseModel = saveExpenseRequestModel.getExpense().getExpenseItem().getAdvanceAdjustmentResponseModel();
                 setAdvanceAdjustmentData();
-               /*     requestTV.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (advanceDropdownList != null) {
-
-                                CustomBuilder claimDialog = new CustomBuilder(getContext(), "Select Request Id", true);
-                                claimDialog.setSingleChoiceItems(advanceDropdownList, null, new CustomBuilder.OnClickListener() {
-                                    @Override
-                                    public void onClick(CustomBuilder builder, Object selectedObject) {
-                                        advanceListItemModel = (AdvanceListItemModel) selectedObject;
-                                        requestTV.setText(advanceListItemModel.getReqCode());
-                                        requestCode = advanceListItemModel.getReqCode();
-                                        reasonCode = advanceListItemModel.getReason();
-                                        amount = advanceListItemModel.getAdjAmount();
-                                        showPopupForAdjustExpense(advanceListItemModel);
-
-                                        builder.dismiss();
-
-                                    }
-                                });
-                                claimDialog.show();
-
-                            }
-                        }
-                    });*/
-
-
                 for (AdvanceListItemModel item : advanceDropdownList) {
                     if (totalAmountTobeAdjusted != 0) {
                         if (item.getPaidAmount() != null) {
@@ -667,12 +634,6 @@ if(saveExpenseRequestModel!=null) {
                                 saveExpenseRequestModel.getExpense().getExpenseItem().setClaimTypeID(claimTypeId);
                                 sendExpenseApproverData();
                                 sendProjectData();
-                              /*  if (claimTypeId == 20 || claimTypeId == 29) {
-                                    sendProjectData();
-                                    projectLinearLayout.setVisibility(View.VISIBLE);
-                                } else {
-                                    projectLinearLayout.setVisibility(View.GONE);
-                                }*/
                                 builder.dismiss();
 
 
@@ -754,45 +715,6 @@ if(saveExpenseRequestModel!=null) {
                     }
                 }
                 break;
-          /*  case R.id.requestTV:
-                if (!currencyValue.equalsIgnoreCase("")) {
-                    if (advanceAdjustmentResponseModel != null &&
-                            advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult() != null
-                            && advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult().
-                            getAdvanceList().size() > 0) {
-                        final GetAdvanceListForExpenseResult getAdvanceListForExpenseResult = advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult();
-
-                        if (getAdvanceListForExpenseResult != null) {
-                            final ArrayList<GetAdvanceDetailResultModel> advanceListtt = getAdvanceListForExpenseResult.getAdvanceList();
-
-                            CustomBuilder claimDialog = new CustomBuilder(getContext(), "Select Request Id", true);
-                            claimDialog.setSingleChoiceItems(advanceListtt, null, new CustomBuilder.OnClickListener() {
-                                @Override
-                                public void onClick(CustomBuilder builder, Object selectedObject) {
-                                    getAdvanceDetailResultModel = (GetAdvanceDetailResultModel) selectedObject;
-                                    requestTV.setText(getAdvanceDetailResultModel.getReqCode());
-                                    requestCode = getAdvanceDetailResultModel.getReqCode();
-                                    reasonCode = getAdvanceDetailResultModel.getReason();
-                                    amount = getAdvanceDetailResultModel.getBalAmount();
-
-                                    if (currencyValue != null && saveExpenseRequestModel != null && saveExpenseRequestModel.getExpense() != null && saveExpenseRequestModel.getExpense().getExpenseItem() != null && saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems() != null && saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems().size() > 0) {
-                                        showPopupForAdjustExpense(getAdvanceDetailResultModel);
-                                    } else {
-                                        new AlertCustomDialog(context, "Please Add Expense");
-                                    }
-                                    builder.dismiss();
-
-                                }
-                            });
-                            claimDialog.show();
-                        }
-                    } else {
-                        new AlertCustomDialog(context, "No Request Id");
-                    }
-                } else {
-                    new AlertCustomDialog(context, "Please Select Currency");
-                }
-                break;*/
             default:
                 break;
         }
@@ -872,20 +794,8 @@ if(saveExpenseRequestModel!=null) {
         }
     }
     public void sendExpenseApproverData() {
-      /*  if(projectId==null || projectId.equalsIgnoreCase("")){
-            projectId="0";
-        }
-        LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
-        String empId = loginUserModel.getUserModel().getEmpId();
-        CommunicationManager.getInstance().sendPostRequest(this,
-                AppRequestJSONString.getExpenseApproverData(claimTypeId, Integer.parseInt(empId)),
-                CommunicationConstant.API_GET_APPROVER_DETAILS, true);*/
-
         if (expensePageInitResponseModel != null && expensePageInitResponseModel.getGetExpensePageInitResult() != null
                 && expensePageInitResponseModel.getGetExpensePageInitResult().getOnBehalfOfYN().equalsIgnoreCase("Y")) {
-           /* LoginUserModel loginUserModel = ModelManager.getInstance().getLoginUserModel();
-            String empId = loginUserModel.getUserModel().getEmpId();*/
-
             CommunicationManager.getInstance().sendPostRequest(this,
                     AppRequestJSONString.getExpenseApproverData(claimTypeId, empId,String.valueOf(projectId)),
                     CommunicationConstant.API_GET_APPROVER_DETAILS, true);
@@ -912,7 +822,7 @@ if(saveExpenseRequestModel!=null) {
                     deleteBTN.setVisibility(View.VISIBLE);
                 }
                 if(button.equalsIgnoreCase(AppsConstant.SUBMIT)){
-                    submitBTN.setVisibility(View.VISIBLE);
+                    submitBTN.setVisibility(View.GONE);
                 }
                 if(button.equalsIgnoreCase(AppsConstant.SAVE_DRAFT)){
                     saveDraftBTN.setVisibility(View.VISIBLE);
@@ -954,13 +864,6 @@ if(saveExpenseRequestModel!=null) {
         saveExpenseRequestModel.setButtons(viewClaimSummaryResponseModel.getGetExpenseDetailResult().getButtons());
         setupButtons();
         saveExpenseRequestModel.getExpense().getExpenseItem().setDescription(item.getDescription());
-        /*if(item.getTotalExpenseClaimed()!=null && !item.getTotalExpenseClaimed().equalsIgnoreCase(""))
-            Utility.formatAmount(totalExpenseClaimedTV,Double.parseDouble(item.getTotalExpenseClaimed()));*/
-
-
-       /* if(item.getNetAmountToBePaid()!=null && !item.getNetAmountToBePaid().equalsIgnoreCase(""))
-            Utility.formatAmount(netAmountTV,Double.parseDouble(item.getNetAmountToBePaid()));*/
-     //   netAmountTV.setText(item.getNetAmountToBePaid());
         if ((item.getProjectName() != null && !item.getProjectName().equalsIgnoreCase(""))|| item.getShowProject().equalsIgnoreCase("Y")) {
             projectLinearLayout.setVisibility(View.VISIBLE);
             projectTV.setText(item.getProjectName());
@@ -990,8 +893,6 @@ if(saveExpenseRequestModel!=null) {
                 projectId = 0;
                 saveExpenseRequestModel.getExpense().getExpenseItem().setProjectID(projectId);
             } else {
-              /*  saveExpenceItem.setProjectID(item.getProjectID());
-                projectId = item.getProjectID();*/
                 saveExpenseRequestModel.getExpense().getExpenseItem().setProjectID(projectId);
                 saveExpenseRequestModel.getExpense().getExpenseItem().setProjectName(projectName);
             }
@@ -1035,8 +936,7 @@ if(saveExpenseRequestModel!=null) {
         ArrayList<String> list=new ArrayList<>();
         for (LineItemsModel itemsModel : saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems()) {
             if (itemsModel.getCategoryID() == 4) {
-                //monthList = itemsModel.getDateTo().split(",");
-                list.add(itemsModel.getDateTo());
+                list.add(itemsModel.getHeadID()+"#"+itemsModel.getDateTo());
             }
         }
 
@@ -1056,8 +956,6 @@ if(saveExpenseRequestModel!=null) {
         currency = currencyTV.getText().toString();
         remarks = remarksET.getText().toString();
         approverName = approverTV.getText().toString();
-
-        //progressBar.setVisibility(View.VISIBLE);
 
         if (saveExpenseRequestModel != null && saveExpenseRequestModel.getExpense() != null
                 && saveExpenseRequestModel.getExpense().getExpenseItem() != null &&
@@ -1093,7 +991,7 @@ if(saveExpenseRequestModel!=null) {
             String[] monthList=sendPeriodicMonthData();
             if(monthList!=null && monthList.length>0) {
                 CommunicationManager.getInstance().sendPostRequest(this,
-                        AppRequestJSONString.getPeriodicMonthData(empId, 0, monthList),
+                        AppRequestJSONString.getPeriodicMonthData(empId, Integer.parseInt(requestId), monthList),
                         CommunicationConstant.API_GET_MONTH_LIST, true);
             }else{
 
@@ -1102,12 +1000,6 @@ if(saveExpenseRequestModel!=null) {
                                 advanceList, description, remarks, currency, claimTypeId, String.valueOf(projectId), uploadFileList, String.valueOf(empId),saveExpenseRequestModel.getExpense().getExpenseItem().getReqStatus()),
                         CommunicationConstant.API_GET_SAVE_EXPENSE, true);
             }
-
-            //       AppRequestJSONString.getExpenseClaimData(fromButton, approverName, approverId, requestId, saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems(), advanceList, description, remarks, currency, claimTypeId, String.valueOf(projectId), uploadFileList, String.valueOf(empId));
-/*
-            CommunicationManager.getInstance().sendPostRequest(this,
-                    AppRequestJSONString.getExpenseClaimData(fromButton, approverName, approverId, requestId, saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems(), advanceList, description, remarks, currency, claimTypeId, String.valueOf(projectId), uploadFileList, String.valueOf(empId)),
-                    CommunicationConstant.API_GET_SAVE_EXPENSE, true);*/
         } else {
             if (viewClaimSummaryResponseModel != null && viewClaimSummaryResponseModel.getGetExpenseDetailResult() != null && viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem() != null) {
                 approverId = viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getApproverID() + "";
@@ -1116,21 +1008,14 @@ if(saveExpenseRequestModel!=null) {
                     advanceList = viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getAdvanceList();
                 }
                 claimTypeId = viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getClaimTypeID();
-               /* if (viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getProjectID() != 0) {
-                    projectId = viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getProjectID();
-                } else {
-                    projectId = 0;
-                }*/
-
                 if (viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getDocList() != null) {
                     uploadFileList = viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getDocList();
                 }
                 empId = viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getForEmpID();
-                //      AppRequestJSONString.getExpenseClaimData(fromButton, approverName, approverId, requestId, saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems(), advanceList, description, remarks, currency, claimTypeId, String.valueOf(projectId), uploadFileList, String.valueOf(empId));
                 String[] monthList=sendPeriodicMonthData();
                 if(monthList!=null && monthList.length>0) {
                     CommunicationManager.getInstance().sendPostRequest(this,
-                            AppRequestJSONString.getPeriodicMonthData(empId, 0, monthList),
+                            AppRequestJSONString.getPeriodicMonthData(empId, Integer.parseInt(requestId), monthList),
                             CommunicationConstant.API_GET_MONTH_LIST, true);
                 }else{
 
@@ -1140,9 +1025,6 @@ if(saveExpenseRequestModel!=null) {
                                     remarks, currency, claimTypeId, String.valueOf(projectId), uploadFileList, String.valueOf(empId),saveExpenseRequestModel.getExpense().getExpenseItem().getReqStatus()),
                             CommunicationConstant.API_GET_SAVE_EXPENSE, true);
                 }
-             /*   CommunicationManager.getInstance().sendPostRequest(this,
-                        AppRequestJSONString.getExpenseClaimData(fromButton, approverName, approverId, requestId, viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getLineItems(), advanceList, description, remarks, currency, claimTypeId, String.valueOf(projectId), uploadFileList, String.valueOf(empId)),
-                        CommunicationConstant.API_GET_SAVE_EXPENSE, true);*/
             }
         }
 
@@ -1274,16 +1156,8 @@ if(saveExpenseRequestModel!=null) {
                     return;
                 }
                 if (viewClaimSummaryResponseModel != null && viewClaimSummaryResponseModel.getGetExpenseDetailResult() != null) {
-                    //   advanceDropdownList = viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getAdvanceList();
+
                     advanceDropdownList = new ArrayList<AdvanceListItemModel>();
-                    /*for (AdvanceListItemModel item : viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getAdvanceList()) {
-                        advanceDropdownList.add(item);
-                    }*/
-
-
-
-                   /* ((TextView) ((MainActivity) getActivity()).findViewById(R.id.tv_header_text))
-                            .setText("");*/
                    saveExpenseRequestModel.getExpense().getExpenseItem().setForEmpID(
                            viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getForEmpID());
                     setupExpenseDetail();
@@ -1379,19 +1253,99 @@ if(saveExpenseRequestModel!=null) {
 
             if (advanceAdjustmentResponseModel != null &&
                     advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult() != null) {
+
+
+                /*requestTV.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        CommunicationManager.getInstance().sendPostRequest(
+                                new IBaseResponse() {
+                                    @Override
+                                    public void validateResponse(ResponseData response) {
+                                        JSONObject managerJsonList;
+                                        try {
+                                            managerJsonList = new JSONObject(response.getResponseData());
+                                            AdvanceAdjustmentResponseModel  advance = AdvanceAdjustmentResponseModel.create(managerJsonList.toString());
+                                          //  saveExpenseRequestModel.getExpense().getExpenseItem().setAdvanceAdjustmentResponseModel(advanceAdjustmentResponseModel);
+                                            final GetAdvanceListForExpenseResult getAdvanceListForExpenseResult = advance.getGetAdvanceListForExpenseResult();
+
+                                            if (getAdvanceListForExpenseResult != null && getAdvanceListForExpenseResult.getAdvanceList().size() > 0) {
+                                                final ArrayList<GetAdvanceDetailResultModel> advanceListtt = getAdvanceListForExpenseResult.getAdvanceList();
+
+                                                final CustomBuilder claimDialog = new CustomBuilder(getContext(), "Select Request Id", true);
+                                                claimDialog.setSingleChoiceItems(advanceListtt, null, new CustomBuilder.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(CustomBuilder builder, Object selectedObject) {
+
+                                                        getAdvanceDetailResultModel = (GetAdvanceDetailResultModel) selectedObject;
+                                                        double paidAmount = 0;
+                                                        double balanceAmt = 0;
+                                                        double totalAdvanceAdjustInCaseExpenseSumLesserTemp = 0;
+                                                        if (currencyValue != null && saveExpenseRequestModel != null && saveExpenseRequestModel.getExpense() != null && saveExpenseRequestModel.getExpense().getExpenseItem() != null && saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems() != null && saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems().size() > 0) {
+                                                        } else {
+                                                            claimDialog.dismiss();
+                                                            new AlertCustomDialog(context, "Please Add Expense Detail");
+                                                            return;
+                                                        }
+                                                        if (getAdvanceDetailResultModel.getBalAmount() != null && !getAdvanceDetailResultModel.getBalAmount().equalsIgnoreCase("")) {
+                                                            balanceAmt = Double.parseDouble(getAdvanceDetailResultModel.getBalAmount());
+                                                        }
+                                                        for (AdvanceListItemModel advance : advanceList) {
+                                                            if (!advance.getFlag().equalsIgnoreCase(AppsConstant.DELETE_FLAG)) {
+                                                                totalAdvanceAdjustInCaseExpenseSumLesserTemp = totalAdvanceAdjustInCaseExpenseSumLesserTemp + Double.parseDouble(advance.getAdjAmount());
+                                                                if (advance.getReqCode().equalsIgnoreCase
+                                                                        (getAdvanceDetailResultModel.getReqCode())) {
+                                                                    paidAmount = paidAmount + Double.parseDouble(advance.getAdjAmount());
+                                                                }
+                                                            }
+                                                        }
+                                                        totalAdvanceAdjustInCaseExpenseSumLesser = totalAdvanceAdjustInCaseExpenseSumLesserTemp;
+
+                                                        if (advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult()
+                                                                .getAdvanceList().contains(getAdvanceDetailResultModel)) {
+                                                            getAdvanceDetailResultModel.setPaidAmount(paidAmount + "");
+                                                            advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult().
+                                                                    getAdvanceList().set(advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult()
+                                                                    .getAdvanceList().indexOf(getAdvanceDetailResultModel), getAdvanceDetailResultModel);
+                                                        }
+
+                                                        requestTV.setText(getAdvanceDetailResultModel.getReqCode());
+                                                        requestCode = getAdvanceDetailResultModel.getReqCode();
+                                                        reasonCode = getAdvanceDetailResultModel.getReason();
+
+                                                        amount = getAdvanceDetailResultModel.getBalAmount();
+                                                        if (balanceAmt == paidAmount) {
+                                                            builder.dismiss();
+                                                            new AlertCustomDialog(context, "You have not advance amount to adjust");
+                                                            return;
+                                                        }
+                                                        showPopupForAdjustExpense(getAdvanceDetailResultModel);
+                                                        builder.dismiss();
+                                                    }
+                                                });
+                                                claimDialog.show();
+                                            } else {
+                                                new AlertCustomDialog(context, getResources().getString(R.string.error_no_advance));
+                                                return;
+                                            }
+
+                                        } catch (JSONException e) {
+                                            Crashlytics.logException(e);
+                                            Crashlytics.log(1, TAG, Utility.LogUserDetails());
+                                        }
+                                        MainActivity.isAnimationLoaded = true;
+                                        ((MainActivity)getActivity()).showHideProgress(false);
+                                    }
+                                }, AppRequestJSONString.getAdvanceAdjustmentDataRequest(currencyValue, String.valueOf(empId),advanceList), CommunicationConstant.API_GET_ADVANCE_LIST_FOR_EXPENSE, true);
+
+                      *//*  CommunicationManager.getInstance().sendPostRequest(this,
+                                );*//*
+                    }
+                });*/
+
                 requestTV.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                       /* if(currencyValue.equalsIgnoreCase("")){
-                            new AlertCustomDialog(context, "Please Select Currency");
-                            return;
-                        }
-
-                        if(!currencyValue.equalsIgnoreCase("") && saveExpenseRequestModel!=null){
-                            new AlertCustomDialog(context, "Please Add Expense");
-                            return;
-                        }*/
                         final GetAdvanceListForExpenseResult getAdvanceListForExpenseResult = advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult();
 
                         if (getAdvanceListForExpenseResult != null && getAdvanceListForExpenseResult.getAdvanceList().size() > 0) {
@@ -1403,12 +1357,10 @@ if(saveExpenseRequestModel!=null) {
                                 public void onClick(CustomBuilder builder, Object selectedObject) {
 
                                     getAdvanceDetailResultModel = (GetAdvanceDetailResultModel) selectedObject;
-                                    //  if(getAdvanceDetailResultModel.getPaidAmount()==null) {
                                     double paidAmount = 0;
                                     double balanceAmt = 0;
                                     double totalAdvanceAdjustInCaseExpenseSumLesserTemp = 0;
                                     if (currencyValue != null && saveExpenseRequestModel != null && saveExpenseRequestModel.getExpense() != null && saveExpenseRequestModel.getExpense().getExpenseItem() != null && saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems() != null && saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems().size() > 0) {
-                                        //showPopupForAdjustExpense(getAdvanceDetailResultModel);
                                     } else {
                                         claimDialog.dismiss();
                                         new AlertCustomDialog(context, "Please Add Expense Detail");
@@ -1435,7 +1387,6 @@ if(saveExpenseRequestModel!=null) {
                                                 getAdvanceList().set(advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult()
                                                 .getAdvanceList().indexOf(getAdvanceDetailResultModel), getAdvanceDetailResultModel);
                                     }
-                                    // }
 
                                     requestTV.setText(getAdvanceDetailResultModel.getReqCode());
                                     requestCode = getAdvanceDetailResultModel.getReqCode();
@@ -1453,7 +1404,7 @@ if(saveExpenseRequestModel!=null) {
                             });
                             claimDialog.show();
                         } else {
-                            new AlertCustomDialog(context, "No Request Id");
+                            new AlertCustomDialog(context, getResources().getString(R.string.error_no_advance));
                             return;
                         }
                     }
@@ -1463,67 +1414,6 @@ if(saveExpenseRequestModel!=null) {
             new AlertCustomDialog(context, "Please Select Currency");
             return;
         }
-      /*  if (advanceAdjustmentResponseModel != null && advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult() != null) {
-            requestTV.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final GetAdvanceListForExpenseResult getAdvanceListForExpenseResult = advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult();
-
-                    if (getAdvanceListForExpenseResult != null) {
-                        final ArrayList<GetAdvanceDetailResultModel> advanceListtt = getAdvanceListForExpenseResult.getAdvanceList();
-
-                        CustomBuilder claimDialog = new CustomBuilder(getContext(), "Select Request Id", true);
-                        claimDialog.setSingleChoiceItems(advanceListtt, null, new CustomBuilder.OnClickListener() {
-                            @Override
-                            public void onClick(CustomBuilder builder, Object selectedObject) {
-
-                                getAdvanceDetailResultModel = (GetAdvanceDetailResultModel) selectedObject;
-                                //  if(getAdvanceDetailResultModel.getPaidAmount()==null) {
-                                double paidAmount = 0;
-                                double balanceAmt = 0;
-                                double totalAdvanceAdjustInCaseExpenseSumLesserTemp = 0;
-                                if (getAdvanceDetailResultModel.getBalAmount() != null && !getAdvanceDetailResultModel.getBalAmount().equalsIgnoreCase("")) {
-                                    balanceAmt = Double.parseDouble(getAdvanceDetailResultModel.getBalAmount());
-                                }
-                                for (AdvanceListItemModel advance : advanceList) {
-                                    if (!advance.getFlag().equalsIgnoreCase(AppsConstant.DELETE_FLAG)) {
-                                        totalAdvanceAdjustInCaseExpenseSumLesserTemp = totalAdvanceAdjustInCaseExpenseSumLesserTemp + Double.parseDouble(advance.getAdjAmount());
-                                        if (advance.getReqCode().equalsIgnoreCase
-                                                (getAdvanceDetailResultModel.getReqCode())) {
-                                            paidAmount = paidAmount + Double.parseDouble(advance.getAdjAmount());
-                                        }
-                                    }
-                                }
-                                totalAdvanceAdjustInCaseExpenseSumLesser = totalAdvanceAdjustInCaseExpenseSumLesserTemp;
-
-                                if (advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult()
-                                        .getAdvanceList().contains(getAdvanceDetailResultModel)) {
-                                    getAdvanceDetailResultModel.setPaidAmount(paidAmount + "");
-                                    advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult().
-                                            getAdvanceList().set(advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult()
-                                            .getAdvanceList().indexOf(getAdvanceDetailResultModel), getAdvanceDetailResultModel);
-                                }
-                                // }
-
-                                requestTV.setText(getAdvanceDetailResultModel.getReqCode());
-                                requestCode = getAdvanceDetailResultModel.getReqCode();
-                                reasonCode = getAdvanceDetailResultModel.getReason();
-
-                                amount = getAdvanceDetailResultModel.getBalAmount();
-                                if (balanceAmt == paidAmount) {
-                                    builder.dismiss();
-                                    new AlertCustomDialog(context, "You have not advance amount to adjust");
-                                    return;
-                                }
-                                showPopupForAdjustExpense(getAdvanceDetailResultModel);
-                                builder.dismiss();
-                            }
-                        });
-                        claimDialog.show();
-                    }
-                }
-            });
-        }*/
     }
 
     private void refresh(ArrayList<LineItemsModel> lineItemsModels) {
@@ -1558,16 +1448,13 @@ if(saveExpenseRequestModel!=null) {
             RecyclerView.Adapter<ViewExpenseClaimSummaryAdapter.MyViewHolder> {
         private ArrayList<LineItemsModel> dataSet;
         private LinearLayout lineDocumentLl, viewDocLl;
-        private int totalCount;
-        private RecyclerView lineDocumentRecyclerView;
-
-
         public class MyViewHolder extends RecyclerView.ViewHolder {
 
             private TextView toDateLabel,fromDateLabel, fromDateTV, toDateTV, detailsTV, claimHeadTV, inputTV, amountTV, totalAmountTV, approvedAmountTV, categoryDescTV;
             private Button editButton, viewDocBTN,statusBT;
             private LinearLayout lineItemId,statusLl,statusMsgLl;
             private LinearLayout categoryLinearLayout,detailsLinearLayout,claimHeadLinearLayout,inputAmtLinearLayout,amountLinearLayout,fromDateLinearLayout,toDateLinearLayout;
+            private ImageView img_menu_icon;
 
             public MyViewHolder(View v) {
                 super(v);
@@ -1585,18 +1472,13 @@ if(saveExpenseRequestModel!=null) {
                 claimHeadTV = (TextView) v.findViewById(R.id.claimHeadTV);
                 inputTV = (TextView) v.findViewById(R.id.inputTV);
                 amountTV = (TextView) v.findViewById(R.id.amountTV);
-                // totalAmountTV = (TextView) v.findViewById(R.id.totalAmountTV);
-                // approvedAmountLabelLl = (LinearLayout) v.findViewById(R.id.approvedAmountLabelLl);
-                // approvedAmountLabelLl.setVisibility(View.GONE);
-                //approvedAmountTV = (TextView) v.findViewById(R.id.approvedAmountTV);
                 fromDateLinearLayout = (LinearLayout) v.findViewById(R.id.fromDateLinearLayout);
                 fromDateLinearLayout.setVisibility(View.GONE);
                 editButton = (Button) v.findViewById(R.id.actionBTN);
-                editButton.setVisibility(View.VISIBLE);
+                editButton.setVisibility(View.GONE);
 
                 lineDocumentLl = (LinearLayout) v.findViewById(R.id.lineDocumentLl);
                 lineDocumentLl.setVisibility(View.GONE);
-                //lineDocumentRecyclerView = (RecyclerView) v.findViewById(R.id.lineDocumentRecyclerView);
 
                 inputAmtLinearLayout = (LinearLayout) v.findViewById(R.id.inputAmtLinearLayout);
 
@@ -1613,6 +1495,9 @@ if(saveExpenseRequestModel!=null) {
                 statusMsgLl = (LinearLayout) v.findViewById(R.id.statusMsgLl);
                 statusMsgLl.setVisibility(View.GONE);
                 statusBT = (Button) v.findViewById(R.id.statusBT);
+
+                img_menu_icon= (ImageView) v.findViewById(R.id.img_menu_icon);
+                img_menu_icon.setVisibility(View.VISIBLE);
 
             }
         }
@@ -1633,7 +1518,6 @@ if(saveExpenseRequestModel!=null) {
 
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.travel_expense_claim_item, parent, false);
-            //view.setOnClickListener(MainActivity.myOnClickListener);
             MyViewHolder myViewHolder = new MyViewHolder(view);
             return myViewHolder;
         }
@@ -1661,7 +1545,6 @@ if(saveExpenseRequestModel!=null) {
                     holder.fromDateTV.setText(fromDate[0]);
                     holder.toDateTV.setText(toDate[0]);
                 } else {
-                    //String[] fromDate = item.getDateFrom().split(" ");
                     holder.fromDateLinearLayout.setVisibility(View.VISIBLE);
                     holder.toDateLinearLayout.setVisibility(View.GONE);
                     holder.fromDateTV.setText(" ");
@@ -1681,8 +1564,8 @@ if(saveExpenseRequestModel!=null) {
                     holder.toDateTV.setText(item.getDateTo());
                     holder.toDateLabel.setText("Period");
                 }
-                //  holder.statusBT.setText("No Policy");
-                if(!item.getPolicyID().equalsIgnoreCase("")){
+
+               /* if(!item.getPolicyID().equalsIgnoreCase("")){
                     holder.statusMsgLl.setVisibility(View.VISIBLE);
                     holder.statusBT.setText(Utility.policyStatus(item.getPolicyID(),item.getPolicyLimitValue(),item.getInputUnit(),item.getClaimAmt()));
                     holder.statusBT.setOnClickListener(new View.OnClickListener() {
@@ -1698,31 +1581,75 @@ if(saveExpenseRequestModel!=null) {
 
                 if (item.getDocListLineItem() != null && item.getDocListLineItem().size() > 0) {
                     viewDocLl.setVisibility(View.VISIBLE);
-                    // holder.viewDocBTN.setText("Document " + item.getDocListLineItem().size());
                     holder.viewDocBTN.setText("Document");
                     holder.viewDocBTN.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            /*setData();
-                            AddExpenseFragment editExpenseFragment = new AddExpenseFragment();
-                            editExpenseFragment.setExpenseRequestModel(saveExpenseRequestModel);
-                            editExpenseFragment.setLineItemList(item);
-                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            fragmentTransaction.replace(R.id.add_expense, editExpenseFragment);
-                            fragmentTransaction.addToBackStack(TAG);
-                            fragmentTransaction.commit();*/
-
                             Intent theIntent=new Intent(getActivity(), AddExpenseActivity.class);
                             AddExpenseActivity.saveExpenseRequestModel=saveExpenseRequestModel;
                             AddExpenseActivity.lineItemsModel=item;
                             startActivityForResult(theIntent,AddExpenseActivity.REQUEST_CODE);
                         }
                     });
+                }*/
+
+                if (item.getPolicyID().equalsIgnoreCase("")) {
+                    holder.statusLl.setVisibility(View.VISIBLE);
                 }
 
+                holder.img_menu_icon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<String> list = new ArrayList<>();
+                        list.add("Edit");
+                        list.add("Delete");
+                        if (item.getDocListLineItem() != null && item.getDocListLineItem().size() > 0) {
+                            list.add("Document " + item.getDocListLineItem().size());
+                        }
+                        if (!item.getPolicyID().equalsIgnoreCase("")) {
+                            list.add("Policy Status");
 
-                holder.editButton.setOnClickListener(new View.OnClickListener() {
+                        }
+                        CustomBuilder customBuilder = new CustomBuilder(getContext(), "Options", false);
+                        customBuilder.setSingleChoiceItems(list, null, new CustomBuilder.OnClickListener() {
+                            @Override
+                            public void onClick(CustomBuilder builder, Object selectedObject) {
+                                if (selectedObject.toString().equalsIgnoreCase("Edit")) {
+                                    setData();
+                                    Intent theIntent=new Intent(getActivity(), AddExpenseActivity.class);
+                                    AddExpenseActivity.saveExpenseRequestModel=saveExpenseRequestModel;
+                                    AddExpenseActivity.lineItemsModel=item;
+                                    startActivityForResult(theIntent,AddExpenseActivity.REQUEST_CODE);
+                                } else if (selectedObject.toString().equalsIgnoreCase("Delete")) {
+                                    LineItemsModel lineItems = dataSet.get(listPosition);
+                                    if (lineItems.getLineItemID() != 0 && lineItems.getFlag().equalsIgnoreCase(AppsConstant.OLD_FLAG)) {
+                                        lineItems.setFlag(AppsConstant.DELETE_FLAG);
+                                        holder.lineItemId.setVisibility(View.GONE);
+                                        dataSet.set(listPosition, lineItems);
+                                    }
+                                    if (dataSet.size() == 0) {
+                                        expenseErrorLl.setVisibility(View.VISIBLE);
+                                    }
+                                    Utility.refreshLineItem(currencyTV,dataSet);
+                                }else if(selectedObject.toString().equalsIgnoreCase("Document " + item.getDocListLineItem().size())){
+                                    Intent theIntent=new Intent(getActivity(), AddExpenseActivity.class);
+                                    AddExpenseActivity.saveExpenseRequestModel=saveExpenseRequestModel;
+                                    AddExpenseActivity.lineItemsModel=item;
+                                    startActivityForResult(theIntent,AddExpenseActivity.REQUEST_CODE);
+                                }else if(selectedObject.toString().equalsIgnoreCase("Policy Status")){
+                                    Utility.openPolicyStatusPopUp(item, context, preferences);
+                                }
+                                builder.dismiss();
+                            }
+
+
+                        });
+                        customBuilder.show();
+                    }
+
+                });
+
+         /*       holder.editButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ArrayList<String> list = new ArrayList<>();
@@ -1734,21 +1661,7 @@ if(saveExpenseRequestModel!=null) {
                             public void onClick(CustomBuilder builder, Object selectedObject) {
                                 if (selectedObject.toString().equalsIgnoreCase("Edit")) {
                                     setData();
-                                    /*AddExpenseFragment editExpenseFragment = new AddExpenseFragment();
-                                    saveExpenseRequestModel.setScreenName(AppsConstant.VIEW_EDIT_EXPENSE_CLAIM_FRAGMENT);
-                                    editExpenseFragment.setExpenseRequestModel(saveExpenseRequestModel);
-                                    editExpenseFragment.setLineItemList(item);
-                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                    fragmentTransaction.replace(R.id.add_expense, editExpenseFragment);
-                                    fragmentTransaction.addToBackStack(TAG);
-                                    fragmentTransaction.commit();*/
-
                                     Intent theIntent=new Intent(getActivity(), AddExpenseActivity.class);
-                                    /*theIntent.putExtra(AddExpenseActivity.SAVE_EXPENSE_REQUEST,saveExpenseRequestModel);
-                                    theIntent.putExtra(AddExpenseActivity.LINE_ITEM_REQUEST,item);*/
-                                    //theIntent.putExtra(AddExpenseActivity.SAVE_EXPENSE_REQUEST,saveExpenseRequestModel);
-                                    //theIntent.putExtra(AddExpenseActivity.LINE_ITEM_REQUEST,item);
                                     AddExpenseActivity.saveExpenseRequestModel=saveExpenseRequestModel;
                                     AddExpenseActivity.lineItemsModel=item;
                                     startActivityForResult(theIntent,AddExpenseActivity.REQUEST_CODE);
@@ -1772,7 +1685,7 @@ if(saveExpenseRequestModel!=null) {
                         });
                         customBuilder.show();
                     }
-                });
+                });*/
             }
 
             //New Line Item Data
@@ -1799,7 +1712,6 @@ if(saveExpenseRequestModel!=null) {
                 holder.categoryDescTV.setText(item.getCategoryDesc());
                 holder.detailsTV.setText(item.getLineItemDetail());
                 holder.claimHeadTV.setText(item.getHeadDesc());
-             //   if (item.getInputUnit() != null && !item.getInputUnit().equalsIgnoreCase("0.00")) {
                     holder.inputAmtLinearLayout.setVisibility(View.VISIBLE);
                     holder.inputTV.setText(item.getInputUnit());
                     holder.amountTV.setText(item.getClaimAmt());
@@ -1808,14 +1720,9 @@ if(saveExpenseRequestModel!=null) {
                         holder.toDateTV.setText(item.getDateTo());
                         holder.toDateLabel.setText(item.getLabelPeriod());
                     }
-
-              /*  } else {
-                    holder.inputAmtLinearLayout.setVisibility(View.GONE);
-                    holder.amountTV.setText(item.getClaimAmt());
-                }*/
                 holder.statusBT.setText("No Policy");
 
-                if(!item.getPolicyID().equalsIgnoreCase("")){
+               /* if(!item.getPolicyID().equalsIgnoreCase("")){
 
                     holder.statusBT.setText(Utility.policyStatus(item.getPolicyID(),item.getPolicyLimitValue(),item.getInputUnit(),item.getClaimAmt()));
                     holder.statusBT.setOnClickListener(new View.OnClickListener() {
@@ -1828,52 +1735,38 @@ if(saveExpenseRequestModel!=null) {
 
                 if (item.getDocListLineItem() != null && item.getDocListLineItem().size() > 0) {
                     viewDocLl.setVisibility(View.VISIBLE);
-                    // holder.viewDocBTN.setText("Document " + item.getDocListLineItem().size());
                     holder.viewDocBTN.setText("Document");
                     holder.viewDocBTN.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            /*setData();
-                            AddExpenseFragment editExpenseFragment = new AddExpenseFragment();
-                            editExpenseFragment.setExpenseRequestModel(saveExpenseRequestModel);
-                            editExpenseFragment.setLineItemList(item);
-                            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            fragmentTransaction.replace(R.id.add_expense, editExpenseFragment);
-                            fragmentTransaction.addToBackStack(TAG);
-                            fragmentTransaction.commit();*/
-
                             Intent theIntent=new Intent(getActivity(), AddExpenseActivity.class);
-                           /* theIntent.putExtra(AddExpenseActivity.SAVE_EXPENSE_REQUEST,saveExpenseRequestModel);
-                            theIntent.putExtra(AddExpenseActivity.LINE_ITEM_REQUEST,item);*/
                             AddExpenseActivity.saveExpenseRequestModel=saveExpenseRequestModel;
                             AddExpenseActivity.lineItemsModel=item;
                             startActivityForResult(theIntent,AddExpenseActivity.REQUEST_CODE);
                         }
                     });
-                }
+                }*/
 
-                holder.editButton.setOnClickListener(new View.OnClickListener() {
+
+                holder.img_menu_icon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ArrayList<String> list = new ArrayList<>();
                         list.add("Edit");
                         list.add("Delete");
+                        if (item.getDocListLineItem() != null && item.getDocListLineItem().size() > 0) {
+                            list.add("Document");
+                        }
+                        if (!item.getPolicyID().equalsIgnoreCase("")) {
+                            list.add("Policy Status");
+
+                        }
                         CustomBuilder customBuilder = new CustomBuilder(getContext(), "Options", false);
                         customBuilder.setSingleChoiceItems(list, null, new CustomBuilder.OnClickListener() {
                             @Override
                             public void onClick(CustomBuilder builder, Object selectedObject) {
                                 if (selectedObject.toString().equalsIgnoreCase("Edit")) {
-                                    /*setData();
-                                    AddExpenseFragment editExpenseFragment = new AddExpenseFragment();
-                                    editExpenseFragment.setExpenseRequestModel(saveExpenseRequestModel);
-                                    editExpenseFragment.setLineItemList(item);
-                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                    fragmentTransaction.replace(R.id.add_expense, editExpenseFragment);
-                                    fragmentTransaction.addToBackStack(TAG);
-                                    fragmentTransaction.commit();*/
-
+                                    setData();
                                     Intent theIntent=new Intent(getActivity(), AddExpenseActivity.class);
                                     AddExpenseActivity.saveExpenseRequestModel=saveExpenseRequestModel;
                                     AddExpenseActivity.lineItemsModel=item;
@@ -1884,19 +1777,13 @@ if(saveExpenseRequestModel!=null) {
                                     if (dataSet.size() == 0) {
                                         expenseErrorLl.setVisibility(View.VISIBLE);
                                     }
-
-                                 /*   LineItemsModel lineItems = dataSet.get(listPosition);
-                                    if (lineItems.getLineItemID() != 0 && lineItems.getFlag().equalsIgnoreCase(AppsConstant.OLD_FLAG)) {
-                                        lineItems.setFlag(AppsConstant.DELETE_FLAG);
-                                        dataSet.set(listPosition, lineItems);
-                                    } else if (lineItems.getLineItemID() == 0 && lineItems.getFlag().equalsIgnoreCase(AppsConstant.NEW_FLAG)) {
-                                        dataSet.remove(listPosition);
-                                    }
-                                    if (dataSet.size() == 0) {
-                                        expenseErrorLl.setVisibility(View.VISIBLE);
-
-                                    }*/
-
+                                }else if(selectedObject.toString().equalsIgnoreCase("Document")){
+                                    Intent theIntent=new Intent(getActivity(), AddExpenseActivity.class);
+                                    AddExpenseActivity.saveExpenseRequestModel=saveExpenseRequestModel;
+                                    AddExpenseActivity.lineItemsModel=item;
+                                    startActivityForResult(theIntent,AddExpenseActivity.REQUEST_CODE);
+                                }else if(selectedObject.toString().equalsIgnoreCase("Policy Status")){
+                                    Utility.openPolicyStatusPopUp(item, context, preferences);
                                 }
                                 builder.dismiss();
                             }
@@ -1905,7 +1792,39 @@ if(saveExpenseRequestModel!=null) {
                         });
                         customBuilder.show();
                     }
+
                 });
+
+               /* holder.editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<String> list = new ArrayList<>();
+                        list.add("Edit");
+                        list.add("Delete");
+                        CustomBuilder customBuilder = new CustomBuilder(getContext(), "Options", false);
+                        customBuilder.setSingleChoiceItems(list, null, new CustomBuilder.OnClickListener() {
+                            @Override
+                            public void onClick(CustomBuilder builder, Object selectedObject) {
+                                if (selectedObject.toString().equalsIgnoreCase("Edit")) {
+                                    Intent theIntent=new Intent(getActivity(), AddExpenseActivity.class);
+                                    AddExpenseActivity.saveExpenseRequestModel=saveExpenseRequestModel;
+                                    AddExpenseActivity.lineItemsModel=item;
+                                    startActivityForResult(theIntent,AddExpenseActivity.REQUEST_CODE);
+                                } else if (selectedObject.toString().equalsIgnoreCase("Delete")) {
+                                    dataSet.remove(listPosition);
+                                    ViewExpenseClaimSummaryAdapter.this.notifyDataSetChanged();
+                                    if (dataSet.size() == 0) {
+                                        expenseErrorLl.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                                builder.dismiss();
+                            }
+
+
+                        });
+                        customBuilder.show();
+                    }
+                });*/
 
             }
 
@@ -1964,7 +1883,6 @@ if(saveExpenseRequestModel!=null) {
                     }
 
                     if(column.getColumnName().equalsIgnoreCase(LineItemsModel.INPUT_UNIT_TAG)){
-                        // holder.inputAmtLinearLayout.setVisibility(View.VISIBLE);
                         ((TextView)holder.inputAmtLinearLayout.findViewById(R.id.inputLabelTV)).setText(column.getLableName());
                     }
                 }
@@ -1987,11 +1905,10 @@ if(saveExpenseRequestModel!=null) {
         } else {
             saveExpenseItem = new SaveExpenseItem();
         }
-        //SaveExpenseItem saveExpenseItem = new SaveExpenseItem();
+
         if (viewClaimSummaryResponseModel != null && viewClaimSummaryResponseModel.getGetExpenseDetailResult() != null && viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem() != null) {
             saveExpenseItem.setCurrencyCode(viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getCurrencyCode());
             saveExpenseItem.setClaimTypeID(viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getClaimTypeID());
-            //claimTypeTV.setText(viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getClaimTypeDesc());
             saveExpenseItem.setClaimTypeDesc(viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getClaimTypeDesc());
             saveExpenseItem.setForEmpID(viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getForEmpID());
             saveExpenseItem.setEmpName(viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getName());
@@ -2200,22 +2117,6 @@ if(saveExpenseRequestModel!=null) {
             adjustemntDetailAdapter.notifyDataSetChanged();
 
             updateNetAmount();
-        /*    for (AdvanceListItemModel item : list) {
-                if (item.getPaidAmount() != null && !item.getPaidAmount().equalsIgnoreCase("")) {
-                    netAmount = totalAmountTobeAdjusted - Double.parseDouble(item.getPaidAmount());
-                } else {
-                    netAmount = totalAmountTobeAdjusted - Double.parseDouble(item.getAdjAmount());
-                }
-            }
-            if (balanceAmount == 0) {
-
-            } else {
-                netAmountTV.setText(balanceAmount + "");
-            }*/
-
-           /* netAmount = totalExpenseAmt - totalAdvanceAdjustInCaseExpenseSumLesser;
-            saveExpenseRequestModel.getExpense().getExpenseItem().setNetAmount(netAmount + "");*/
-
 
         } else {
             advanceRV.setVisibility(View.GONE);
@@ -2256,7 +2157,6 @@ if(saveExpenseRequestModel!=null) {
                 AddExpenseActivity.lineItemsModel=null;
                 AddExpenseFragment.expenseRequestModel=null;
                 AddExpenseActivity.saveExpenseRequestModel=null;
-               // saveExpenseRequestModel = (SaveExpenseRequestModel) data.getSerializableExtra(AddExpenseActivity.SAVE_EXPENSE_REQUEST);
                 refresh(saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems());
 
             }else{
@@ -2377,29 +2277,7 @@ if(saveExpenseRequestModel!=null) {
                 if(Utility.calcBase64SizeInKBytes(encodeFileToBase64Binary)>Utility.maxLimit){
                     CustomDialog.alertWithOk(context, "File size should not greater than 2 MB");
                     return;
-                }/*else {
-                    fileShow = false;
-                    CustomDialog.alertWithOk(context, " Allowed file types - .doc, .pdf, .docx format only.");
-                }*/
-
-                // if (fileShow) {
-                    /*if (uploadFileList.size() > 0) {
-                        for (int i = 1; i <= uploadFileList.size(); i++) {
-                            fileObj.setBase64Data(encodeFileToBase64Binary);
-                            fileObj.setFlag("N");
-                            //fileObj.setSeqNo(i + 1);
-                            String seqNo = String.valueOf(i + 1);
-                            Log.d("seqNo", "seqNo");
-                            uploadFileList.add(fileObj);
-                            break;
-                        }
-                    } else {
-                        fileObj.setBase64Data(encodeFileToBase64Binary);
-                        fileObj.setFlag("N");
-                        //  fileObj.setSeqNo(1);
-                        uploadFileList.add(fileObj);
-                    }*/
-                //String encodeFileToBase64Binary = fileToBase64Conversion(data.getData());
+                }
 
                 fileObj.setBase64Data(encodeFileToBase64Binary);
                 fileObj.setFlag("N");
@@ -2413,13 +2291,12 @@ if(saveExpenseRequestModel!=null) {
 
         if (requestCode == AppsConstant.REQ_CAMERA && resultCode == RESULT_OK) {
 
-            final Intent intent = data;//new Intent();
+            final Intent intent = data;
             String path = intent.getStringExtra("response");
             Uri uri = Uri.fromFile(new File(path));
             if (uri == null) {
                 Log.d("uri", "null");
             } else {
-                //  Uri extras = data.getData();
                 bitmap = null;
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
@@ -2448,6 +2325,8 @@ if(saveExpenseRequestModel!=null) {
                 }
             }
             final Dialog dialog = new Dialog(context);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
             dialog.setContentView(R.layout.image_preview_expense);
             final TextView filenameET = (TextView) dialog.findViewById(R.id.filenameET);
             ImageView imageView = (ImageView) dialog.findViewById(R.id.img_preview);
@@ -2458,7 +2337,7 @@ if(saveExpenseRequestModel!=null) {
             tv_header_text.setTextColor(textColor);
             tv_header_text.setText("Supporting Documents");
             int bgColor = Utility.getBgColorCode(context, preferences);
-            FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
+            RelativeLayout fl_actionBarContainer = (RelativeLayout) dialog.findViewById(R.id.fl_actionBarContainer);
             fl_actionBarContainer.setBackgroundColor(bgColor);
 
             (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
@@ -2478,7 +2357,6 @@ if(saveExpenseRequestModel!=null) {
                                     fileObj.setBase64Data(encodeFileToBase64Binary);
                                     fileObj.setFlag("N");
                                     fileObj.setBitmap(bitmap);
-                                    //fileObj.setSeqNo(i + 1);
                                     String seqNo = String.valueOf(i + 1);
                                     Log.d("seqNo", "seqNo");
                                     uploadFileList.add(fileObj);
@@ -2489,7 +2367,6 @@ if(saveExpenseRequestModel!=null) {
                                 fileObj.setBase64Data(encodeFileToBase64Binary);
                                 fileObj.setFlag("N");
                                 fileObj.setBitmap(bitmap);
-                                // fileObj.setSeqNo(1);
                                 uploadFileList.add(fileObj);
                             }
                             Log.d("encodedFile", encodeFileToBase64Binary);
@@ -2587,7 +2464,7 @@ if(saveExpenseRequestModel!=null) {
                     }
                 } else if (filename.contains(".jpg") || filename.contains(".png") || filename.contains(".jpeg") ||
                         filename.contains(".BMP") || filename.contains(".bmp")) {
-                    holder.img_icon.setImageBitmap(fileObject.getBitmap());
+                    holder.img_icon.setImageDrawable((context.getResources().getDrawable(R.drawable.jpeg_icon)));
                     holder.fileNameTV.setText(filename);
                     holder.fileDescriptionTV.setText(name);
 
@@ -2643,17 +2520,6 @@ if(saveExpenseRequestModel!=null) {
 
                     }
                 }
-
-           /* final String finalFileType = fileType;
-            holder.img_icon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent1 = new Intent(Intent.ACTION_VIEW);
-                    intent1.setDataAndType(uploadedFilePath, finalFileType);
-                    startActivity(intent1);
-                }
-            });*/
-
                 holder.img_menu_icon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
@@ -2672,11 +2538,14 @@ if(saveExpenseRequestModel!=null) {
                             public void onClick(CustomBuilder builder, Object selectedObject) {
                                 if (selectedObject.toString().equalsIgnoreCase("Edit")) {
                                     final Dialog dialog = new Dialog(context);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                                     dialog.setContentView(R.layout.filename_advance_expense);
+
+
                                     preferences = new Preferences(getContext());
                                     int textColor = Utility.getTextColorCode(preferences);
                                     int bgColor = Utility.getBgColorCode(context, preferences);
-                                    FrameLayout fl_actionBarContainer = (FrameLayout) dialog.findViewById(R.id.fl_actionBarContainer);
+                                    RelativeLayout fl_actionBarContainer = (RelativeLayout) dialog.findViewById(R.id.fl_actionBarContainer);
                                     fl_actionBarContainer.setBackgroundColor(bgColor);
                                     TextView tv_header_text = (TextView) dialog.findViewById(R.id.tv_header_text);
                                     tv_header_text.setTextColor(textColor);
@@ -2688,7 +2557,6 @@ if(saveExpenseRequestModel!=null) {
                                     (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            //  SupportDocsItemModel docItem = new SupportDocsItemModel();
                                             fileObject.setName(editFilenameET.getText().toString());
                                             if (uploadFileList != null && uploadFileList.size() > 0) {
                                                 uploadFileList.set(uploadFileList.indexOf(fileObject), fileObject);
@@ -2772,7 +2640,7 @@ if(saveExpenseRequestModel!=null) {
 
     private String fileToBase64Conversion(Uri file) {
         String attachedFile;
-        InputStream inputStream = null;//You can get an inputStream using any IO API
+        InputStream inputStream = null;
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         try {
             inputStream = context.getContentResolver().openInputStream(file);
@@ -2805,117 +2673,6 @@ if(saveExpenseRequestModel!=null) {
         } catch (ActivityNotFoundException e) {
             // The reason for the existence of aFileChooser
         }
-    }
-
-    private void showPopupForAdjustExpense(final AdvanceListItemModel model) {
-
-        final Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.advance_adjustment_detail_item);
-        final TextView reasonTV, amountTV, requestIdTV;
-        final LinearLayout amountEditableLinearLayout, amountLinearLayout;
-        Button deleteBTN;
-        LinearLayout header_layout;
-        requestIdTV = (TextView) dialog.findViewById(R.id.requestTV);
-        reasonTV = (TextView) dialog.findViewById(R.id.reasonTV);
-        amountEditableLinearLayout = (LinearLayout) dialog.findViewById(R.id.amountEditableLinearLayout);
-        amountEditableLinearLayout.setVisibility(View.VISIBLE);
-        amountLinearLayout = (LinearLayout) dialog.findViewById(R.id.amountLinearLayout);
-        amountLinearLayout.setVisibility(View.GONE);
-        amountTV = (TextView) dialog.findViewById(R.id.amountET);
-        deleteBTN = (Button) dialog.findViewById(R.id.deleteBTN);
-        deleteBTN.setVisibility(View.GONE);
-        header_layout = (LinearLayout) dialog.findViewById(R.id.header_layout);
-        header_layout.setVisibility(View.VISIBLE);
-        int textColor = Utility.getTextColorCode(preferences);
-        int bgColor = Utility.getBgColorCode(context, preferences);
-        TextView tv_header_text = (TextView) dialog.findViewById(R.id.tv_header_text);
-        tv_header_text.setTextColor(textColor);
-        header_layout.setBackgroundColor(bgColor);
-        tv_header_text.setText("Advance Adjustments");
-
-        requestIdTV.setText(model.getReqCode());
-        reasonTV.setText(model.getReason());
-
-        if (model.getAdjAmount() != null && !model.getAdjAmount().equalsIgnoreCase("")) {
-            balanceAmount = Double.parseDouble(model.getAdjAmount());
-            if (balanceAmount > totalAmountTobeAdjusted) {
-                if (model.getPaidAmount() != null && !model.getPaidAmount().equalsIgnoreCase("")) {
-
-                    amountTV.setText((totalAmountTobeAdjusted - Double.parseDouble(model.getPaidAmount())) + "");
-                } else {
-                    amountTV.setText((totalAmountTobeAdjusted - paidAmount) + "");
-                }
-            } else {
-
-                amountTV.setText(balanceAmount + "");
-            }
-        }
-
-        (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                double amount = Double.parseDouble(amountTV.getText().toString());
-
-
-                if (amount > totalAmountTobeAdjusted) {
-                    new AlertCustomDialog(context, "Amount cannot be greater than Expense Amount");
-                } else if (amount > balanceAmount) {
-                    new AlertCustomDialog(context, "Amount cannot be greater than Advance Amount");
-                } else {
-                    balanceAmount = balanceAmount - amount;
-
-                    if (model.getPaidAmount() != null && !model.getPaidAmount().equalsIgnoreCase("")) {
-                        model.setPaidAmount((amount + Double.parseDouble(model.getPaidAmount())) + "");
-                    } else {
-                        model.setPaidAmount(amount + "");
-                    }
-                    paidAmount = paidAmount + amount;
-                    model.setAdjAmount(balanceAmount + "");
-                    ArrayList<AdvanceListItemModel> list = new ArrayList<AdvanceListItemModel>();
-                    ArrayList<AdvanceListItemModel> advanceListItemModelArrayList = new ArrayList<AdvanceListItemModel>();
-                    if (viewClaimSummaryResponseModel != null && viewClaimSummaryResponseModel.getGetExpenseDetailResult() != null && viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem() != null &&
-                            viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getAdvanceList() != null && viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getAdvanceList().size() > 0) {
-                        list = viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getAdvanceList();
-                        //  if (list.contains(model)) {
-                        //list.set(list.indexOf(model), model);
-                        list.add(model);
-                        viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().setAdvanceList(list);
-                        advanceListItemModelArrayList = viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getAdvanceList();
-
-                        // }
-                    } else {
-                        if (saveExpenseRequestModel != null && saveExpenseRequestModel.getExpense() != null && saveExpenseRequestModel.getExpense().getExpenseItem() != null
-                                && saveExpenseRequestModel.getExpense().getExpenseItem().getAdvanceList() != null && saveExpenseRequestModel.getExpense().getExpenseItem().getAdvanceList().size() > 0) {
-                            list = saveExpenseRequestModel.getExpense().getExpenseItem().getAdvanceList();
-                            //   if (list.contains(model)) {
-                            //    list.set(list.indexOf(model), model);
-                            list.add(model);
-                            saveExpenseRequestModel.getExpense().getExpenseItem().setAdvanceList(list);
-                            advanceListItemModelArrayList = saveExpenseRequestModel.getExpense().getExpenseItem().getAdvanceList();
-
-                            // }
-
-                        }
-                    }
-
-                    advanceListItemModelArrayList.add(model);
-                    refreshAdjustmentRecycle(advanceListItemModelArrayList);
-
-
-                    dialog.dismiss();
-                }
-
-            }
-        });
-        (dialog).findViewById(R.id.ibWrong).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-
-
     }
 
     private void showPopupForAdjustExpense(final GetAdvanceDetailResultModel model) {
@@ -2978,49 +2735,12 @@ if(saveExpenseRequestModel!=null) {
 
             amountTV.setText(totalExpenseAmt + "");
         }
-
-
-      /*  if (model.getBalAmount() != null && !model.getBalAmount().equalsIgnoreCase("")) {
-            balanceAmount = Double.parseDouble(model.getBalAmount());
-            if (balanceAmount >= totalAmountTobeAdjusted) {
-                if (model.getPaidAmount() != null && !model.getPaidAmount().equalsIgnoreCase("")) {
-                    amountTV.setText((totalAmountTobeAdjusted - Double.parseDouble(model.getPaidAmount())) + "");
-
-                } else {
-                    amountTV.setText((totalAmountTobeAdjusted - paidAmount) + "");
-                }
-            } else {
-                amountTV.setText(balanceAmount + "");
-            }
-        }*/
-
         (dialog).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
 
                 double amount = Double.parseDouble(amountTV.getText().toString());
-
-
-                //Wrote by Sunaina
-               /* if (amount > totalAmountTobeAdjusted) {
-                    new AlertCustomDialog(context, "Amount cannot be greater than Expense Amount");
-                } else if (amount > balanceAmount) {
-                    new AlertCustomDialog(context, "Amount cannot be greater than Advance Amount");
-                } else {
-                    balanceAmount = balanceAmount - amount;
-                    model.setPaidAmount(amount + "");
-                    paidAmount = paidAmount + amount;
-                    model.setBalAmount(balanceAmount + "");
-                    ArrayList<GetAdvanceDetailResultModel> list = advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult().getAdvanceList();
-                    if (list.contains(model)) {
-                        list.set(list.indexOf(model), model);
-                        advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult().setAdvanceList(list);
-                    }
-                    refreshAdjustmentList(model);
-                    dialog.dismiss();
-                }*/
-// Updated by wahid
                 if (amount == 0) {
                     new AlertCustomDialog(context, "Please enter amount");
                     return;
@@ -3032,31 +2752,7 @@ if(saveExpenseRequestModel!=null) {
                     new AlertCustomDialog(context, "Amount cannot be greater than Advance Amount");
                     return;
                 } else {
-                   /* balanceAmount = balanceAmount - amount;
-                    model.setPaidAmount(amount + "");
-                    paidAmount = paidAmount + amount;
-                    model.setBalAmount(balanceAmount + "");
-                    ArrayList<GetAdvanceDetailResultModel> list = advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult().getAdvanceList();
-                    if (list.contains(model)) {
-                        list.set(list.indexOf(model), model);
-                        advanceAdjustmentResponseModel.getGetAdvanceListForExpenseResult().setAdvanceList(list);
-                    }
-                    double netAmount = 0;*/
-
                     AdvanceListItemModel item = new AdvanceListItemModel();
-                   /* double totalAmountTobeAdjust = 0;
-                    if (lineItemsList.size() > 0) {
-                        for (LineItemsModel lineItemsModel : lineItemsList) {
-                            totalAmountTobeAdjust = totalAmountTobeAdjust + Double.parseDouble(lineItemsModel.getClaimAmt());
-                        }
-                    }
-                    if (totalAmountTobeAdjust == 0) {
-                        item.setAdjAmount(model.getPaidAmount());
-                    } else {
-                        item.setAdjAmount(totalAmountTobeAdjust + "");
-                    }
-*/
-                    //   item.setPaidAmount(amount+"");
                     item.setAdjAmount(amount + "");
                     item.setReqCode(model.getReqCode());
                     item.setAdvanceID(model.getAdvanceID());
@@ -3064,12 +2760,7 @@ if(saveExpenseRequestModel!=null) {
                     item.setTranID(0);
                     item.setFlag("N");
                     advanceList.add(item);
-                   /* for (AdvanceListItemModel model1 : advanceList) {
-                        netAmount = netAmount + Double.parseDouble(model1.getAdjAmount());
-                    }
-                    netAmountTV.setText(netAmount + "");*/
                     refreshAdjustmentRecycle(advanceList);
-                    // refreshAdjustmentList(model);
                     dialog.dismiss();
                 }
             }
@@ -3094,21 +2785,12 @@ if(saveExpenseRequestModel!=null) {
                 }
             }
         }
-
-      /*  if (viewClaimSummaryResponseModel != null && viewClaimSummaryResponseModel.getGetExpenseDetailResult() != null &&
-                viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem() != null &&
-                viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getLineItems() != null) {
-            for (LineItemsModel item : viewClaimSummaryResponseModel.getGetExpenseDetailResult().getExpenseItem().getLineItems()) {
-                totalExpense = totalExpense + Double.parseDouble(item.getClaimAmt());
-            }
-        } else {*/
             if (saveExpenseRequestModel != null && saveExpenseRequestModel.getExpense() != null && saveExpenseRequestModel.getExpense().getExpenseItem() != null
                     && saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems() != null) {
                 for (LineItemsModel item : saveExpenseRequestModel.getExpense().getExpenseItem().getLineItems()) {
                     totalExpense = totalExpense + Double.parseDouble(item.getClaimAmt());
                 }
             }
-        //}
 
         totalExpenseClaimedTV.setText(totalExpense + "");
         Utility.formatAmount(totalExpenseClaimedTV,totalExpense);
@@ -3116,65 +2798,13 @@ if(saveExpenseRequestModel!=null) {
         if (totalExpense != 0.0) {
             netAmount = totalExpense - advanceAdjustAmt;
             saveExpenseRequestModel.getExpense().getExpenseItem().setNetAmount(netAmount + "");
-           // netAmountTV.setText(netAmount + "");
             Utility.formatAmount(netAmountTV,netAmount);
         }else {
             netAmount=0.0;
             saveExpenseRequestModel.getExpense().getExpenseItem().setNetAmount(netAmount + "");
-           // netAmountTV.setText(netAmount + "");
             Utility.formatAmount(netAmountTV,netAmount);
 
         }
-
-    }
-
-    private void refreshAdjustmentList(GetAdvanceDetailResultModel model) {
-        double netAmount = 0;
-        AdvanceListItemModel item = new AdvanceListItemModel();
-        double totalAmountTobeAdjust = 0;
-        if (lineItemsList.size() > 0) {
-            for (LineItemsModel lineItemsModel : lineItemsList) {
-                totalAmountTobeAdjust = totalAmountTobeAdjust + Double.parseDouble(lineItemsModel.getClaimAmt());
-            }
-        }
-        if (totalAmountTobeAdjust == 0) {
-            item.setAdjAmount(model.getPaidAmount());
-        } else {
-            item.setAdjAmount(totalAmountTobeAdjust + "");
-        }
-  /*      if (advanceList.size() > 0) {
-            for (int i = 0; i <= advanceList.size(); i++) {
-                item.setPaidAmount(model.getPaidAmount());
-                item.setReqCode(model.getReqCode());
-                item.setAdvanceID(Integer.parseInt(model.getAdvanceID()));
-                item.setReason(model.getReason());
-                item.setTranID(0);
-                item.setSeqNo(i+1);
-                item.setFlag("N");
-                advanceList.add(item);
-                break;
-            }
-        } else {*/
-        item.setPaidAmount(model.getPaidAmount());
-        item.setReqCode(model.getReqCode());
-        item.setAdvanceID(model.getAdvanceID());
-        item.setReason(model.getReason());
-        item.setTranID(0);
-        item.setFlag("N");
-           /* if (totalAmountTobeAdjust == 0) {
-                item.setAdjAmount(model.getPaidAmount());
-            } else {
-                item.setAdjAmount(totalAmountTobeAdjust + "");
-            }*/
-        advanceList.add(item);
-
-        for (AdvanceListItemModel model1 : advanceList) {
-            netAmount = netAmount + Double.parseDouble(model1.getAdjAmount());
-        }
-        netAmountTV.setText(netAmount + "");
-        Utility.formatAmount(netAmountTV,netAmount);
-        refreshAdjustmentRecycle(advanceList);
-
 
     }
 

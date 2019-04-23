@@ -23,14 +23,6 @@ public class GetHeadDetailsWithPolicyResultModel extends GenericResponse impleme
     private String UnitDesc;
     private ArrayList<VisibilityDataModel> Visibility;
 
-   /* public double getLimitedTo() {
-        return LimitedTo;
-    }
-
-    public void setLimitedTo(double limitedTo) {
-        LimitedTo = limitedTo;
-    }*/
-
     public BigDecimal getLimitedTo() {
         return LimitedTo;
     }
@@ -74,14 +66,6 @@ public class GetHeadDetailsWithPolicyResultModel extends GenericResponse impleme
     public void setBeforeLimitedTo(long beforeLimitedTo) {
         BeforeLimitedTo = beforeLimitedTo;
     }
-
-   /* public long getLimitedTo() {
-        return LimitedTo;
-    }
-
-    public void setLimitedTo(long limitedTo) {
-        LimitedTo = limitedTo;
-    }*/
 
     public String getPolicyID() {
         return PolicyID;

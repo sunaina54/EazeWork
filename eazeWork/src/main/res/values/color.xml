@@ -42,7 +42,17 @@
     <color name="primary_pink">#ffaab9</color>
     <color name="primary_wheel_progress_color">#3895dc</color>
     <color name="possitive_button">#4da54d</color>
-    
+
+    <color name="present_cell">#9dc481</color>
+    <color name="wo_co_cell">#67b7dc</color>
+    <color name="multiple_status_cell">#F59A37</color>
+    <color name="future_cell">#808080</color>
+    <color name="wfh">#AD7A58</color>
+    <color name="tour">#75319c</color>
+    <color name="leave_cell">#efacac</color>
+    <color name="rh_cell">#00ffff</color>
+    <color name="absent_cell">#c74c4e</color>
+
     <color name="lighter_gray">#ddd</color>
     <color name="darker_gray">#6c6c6c</color>
 

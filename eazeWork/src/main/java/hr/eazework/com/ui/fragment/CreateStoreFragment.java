@@ -198,6 +198,7 @@ public class CreateStoreFragment extends ManageStore implements GoogleApiClient.
         });
 
         ((TextView) ((MainActivity) getActivity()).findViewById(R.id.tv_header_text)).setText("Create Location");
+        ((MainActivity) getActivity()).findViewById(R.id.ibRight).setVisibility(View.VISIBLE);
         ((MainActivity) getActivity()).findViewById(R.id.ibRight).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

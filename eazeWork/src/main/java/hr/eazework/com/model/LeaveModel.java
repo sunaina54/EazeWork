@@ -1,5 +1,7 @@
 package hr.eazework.com.model;
 
+import com.google.gson.Gson;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -25,9 +27,28 @@ public class LeaveModel implements Serializable{
 	private String mRequestCode;
 	private String mStatus;
 	private boolean isWithdrawen;
+	private String[] Buttons;
+	private String StatusDesc;
 	private ArrayList<LeaveModel> mLeaveLIst;
 	public LeaveModel() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public String[] fetchButton(JSONArray jsonArray){
+		if(jsonArray!=null){
+			Buttons=new String[jsonArray.length()];
+			for(int j=0; j<jsonArray.length();j++){
+				try {
+					String str=(String) jsonArray.get(j);
+					Buttons[j]=str;
+
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+		return Buttons;
 	}
 	public LeaveModel(String jsonString) {
 		try {
@@ -48,12 +69,35 @@ public class LeaveModel implements Serializable{
 			mRequestId =jsonObject.optString("ReqID", "");
 			mRequestCode =jsonObject.optString("ReqCode", "");
 			mStatus =jsonObject.optString("Status", "");
+			StatusDesc =jsonObject.optString("StatusDesc", "");
+			try {
+				Buttons=fetchButton(jsonObject.getJSONArray("Buttons"));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 			isWithdrawen=jsonObject.optString("WithdrawYN", "N").equalsIgnoreCase("Y");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 		
 	}
+
+	public String[] getButtons() {
+		return Buttons;
+	}
+
+	public void setButtons(String[] buttons) {
+		Buttons = buttons;
+	}
+
+	public String getStatusDesc() {
+		return StatusDesc;
+	}
+
+	public void setStatusDesc(String statusDesc) {
+		StatusDesc = statusDesc;
+	}
+
 	public String getmLeaveName() {
 		return mLeaveName;
 	}
@@ -77,6 +121,8 @@ public class LeaveModel implements Serializable{
 			return "Casual Leave";
 		}
 	}
+
+
 	public float getmLeaveBalance() {
 		return mLeaveBalanceCount;
 	}
@@ -143,5 +189,6 @@ public class LeaveModel implements Serializable{
 	public void setmRequestCode(String mRequestCode) {
 		this.mRequestCode = mRequestCode;
 	}
+
 	
 }

@@ -41,6 +41,7 @@ import hr.eazework.com.model.ReasonCodeListItemModel;
 import hr.eazework.com.model.RoleListItem;
 import hr.eazework.com.model.SalaryMonthModel;
 import hr.eazework.com.model.TeamMember;
+import hr.eazework.com.model.TourReasonListModel;
 import hr.eazework.com.model.TypeWiseListModel;
 import hr.eazework.com.ui.util.Preferences;
 import hr.eazework.com.ui.util.Utility;
@@ -375,6 +376,8 @@ public class CustomBuilder {
                 name = ((AdvanceListItemModel) obj).getReqCode();
             }else if(obj instanceof ExpenseItemListModel) {
                 name = ((ExpenseItemListModel) obj).getReqStatusDesc();
+            }else if(obj instanceof TourReasonListModel) {
+                name = ((TourReasonListModel) obj).getReason();
             }
             tvSelectUrCountry.setText(name);
 			/*if(isShowAsSelected)
